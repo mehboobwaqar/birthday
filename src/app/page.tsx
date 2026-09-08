@@ -535,7 +535,7 @@ function GiftSection() {
         <div className="gift-reveal">
           <p className="gift-reveal-text">You are my greatest gift! 💖</p>
           <p className="gift-reveal-sub">
-            No gift in this world compares to having you in my life, Laiba. You are my everything. 🥺✨
+            No gift in this world compares to having you in my life, Wifeyyy G. You are my everything literally everything. 🥺✨
           </p>
         </div>
       )}
@@ -636,11 +636,6 @@ function PhotoMemories() {
           <span className="memories-counter">
             💖 Revealed: <span className="count-num">{revealedCards.size}</span> / {TOTAL_PHOTOS}
           </span>
-          {revealedCards.size < TOTAL_PHOTOS && (
-            <button className="memories-reveal-all" onClick={handleRevealAll}>
-              ✨ Reveal All ✨
-            </button>
-          )}
         </div>
 
         <div className="memories-grid">
@@ -673,7 +668,7 @@ function PhotoMemories() {
                         />
                         <div className="photo-overlay">
                           <span className="photo-caption">{captions[i]}</span>
-                          <span className="photo-expand">tap to enlarge</span>
+                          <span className="photo-expand">✨ Tap for Full Screen ✨</span>
                         </div>
                       </>
                     )}
