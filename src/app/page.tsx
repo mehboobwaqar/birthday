@@ -246,7 +246,7 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
     <div className="midnight-gate-overlay">
       <div className="midnight-stars" />
       <div className="midnight-gate-card">
-        <div className="midnight-crown-icon">👑</div>
+        <div className="midnight-crown-icon" onDoubleClick={handleManualPreview} style={{ cursor: "default", userSelect: "none" }}>👑</div>
         <span className="midnight-badge">🔐 BIRTHDAY SURPRISE VAULT</span>
 
         <h2 className="midnight-title">Shhh.... Sabar Meri Jaan! 🤫💖</h2>
@@ -287,17 +287,7 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
           </div>
         )}
 
-        {/* Discreet preview button for Mehboob Waqar to test anytime */}
-        <div className="midnight-admin-area">
-          <button
-            type="button"
-            className="midnight-preview-btn"
-            onClick={handleManualPreview}
-            title="MianG Testing Preview"
-          >
-            👑 MianG Preview (Test Mode)
-          </button>
-        </div>
+        {/* MianG Preview Button hidden as requested so no one can bypass before 12:00 AM */}
       </div>
     </div>
   );
