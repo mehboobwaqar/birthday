@@ -265,7 +265,7 @@ function CakeSection() {
 
   return (
     <section className="cake-section" id="cake">
-      <h2 className="section-title">🎂 Make a Wish, Laiba! 🎂</h2>
+      <h2 className="section-title">🎂 Make a Wish, Wifeyyy G! 🎂</h2>
       <div className="section-divider" />
 
       {!candlesBlown && (
@@ -356,7 +356,7 @@ function LoveLetter() {
         scalar: 2,
         colors: ["#ff0080", "#ff6b9d", "#ffd700", "#ff1744"],
       });
-    } catch (_) {}
+    } catch (_) { }
 
     setTimeout(() => {
       setIsOpen(true);
@@ -374,41 +374,51 @@ function LoveLetter() {
       <div className="section-divider" />
 
       {!isOpen ? (
-        /* ─── Sealed Vintage Love Envelope ─── */
-        <div
-          className={`sealed-envelope-wrapper ${isOpening ? "unsealing" : ""}`}
-          onClick={handleOpen}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && handleOpen()}
-          aria-label="Open Love Letter"
-        >
-          <div className="envelope-stamp">
-            <span className="stamp-sub">AIR MAIL</span>
-            <div className="stamp-heart">💖</div>
-            <span className="stamp-sub">WITH LOVE</span>
-          </div>
+        /* ─── Cute Realistic 3D Love Envelope ─── */
+        <div className="envelope-interactive-zone">
+          <div
+            className={`envelope-container ${isOpening ? "unsealing" : ""}`}
+            onClick={handleOpen}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && handleOpen()}
+            aria-label="Open Love Letter"
+          >
+            {/* Triangular Top Flap */}
+            <div className="envelope-top-flap" />
 
-          <div className="envelope-badge">💌 PRIVATE & CONFIDENTIAL</div>
+            {/* Diagonal Left & Right Fold Lines */}
+            <div className="envelope-fold-left" />
+            <div className="envelope-fold-right" />
 
-          <div className="envelope-address">
-            <p className="to-line">
-              To: <strong>Meri Pyaari Wifey, Laiba Ahmad</strong> 🌹
-            </p>
-            <p className="from-line">
-              From: <strong>Your MianG</strong> 💍
-            </p>
-          </div>
+            {/* Vintage Air Mail Stamp (Top Right) */}
+            <div className="envelope-stamp">
+              <span className="stamp-sub">AIR MAIL</span>
+              <div className="stamp-heart">💖</div>
+              <span className="stamp-sub">10 SEPT</span>
+            </div>
 
-          <div className="wax-seal-container">
+            {/* 3D Wax Seal Holding the Flap */}
             <div className="wax-seal">
               <span className="seal-heart">💖</span>
               <span className="seal-text">SEALED</span>
             </div>
+
+            {/* Handwritten Addressing in Lower Half */}
+            <div className="envelope-address-area">
+              <p className="to-line">
+                To: <span className="address-name">Meri Pyaari Wifey, Laiba Ahmad</span> 🌹
+              </p>
+              <p className="from-line">
+                From: <span className="address-from">Your MianG</span> 💍
+              </p>
+            </div>
           </div>
 
           <p className="envelope-cta">
-            <span>✨ Tap to Break the Seal & Read Letter ✨</span>
+            <span className="cta-icon">✨</span>
+            <span>Tap the Envelope to Break the Seal & Open</span>
+            <span className="cta-icon">✨</span>
           </p>
         </div>
       ) : (
@@ -1081,76 +1091,76 @@ export default function BirthdayPage() {
       <main key={`main-${sessionKey}`}>
         {/* ─── Hero Section ─── */}
         <section className="hero-section">
-        <FloatingHearts />
-        <div className="hero-content">
-          <div className="birthday-badge">🎂 Happy Birthday 🎂</div>
-          <div className="hero-title-wrapper">
-            <h1 className="hero-title">{BIRTHDAY_NAME}</h1>
+          <FloatingHearts />
+          <div className="hero-content">
+            <div className="birthday-badge">🎂 Happy Birthday 🎂</div>
+            <div className="hero-title-wrapper">
+              <h1 className="hero-title">{BIRTHDAY_NAME}</h1>
+            </div>
+            <p className="hero-subtitle">✨ The Most Beautiful Soul ✨</p>
+            <p className="hero-age-line">
+              Celebrating <span>{age}</span> Years of Pure Magic
+            </p>
+            <p className="hero-message">
+              A special birthday celebration for the most amazing person — <strong className="sweet-potato-highlight">Moiiiiiiii Wifey G</strong>! It&apos;s the <strong>{age}rd Birthday</strong> of my Sweet potato 🎂💖 Today and always, you deserve all the love, all the stars, and all the happiness in the entire universe. ✨
+            </p>
+            <button
+              className="cta-button"
+              onClick={() => document.getElementById("countdown")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              🌟 Explore Your Surprises 🌟
+            </button>
           </div>
-          <p className="hero-subtitle">✨ The Most Beautiful Soul ✨</p>
-          <p className="hero-age-line">
-            Celebrating <span>{age}</span> Years of Pure Magic
-          </p>
-          <p className="hero-message">
-            A special birthday celebration for the most amazing person — <strong className="sweet-potato-highlight">Moiiiiiiii Wifey G</strong>! It&apos;s the <strong>{age}rd Birthday</strong> of my Sweet potato 🎂💖 Today and always, you deserve all the love, all the stars, and all the happiness in the entire universe. ✨
-          </p>
-          <button
-            className="cta-button"
+          <div
+            className="scroll-indicator"
             onClick={() => document.getElementById("countdown")?.scrollIntoView({ behavior: "smooth" })}
           >
-            🌟 Explore Your Surprises 🌟
+            <span />
+          </div>
+        </section>
+
+        {/* ─── Countdown ─── */}
+        <Countdown />
+
+        {/* ─── Qualities ─── */}
+        <QualitiesSection />
+
+        {/* ─── Cake ─── */}
+        <CakeSection />
+
+        {/* ─── Reasons ─── */}
+        <ReasonsSection />
+
+        {/* ─── Love Letter ─── */}
+        <LoveLetter />
+
+        {/* ─── Photo Memories ─── */}
+        <PhotoMemories />
+
+        {/* ─── Surprise Gift ─── */}
+        <GiftSection />
+
+        {/* ─── Timeline ─── */}
+        <Timeline />
+
+        {/* ─── Footer ─── */}
+        <footer className="footer">
+          <div className="footer-hearts">💖💕💗💝💖</div>
+          <p className="footer-text">Made with all my love for you, {BIRTHDAY_NAME} 🌹</p>
+          <p className="footer-sub">You are my everything, my forever, my always 💍</p>
+          <p className="footer-year">
+            Happy {age}{getOrdinal(age)} Birthday • September 10, {BIRTHDAY_YEAR} 💫
+          </p>
+          <button
+            className="relock-btn"
+            onClick={handleRelock}
+            title="Click to lock again"
+          >
+            🔒 Lock Website
           </button>
-        </div>
-        <div
-          className="scroll-indicator"
-          onClick={() => document.getElementById("countdown")?.scrollIntoView({ behavior: "smooth" })}
-        >
-          <span />
-        </div>
-      </section>
-
-      {/* ─── Countdown ─── */}
-      <Countdown />
-
-      {/* ─── Qualities ─── */}
-      <QualitiesSection />
-
-      {/* ─── Cake ─── */}
-      <CakeSection />
-
-      {/* ─── Reasons ─── */}
-      <ReasonsSection />
-
-      {/* ─── Love Letter ─── */}
-      <LoveLetter />
-
-      {/* ─── Photo Memories ─── */}
-      <PhotoMemories />
-
-      {/* ─── Surprise Gift ─── */}
-      <GiftSection />
-
-      {/* ─── Timeline ─── */}
-      <Timeline />
-
-      {/* ─── Footer ─── */}
-      <footer className="footer">
-        <div className="footer-hearts">💖💕💗💝💖</div>
-        <p className="footer-text">Made with all my love for you, {BIRTHDAY_NAME} 🌹</p>
-        <p className="footer-sub">You are my everything, my forever, my always 💍</p>
-        <p className="footer-year">
-          Happy {age}{getOrdinal(age)} Birthday • September 10, {BIRTHDAY_YEAR} 💫
-        </p>
-        <button
-          className="relock-btn"
-          onClick={handleRelock}
-          title="Click to lock again"
-        >
-          🔒 Lock Website
-        </button>
-        <span className="footer-infinity">∞</span>
-      </footer>
-    </main>
-  </>
+          <span className="footer-infinity">∞</span>
+        </footer>
+      </main>
+    </>
   );
 }
