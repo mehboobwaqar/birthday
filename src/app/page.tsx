@@ -1,0 +1,749 @@
+"use client";
+
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+
+// ─── Birthday Config ───
+const BIRTHDAY_NAME = "Laiba Ahmad";
+const BIRTHDAY_DATE = new Date("2003-09-10");
+const BIRTHDAY_YEAR = 2026;
+
+function getNextBirthday() {
+  const now = new Date();
+  const thisYear = now.getFullYear();
+  const bday = new Date(thisYear, BIRTHDAY_DATE.getMonth(), BIRTHDAY_DATE.getDate());
+  if (now > bday) {
+    bday.setFullYear(thisYear + 1);
+  }
+  return bday;
+}
+
+function getAge() {
+  return BIRTHDAY_YEAR - BIRTHDAY_DATE.getFullYear();
+}
+
+function getOrdinal(n: number) {
+  if (n === 1 || n === 21 || n === 31) return "st";
+  if (n === 2 || n === 22) return "nd";
+  if (n === 3 || n === 23) return "rd";
+  return "th";
+}
+
+// ─── Star Field Background ───
+function StarField() {
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 80 }, (_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        duration: 3 + Math.random() * 5,
+        delay: Math.random() * 5,
+        brightness: 0.3 + Math.random() * 0.7,
+        size: 1 + Math.random() * 2,
+      })),
+    []
+  );
+
+  return (
+    <div className="starfield">
+      {stars.map((star) => (
+        <div
+          key={star.id}
+          className="star"
+          style={{
+            left: `${star.left}%`,
+            top: `${star.top}%`,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            animationDelay: `${star.delay}s`,
+            "--duration": `${star.duration}s`,
+            "--brightness": star.brightness,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Floating Hearts Component ───
+function FloatingHearts() {
+  const hearts = ["💖", "💕", "💗", "✨", "🌸", "💝", "🦋", "🌹", "💫", "💐", "🌺", "💎", "⭐", "🎀", "🌷"];
+  const items = useMemo(
+    () =>
+      Array.from({ length: 25 }, (_, i) => ({
+        id: i,
+        emoji: hearts[i % hearts.length],
+        left: Math.random() * 100,
+        delay: Math.random() * 12,
+        duration: 10 + Math.random() * 15,
+        size: 0.7 + Math.random() * 1.5,
+      })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  return (
+    <div className="particles-container">
+      {items.map((item) => (
+        <span
+          key={item.id}
+          className="floating-heart"
+          style={{
+            left: `${item.left}%`,
+            animationDelay: `${item.delay}s`,
+            animationDuration: `${item.duration}s`,
+            fontSize: `${item.size}rem`,
+          }}
+        >
+          {item.emoji}
+        </span>
+      ))}
+      {Array.from({ length: 40 }, (_, i) => (
+        <span
+          key={`sparkle-${i}`}
+          className="sparkle"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 6}s`,
+            animationDuration: `${2 + Math.random() * 4}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Countdown Component ───
+function Countdown() {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isBirthday, setIsBirthday] = useState(false);
+
+  useEffect(() => {
+    function update() {
+      const now = new Date();
+      if (now.getMonth() === BIRTHDAY_DATE.getMonth() && now.getDate() === BIRTHDAY_DATE.getDate()) {
+        setIsBirthday(true);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      const target = getNextBirthday();
+      const diff = target.getTime() - now.getTime();
+      if (diff <= 0) { setIsBirthday(true); return; }
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      });
+    }
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const age = getAge();
+
+  return (
+    <section className="countdown-section" id="countdown">
+      <h2 className="section-title">
+        {isBirthday ? "🎉 It's Her Special Day! 🎉" : "✨ The Countdown Has Begun ✨"}
+      </h2>
+      <div className="section-divider" />
+      {!isBirthday ? (
+        <div className="countdown-container">
+          {[
+            { value: timeLeft.days, label: "Days" },
+            { value: timeLeft.hours, label: "Hours" },
+            { value: timeLeft.minutes, label: "Minutes" },
+            { value: timeLeft.seconds, label: "Seconds" },
+          ].map((item) => (
+            <div className="countdown-item" key={item.label}>
+              <div className="countdown-number">{String(item.value).padStart(2, "0")}</div>
+              <div className="countdown-label">{item.label}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="birthday-active-message">
+          🎂 Happy {age}{getOrdinal(age)} Birthday, {BIRTHDAY_NAME}! 🎂
+        </div>
+      )}
+    </section>
+  );
+}
+
+// ─── Qualities Section ───
+function QualitiesSection() {
+  const qualities = [
+    { emoji: "👑", word: "Queen" },
+    { emoji: "🌹", word: "Beautiful" },
+    { emoji: "💎", word: "Precious" },
+    { emoji: "🦋", word: "Graceful" },
+    { emoji: "⭐", word: "Amazing" },
+    { emoji: "🌸", word: "Kind" },
+    { emoji: "💖", word: "Loving" },
+    { emoji: "✨", word: "Magical" },
+    { emoji: "🌺", word: "Stunning" },
+    { emoji: "🎀", word: "Perfect" },
+    { emoji: "💫", word: "Radiant" },
+    { emoji: "🌷", word: "Elegant" },
+  ];
+
+  return (
+    <section className="qualities-section" id="qualities">
+      <h2 className="section-title">👑 Words That Describe You 👑</h2>
+      <div className="section-divider" />
+      <div className="qualities-grid">
+        {qualities.map((q, i) => (
+          <div className="quality-card" key={i}>
+            <span className="quality-emoji">{q.emoji}</span>
+            <span className="quality-word">{q.word}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Cake Section with Interactive Candles ───
+function CakeSection() {
+  const [candlesBlown, setCandlesBlown] = useState(false);
+  const age = getAge();
+
+  const handleBlowCandles = useCallback(async () => {
+    if (candlesBlown) return;
+    setCandlesBlown(true);
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      // Multi-burst celebration
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          confetti({
+            particleCount: 80,
+            spread: 100 + i * 20,
+            origin: { y: 0.5, x: 0.3 + Math.random() * 0.4 },
+            colors: ["#ff0080", "#ffd700", "#ff6b9d", "#ce93d8", "#00f5ff"],
+          });
+        }, i * 300);
+      }
+    } catch (e) {
+      console.log("Confetti error:", e);
+    }
+  }, [candlesBlown]);
+
+  return (
+    <section className="cake-section" id="cake">
+      <h2 className="section-title">🎂 Make a Wish, Laiba! 🎂</h2>
+      <div className="section-divider" />
+
+      {!candlesBlown && (
+        <div className="candles-row">
+          {Array.from({ length: 7 }, (_, i) => (
+            <div className="candle" key={i}>
+              <span className="candle-flame">🔥</span>
+              <div className="candle-stick" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="cake-container" onClick={handleBlowCandles}>
+        <span className="cake-emoji">{candlesBlown ? "🎉" : "🎂"}</span>
+        <div className="cake-glow" />
+      </div>
+
+      <div className="age-badge">{age}</div>
+
+      <button className={`blow-candles-btn ${candlesBlown ? "blown" : ""}`} onClick={handleBlowCandles}>
+        {candlesBlown ? "🎉 Wish Made! 🎉" : "💨 Blow the Candles!"}
+      </button>
+
+      <p className="cake-message" style={{ marginTop: "1.5rem" }}>
+        {candlesBlown
+          ? `Every wish you make deserves to come true, Laiba! ✨ Here's to an incredible year of being ${age}! 🌟`
+          : `Close your eyes, make a wish, and blow out the candles! ✨ You deserve every dream come true! 💫`}
+      </p>
+    </section>
+  );
+}
+
+// ─── Reasons to Love Section ───
+function ReasonsSection() {
+  const reasons = [
+    { text: "Your smile can literally light up the entire room", emoji: "😊" },
+    { text: "The way you care about everyone around you", emoji: "💝" },
+    { text: "Your beautiful heart that's full of kindness", emoji: "💖" },
+    { text: "How strong and brave you are in everything", emoji: "💪" },
+    { text: "Your laughter is the sweetest sound in the world", emoji: "😂" },
+    { text: "The way you make everything feel so special", emoji: "✨" },
+    { text: "Your eyes that tell the most beautiful stories", emoji: "👀" },
+    { text: "How you inspire me to be a better person every day", emoji: "🌟" },
+    { text: "Your intelligence and wisdom beyond your years", emoji: "🧠" },
+    { text: "Simply everything about you — you are perfect", emoji: "👑" },
+  ];
+
+  return (
+    <section className="reasons-section" id="reasons">
+      <h2 className="section-title">💕 10 Reasons You&apos;re Amazing 💕</h2>
+      <div className="section-divider" />
+      <div className="reasons-container">
+        {reasons.map((reason, i) => (
+          <div className="reason-item" key={i}>
+            <span className="reason-number">{i + 1}.</span>
+            <span className="reason-text">{reason.text}</span>
+            <span className="reason-emoji">{reason.emoji}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Wishes Section ───
+function WishesSection() {
+  const wishes = [
+    { icon: "🌟", title: "Shine Bright", text: "May your light continue to brighten every room you walk into. You are the star of every story worth telling." },
+    { icon: "🦋", title: "Beautiful Soul", text: "Your kindness and grace make this world a better place. Never stop being the incredible person you are." },
+    { icon: "🌹", title: "Eternal Love", text: "Every moment with you is a blessing. My heart belongs to you today, tomorrow, and for all of eternity." },
+    { icon: "🎓", title: "Dream Big", text: "May all your wildest dreams come true this year. The world is waiting for someone as extraordinary as you." },
+    { icon: "💎", title: "Precious Gem", text: "You are rare, precious, and absolutely priceless. The universe created its masterpiece when it made you." },
+    { icon: "🌈", title: "Endless Joy", text: "May your days overflow with laughter, love, and every color of happiness that life has to offer." },
+  ];
+
+  return (
+    <section className="wishes-section" id="wishes">
+      <h2 className="section-title">🌟 Birthday Wishes for You 🌟</h2>
+      <div className="section-divider" />
+      <div className="wishes-grid">
+        {wishes.map((wish, i) => (
+          <div className="wish-card" key={i}>
+            <span className="wish-icon">{wish.icon}</span>
+            <h3 className="wish-title">{wish.title}</h3>
+            <p className="wish-text">{wish.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Love Letter Section ───
+function LoveLetter() {
+  const age = getAge();
+  return (
+    <section className="letter-section" id="letter">
+      <h2 className="section-title">💌 A Letter From My Heart 💌</h2>
+      <div className="section-divider" />
+      <div className="letter-container">
+        <p className="letter-greeting">My Dearest Laiba,</p>
+        <div className="letter-body">
+          <p>
+            On this beautiful day, the world became a better place because you were born into it.
+            Your smile lights up the darkest days, and your laughter is the <span className="highlight">sweetest melody</span> I&apos;ve ever heard.
+          </p>
+          <p>
+            You are not just beautiful on the outside — your heart, your soul, your kindness — <span className="highlight">everything about you is absolutely perfect</span>.
+            Every single day with you feels like a gift I don&apos;t deserve but am infinitely grateful for.
+          </p>
+          <p>
+            As you turn <span className="highlight">{age}</span>, I want you to know that my love for you grows deeper with every passing second.
+            You are my today, my tomorrow, and my forever. Happy Birthday, my love! 🌹
+          </p>
+          <p>
+            May this year bring you everything your heart desires and more.
+            You deserve all the happiness, all the love, and all the beautiful things this world has to offer.
+            I promise to be right beside you through <span className="highlight">every moment, every dream, every adventure</span>. 💖
+          </p>
+          <p>
+            You make me want to be a better person. You make every ordinary moment extraordinary.
+            And I want to spend the rest of my life making sure you know just how <span className="highlight">special and loved</span> you truly are. 🥺💕
+          </p>
+        </div>
+        <p className="letter-signature">Forever & Always Yours ❤️</p>
+      </div>
+    </section>
+  );
+}
+
+// ─── Timeline Section ───
+function Timeline() {
+  const age = getAge();
+  const milestones = [
+    { emoji: "👶", title: "September 10, 2003", text: "An angel was born & the world became a beautiful place" },
+    { emoji: "🌸", title: "Growing Up Beautiful", text: "Becoming the most incredible, kind, and amazing person" },
+    { emoji: "💕", title: "Our Paths Crossed", text: "The best thing that ever happened in this universe" },
+    { emoji: "💍", title: "My Future Wifey", text: "The person I want to spend my entire life with" },
+    { emoji: "🎂", title: `Turning ${age} in ${BIRTHDAY_YEAR}`, text: "This is just the beginning of our beautiful forever" },
+  ];
+
+  return (
+    <section className="timeline-section" id="timeline">
+      <h2 className="section-title">✨ Our Beautiful Story ✨</h2>
+      <div className="section-divider" />
+      <div className="timeline">
+        {milestones.map((item, i) => (
+          <div className="timeline-item" key={i}>
+            <div className="timeline-dot" />
+            <div className="timeline-content">
+              <span className="timeline-emoji">{item.emoji}</span>
+              <h3 className="timeline-title">{item.title}</h3>
+              <p className="timeline-text">{item.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Surprise Gift Section ───
+function GiftSection() {
+  const [opened, setOpened] = useState(false);
+
+  const handleOpen = useCallback(async () => {
+    if (opened) return;
+    setOpened(true);
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      // Heart-shaped confetti
+      const heart = confetti.shapeFromPath({ path: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" });
+      confetti({ shapes: [heart], particleCount: 60, spread: 100, origin: { y: 0.5 }, scalar: 2, colors: ["#ff0080", "#ff6b9d", "#ffd700"] });
+      setTimeout(() => {
+        confetti({ particleCount: 100, spread: 160, origin: { y: 0.6 }, colors: ["#ff0080", "#ffd700", "#ce93d8", "#00f5ff"] });
+      }, 500);
+    } catch (e) {
+      console.log("Confetti error:", e);
+    }
+  }, [opened]);
+
+  return (
+    <section className="gift-section" id="gift">
+      <h2 className="section-title">🎁 A Surprise for You 🎁</h2>
+      <div className="section-divider" />
+
+      <div className={`gift-box ${opened ? "opened" : ""}`} onClick={handleOpen}>
+        {opened ? "💝" : "🎁"}
+      </div>
+
+      {!opened && (
+        <p className="gift-message">✨ Tap the gift to open your surprise! ✨</p>
+      )}
+
+      {opened && (
+        <div className="gift-reveal">
+          <p className="gift-reveal-text">You are my greatest gift! 💖</p>
+          <p className="gift-reveal-sub">
+            No gift in this world compares to having you in my life, Laiba. You are my everything. 🥺✨
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
+// ─── Photo Memories Section ───
+function PhotoMemories() {
+  const TOTAL_PHOTOS = 25;
+  const [revealedCards, setRevealedCards] = useState<Set<number>>(new Set());
+  const [justRevealed, setJustRevealed] = useState<number | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const mysteryEmojis = ["💖", "🎁", "💝", "🌹", "✨", "💕", "🦋", "🌸", "💫", "🎀",
+    "💎", "🌺", "⭐", "🌷", "💗", "🎂", "👑", "🌟", "💐", "🎉",
+    "🥰", "💘", "🌈", "🎊", "💞"];
+
+  const captions = [
+    "Our beautiful moment 💕", "Together forever 💖", "My favorite person 🌹",
+    "Love at first sight 💫", "You & Me ✨", "Perfect together 💝",
+    "My sunshine 🌟", "Sweet memories 🦋", "Us forever 💕", "Best day ever 🎀",
+    "My heart 💖", "Beautiful us 🌸", "Always & forever 💫", "Our story 💝",
+    "My everything ✨", "Love you 🌹", "Priceless moment 💎", "My queen 👑",
+    "Together 💕", "Our journey 🌟", "Soulmates 💖", "My world 🌸",
+    "Forever yours 💫", "Made for each other 💝", "The best of us ✨"
+  ];
+
+  const handleReveal = useCallback(async (index: number) => {
+    if (revealedCards.has(index)) {
+      // Already revealed — open lightbox
+      setLightboxIndex(index);
+      return;
+    }
+    setJustRevealed(index);
+    setRevealedCards(prev => new Set([...Array.from(prev), index]));
+
+    // Mini confetti on reveal
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 25,
+        spread: 50,
+        origin: { y: 0.7 },
+        colors: ["#ff0080", "#ffd700", "#ce93d8"],
+        scalar: 0.8,
+      });
+    } catch (_) {}
+
+    setTimeout(() => setJustRevealed(null), 900);
+  }, [revealedCards]);
+
+  const handleRevealAll = useCallback(async () => {
+    const allCards = new Set(Array.from({ length: TOTAL_PHOTOS }, (_, i) => i));
+    setRevealedCards(allCards);
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({ particleCount: 100, spread: 120, origin: { y: 0.5 }, colors: ["#ff0080", "#ffd700", "#ce93d8", "#00f5ff"] });
+    } catch (_) {}
+  }, []);
+
+  // Lightbox navigation (only among revealed cards)
+  const revealedList = Array.from(revealedCards).sort((a, b) => a - b);
+
+  const goToNext = useCallback(() => {
+    if (lightboxIndex === null) return;
+    const curPos = revealedList.indexOf(lightboxIndex);
+    if (curPos < revealedList.length - 1) setLightboxIndex(revealedList[curPos + 1]);
+    else setLightboxIndex(revealedList[0]); // wrap
+  }, [lightboxIndex, revealedList]);
+
+  const goToPrev = useCallback(() => {
+    if (lightboxIndex === null) return;
+    const curPos = revealedList.indexOf(lightboxIndex);
+    if (curPos > 0) setLightboxIndex(revealedList[curPos - 1]);
+    else setLightboxIndex(revealedList[revealedList.length - 1]); // wrap
+  }, [lightboxIndex, revealedList]);
+
+  // Keyboard support for lightbox
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxIndex(null);
+      if (e.key === "ArrowRight") goToNext();
+      if (e.key === "ArrowLeft") goToPrev();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [lightboxIndex, goToNext, goToPrev]);
+
+  return (
+    <>
+      <section className="memories-section" id="memories">
+        <h2 className="section-title">📸 Our Beautiful Memories 📸</h2>
+        <div className="section-divider" />
+
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <span className="memories-counter">
+            💖 Revealed: <span className="count-num">{revealedCards.size}</span> / {TOTAL_PHOTOS}
+          </span>
+          {revealedCards.size < TOTAL_PHOTOS && (
+            <button className="memories-reveal-all" onClick={handleRevealAll}>
+              ✨ Reveal All ✨
+            </button>
+          )}
+        </div>
+
+        <div className="memories-grid">
+          {Array.from({ length: TOTAL_PHOTOS }, (_, i) => {
+            const isRevealed = revealedCards.has(i);
+            const isJust = justRevealed === i;
+            return (
+              <div
+                key={i}
+                className={`memory-card ${isRevealed ? "revealed" : ""} ${isJust ? "just-revealed" : ""}`}
+                onClick={() => handleReveal(i)}
+              >
+                <div className="memory-card-inner">
+                  {/* Front - Mystery */}
+                  <div className="memory-card-front">
+                    <div className="shimmer-line" />
+                    <span className="mystery-num">#{i + 1}</span>
+                    <span className="mystery-emoji">{mysteryEmojis[i]}</span>
+                    <span className="mystery-text">Tap to reveal</span>
+                  </div>
+                  {/* Back - Photo */}
+                  <div className="memory-card-back">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/photos/${i + 1}.jpg`}
+                      alt={`Memory ${i + 1}`}
+                      loading="lazy"
+                    />
+                    <div className="photo-overlay">
+                      <span className="photo-caption">{captions[i]}</span>
+                      <span className="photo-expand">tap to enlarge</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ─── Lightbox Modal ─── */}
+      {lightboxIndex !== null && (
+        <div className="lightbox-overlay" onClick={() => setLightboxIndex(null)}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button className="lightbox-close" onClick={() => setLightboxIndex(null)}>✕</button>
+            {revealedList.length > 1 && (
+              <button className="lightbox-nav prev" onClick={goToPrev}>‹</button>
+            )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/photos/${lightboxIndex + 1}.jpg`}
+              alt={`Memory ${lightboxIndex + 1}`}
+            />
+            <p className="lightbox-caption">{captions[lightboxIndex]}</p>
+            <p className="lightbox-counter">
+              {revealedList.indexOf(lightboxIndex) + 1} / {revealedList.length}
+            </p>
+            {revealedList.length > 1 && (
+              <button className="lightbox-nav next" onClick={goToNext}>›</button>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ─── Envelope Intro ───
+function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
+  const [opened, setOpened] = useState(false);
+
+  const handleClick = () => {
+    setOpened(true);
+    onOpen();
+  };
+
+  return (
+    <div className={`envelope-overlay ${opened ? "opened" : ""}`} onClick={handleClick}>
+      <div className="envelope-glow-ring" />
+      <div className="envelope-glow-ring" />
+      <div className="envelope-glow-ring" />
+      <span className="envelope">💌</span>
+      <p className="envelope-text">You have a special message, Laiba! 💖</p>
+      <p className="envelope-hint">✨ Tap to open your surprise ✨</p>
+    </div>
+  );
+}
+
+// ─── Main Page ───
+export default function BirthdayPage() {
+  const [envelopeOpened, setEnvelopeOpened] = useState(false);
+  const confettiFired = useRef(false);
+
+  const fireConfetti = useCallback(async () => {
+    if (confettiFired.current) return;
+    confettiFired.current = true;
+
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+
+      // Grand entrance confetti
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ["#ff0080", "#ff6b9d", "#ffd700", "#ce93d8", "#f48fb1", "#00f5ff"] });
+
+      setTimeout(() => {
+        confetti({ particleCount: 60, angle: 60, spread: 60, origin: { x: 0, y: 0.6 }, colors: ["#ff0080", "#ff6b9d", "#ffd700"] });
+      }, 250);
+
+      setTimeout(() => {
+        confetti({ particleCount: 60, angle: 120, spread: 60, origin: { x: 1, y: 0.6 }, colors: ["#ce93d8", "#f48fb1", "#ffd700"] });
+      }, 500);
+
+      setTimeout(() => {
+        confetti({ particleCount: 40, spread: 160, origin: { y: 0.35 }, shapes: ["star"], colors: ["#ffd700", "#fff176", "#00f5ff"], scalar: 1.5 });
+      }, 900);
+
+      // Extra sparkle burst
+      setTimeout(() => {
+        confetti({ particleCount: 80, spread: 100, origin: { y: 0.5 }, colors: ["#ff0080", "#ffd700", "#00f5ff"], scalar: 1.2 });
+      }, 1400);
+    } catch (e) {
+      console.log("Confetti error:", e);
+    }
+  }, []);
+
+  const handleEnvelopeOpen = useCallback(() => {
+    setEnvelopeOpened(true);
+    setTimeout(() => fireConfetti(), 900);
+  }, [fireConfetti]);
+
+  const age = getAge();
+
+  return (
+    <main>
+      <StarField />
+      <EnvelopeIntro onOpen={handleEnvelopeOpen} />
+
+      {/* ─── Hero Section ─── */}
+      <section className="hero-section">
+        <FloatingHearts />
+        <div className="hero-content">
+          <div className="birthday-badge">🎂 Happy Birthday 🎂</div>
+          <div className="hero-title-wrapper">
+            <h1 className="hero-title">{BIRTHDAY_NAME}</h1>
+          </div>
+          <p className="hero-subtitle">✨ The Most Beautiful Soul ✨</p>
+          <p className="hero-age-line">
+            Celebrating <span>{age}</span> years of pure magic
+          </p>
+          <p className="hero-message">
+            Today we celebrate the most amazing, kind-hearted, and beautiful person in the entire universe.
+            A day as special as you deserves all the love, all the stars, and all the happiness in the world. 💖
+          </p>
+          <button
+            className="cta-button"
+            onClick={() => document.getElementById("countdown")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            🌟 Explore Your Surprises 🌟
+          </button>
+        </div>
+        <div
+          className="scroll-indicator"
+          onClick={() => document.getElementById("countdown")?.scrollIntoView({ behavior: "smooth" })}
+        >
+          <span />
+        </div>
+      </section>
+
+      {/* ─── Countdown ─── */}
+      <Countdown />
+
+      {/* ─── Qualities ─── */}
+      <QualitiesSection />
+
+      {/* ─── Cake ─── */}
+      <CakeSection />
+
+      {/* ─── Reasons ─── */}
+      <ReasonsSection />
+
+      {/* ─── Wishes ─── */}
+      <WishesSection />
+
+      {/* ─── Love Letter ─── */}
+      <LoveLetter />
+
+      {/* ─── Photo Memories ─── */}
+      <PhotoMemories />
+
+      {/* ─── Surprise Gift ─── */}
+      <GiftSection />
+
+      {/* ─── Timeline ─── */}
+      <Timeline />
+
+      {/* ─── Footer ─── */}
+      <footer className="footer">
+        <div className="footer-hearts">💖💕💗💝💖</div>
+        <p className="footer-text">Made with all my love for you, {BIRTHDAY_NAME} 🌹</p>
+        <p className="footer-sub">You are my everything, my forever, my always 💍</p>
+        <p className="footer-year">
+          Happy {age}{getOrdinal(age)} Birthday • September 10, {BIRTHDAY_YEAR} 💫
+        </p>
+        <span className="footer-infinity">∞</span>
+      </footer>
+    </main>
+  );
+}
