@@ -2646,3 +2646,219 @@ body {
     padding: 0 0.8rem;
   }
 }
+
+/* ============ MIDNIGHT COUNTDOWN GATE ============ */
+.midnight-gate-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(32, 4, 48, 0.98), rgba(9, 1, 16, 0.99));
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  touch-action: pan-y;
+  animation: fadeInGate 0.5s ease-out;
+}
+
+.midnight-stars {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #ffd700, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #ff0080, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 90px 40px, #00f5ff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 160px 120px, #ffd700, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 240px 80px, #fff, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 280px 280px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.midnight-gate-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 540px;
+  background: linear-gradient(145deg, rgba(34, 5, 50, 0.88), rgba(16, 2, 24, 0.96));
+  border: 2px solid rgba(255, 107, 157, 0.4);
+  border-radius: 28px;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(255, 0, 128, 0.25);
+  animation: midnightCardPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes midnightCardPop {
+  0% { transform: scale(0.85) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.midnight-crown-icon {
+  font-size: 3.5rem;
+  margin-bottom: 0.6rem;
+  animation: crownFloat 1.2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+}
+
+.midnight-badge {
+  display: inline-block;
+  padding: 0.32rem 1rem;
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  color: #ffd700;
+  margin-bottom: 0.9rem;
+}
+
+.midnight-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.4rem, 4vw, 1.9rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+  text-shadow: 0 0 25px rgba(255, 0, 128, 0.6);
+}
+
+.midnight-subtitle {
+  font-size: 0.92rem;
+  color: #ffd700;
+  line-height: 1.6;
+  margin-bottom: 1.6rem;
+  font-weight: 300;
+}
+
+.midnight-subtitle strong {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.midnight-timer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.6rem;
+}
+
+.midnight-timer-box {
+  background: linear-gradient(145deg, rgba(46, 7, 66, 0.85), rgba(20, 2, 30, 0.95));
+  border: 1.5px solid rgba(255, 107, 157, 0.35);
+  border-radius: 18px;
+  padding: 0.9rem 0.4rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 0, 128, 0.15);
+  transition: all 0.3s ease;
+}
+
+.midnight-timer-box:hover {
+  transform: translateY(-3px);
+  border-color: #ffd700;
+  box-shadow: 0 10px 30px rgba(255, 0, 128, 0.35), 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.midnight-timer-num {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 800;
+  color: #ffd700;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+  line-height: 1.1;
+}
+
+.midnight-timer-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #ffb3d1;
+  font-weight: 600;
+  margin-top: 0.35rem;
+}
+
+.midnight-romantic-note {
+  margin-top: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.note-urdu {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.5;
+  margin-bottom: 0.3rem;
+}
+
+.midnight-pulse-heart {
+  font-size: 1.6rem;
+  animation: pulseHeart 1s infinite alternate;
+}
+
+@keyframes pulseHeart {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.25); filter: drop-shadow(0 0 12px #ff0080); }
+}
+
+.midnight-unlocked-banner {
+  padding: 0.8rem 1.2rem;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 0, 128, 0.25));
+  border: 1px solid #ffd700;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 1rem;
+  animation: pulseHeart 0.8s infinite alternate;
+}
+
+.midnight-admin-area {
+  margin-top: 1rem;
+}
+
+.midnight-preview-btn {
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px dashed rgba(255, 215, 0, 0.4);
+  border-radius: 50px;
+  color: rgba(255, 215, 0, 0.75);
+  font-size: 0.74rem;
+  padding: 0.42rem 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.midnight-preview-btn:hover {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  border-color: #ffd700;
+  border-style: solid;
+  transform: scale(1.04);
+}
+
+@media (max-width: 480px) {
+  .midnight-gate-card {
+    padding: 1.6rem 1.1rem;
+    border-radius: 20px;
+  }
+  .midnight-timer-grid {
+    gap: 0.45rem;
+  }
+  .midnight-timer-box {
+    padding: 0.7rem 0.25rem;
+  }
+  .midnight-timer-num {
+    font-size: 1.5rem;
+  }
+  .midnight-timer-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.8px;
+  }
+}
+

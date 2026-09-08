@@ -62,6 +62,23 @@ function getNextBirthday() {
   return bday;
 }
 
+function getMidnightTarget() {
+  // Target: September 10, BIRTHDAY_YEAR at 00:00:00 (Midnight)
+  return new Date(BIRTHDAY_YEAR, 8, 10, 0, 0, 0);
+}
+
+function isMidnightPassed() {
+  if (typeof window === "undefined") return false;
+  try {
+    if (sessionStorage.getItem("miang_midnight_bypassed") === "true") {
+      return true;
+    }
+  } catch {}
+  const now = new Date();
+  const target = getMidnightTarget();
+  return now.getTime() >= target.getTime();
+}
+
 function getAge() {
   return BIRTHDAY_YEAR - BIRTHDAY_DATE.getFullYear();
 }
@@ -145,22 +162,36 @@ function FloatingHearts() {
   );
 }
 
-// ─── Countdown Component ───
-function Countdown() {
+// ─── Midnight Countdown Gate ───
+function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [isBirthday, setIsBirthday] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [autoUnlocked, setAutoUnlocked] = useState(false);
 
   useEffect(() => {
-    function update() {
+    function calculate() {
       const now = new Date();
-      if (now.getMonth() === BIRTHDAY_DATE.getMonth() && now.getDate() === BIRTHDAY_DATE.getDate()) {
-        setIsBirthday(true);
+      const target = getMidnightTarget();
+      const diff = target.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        setIsReady(true);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        if (!autoUnlocked) {
+          setAutoUnlocked(true);
+          try {
+            playAudioCue("success");
+            import("canvas-confetti").then((m) => {
+              m.default({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+            });
+          } catch {}
+          setTimeout(() => {
+            onUnlock();
+          }, 1500);
+        }
         return;
       }
-      const target = getNextBirthday();
-      const diff = target.getTime() - now.getTime();
-      if (diff <= 0) { setIsBirthday(true); return; }
+
       setTimeLeft({
         days: Math.floor(diff / (1000 * 60 * 60 * 24)),
         hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
@@ -168,39 +199,77 @@ function Countdown() {
         seconds: Math.floor((diff / 1000) % 60),
       });
     }
-    update();
-    const interval = setInterval(update, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
-  const age = getAge();
+    calculate();
+    const interval = setInterval(calculate, 1000);
+    return () => clearInterval(interval);
+  }, [autoUnlocked, onUnlock]);
+
+  const handleManualPreview = () => {
+    try {
+      sessionStorage.setItem("miang_midnight_bypassed", "true");
+    } catch {}
+    onUnlock();
+  };
 
   return (
-    <section className="countdown-section" id="countdown">
-      <h2 className="section-title">
-        {isBirthday ? "🎉 It's Her Special Day! 🎉" : "✨ The Countdown Has Begun ✨"}
-      </h2>
-      <div className="section-divider" />
-      {!isBirthday ? (
-        <div className="countdown-container">
+    <div className="midnight-gate-overlay">
+      <div className="midnight-stars" />
+      <div className="midnight-gate-card">
+        <div className="midnight-crown-icon">👑</div>
+        <span className="midnight-badge">🔐 BIRTHDAY SURPRISE VAULT</span>
+
+        <h2 className="midnight-title">Shhh... Sabar Meri Jaan! 🤫💖</h2>
+
+        <p className="midnight-subtitle">
+          Aapka secret birthday surprise lock hai!
+          <br />
+          <strong>10 September raat 12:00:00 baje</strong> ye darwaza khud ba khud khul jayega... 🎂✨
+        </p>
+
+        {/* ─── Glowing Countdown Grid ─── */}
+        <div className="midnight-timer-grid">
           {[
             { value: timeLeft.days, label: "Days" },
             { value: timeLeft.hours, label: "Hours" },
             { value: timeLeft.minutes, label: "Minutes" },
             { value: timeLeft.seconds, label: "Seconds" },
-          ].map((item) => (
-            <div className="countdown-item" key={item.label}>
-              <div className="countdown-number">{String(item.value).padStart(2, "0")}</div>
-              <div className="countdown-label">{item.label}</div>
+          ].map((unit) => (
+            <div className="midnight-timer-box" key={unit.label}>
+              <div className="midnight-timer-num">
+                {String(unit.value).padStart(2, "0")}
+              </div>
+              <div className="midnight-timer-label">{unit.label}</div>
             </div>
           ))}
         </div>
-      ) : (
-        <div className="birthday-active-message">
-          🎂 Happy {age}{getOrdinal(age)} Birthday, {BIRTHDAY_NAME}! 🎂
+
+        <div className="midnight-romantic-note">
+          <p className="note-urdu">
+            &ldquo;Waqt aahista chal raha hai kyunke khushi bohot badi hai... bas thora sa intezar meri Wifey!&rdquo; 🥺❤️
+          </p>
+          <div className="midnight-pulse-heart">💓</div>
         </div>
-      )}
-    </section>
+
+        {isReady && (
+          <div className="midnight-unlocked-banner">
+            🎉 IT&apos;S FINALLY 12:00 AM! Opening Your Surprises... 💖
+          </div>
+        )}
+
+        {/* Discreet preview button for Mehboob Waqar to test anytime */}
+        <div className="midnight-admin-area">
+          <button
+            type="button"
+            className="midnight-preview-btn"
+            onClick={handleManualPreview}
+            title="MianG Testing Preview"
+          >
+            👑 MianG Preview (Test Mode)
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1182,22 +1251,28 @@ function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
 
 // ─── Main Page ───
 export default function BirthdayPage() {
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+  const [isMidnightUnlocked, setIsMidnightUnlocked] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
   const confettiFired = useRef(false);
 
   useEffect(() => {
     try {
-      if (sessionStorage.getItem("miang_unlocked") === "true") {
-        setIsUnlocked(true);
+      if (sessionStorage.getItem("miang_password_verified") === "true") {
+        setIsPasswordVerified(true);
+      }
+      if (isMidnightPassed()) {
+        setIsMidnightUnlocked(true);
       }
     } catch { }
   }, []);
 
-  // Lock body scroll and keep viewport at top when password gate is active
+  const isFullyUnlocked = isPasswordVerified && isMidnightUnlocked;
+
+  // Lock body scroll and keep viewport at top when website is not fully unlocked
   useEffect(() => {
-    if (!isUnlocked) {
+    if (!isFullyUnlocked) {
       document.body.classList.add("locked-body");
       window.scrollTo(0, 0);
     } else {
@@ -1206,7 +1281,7 @@ export default function BirthdayPage() {
     return () => {
       document.body.classList.remove("locked-body");
     };
-  }, [isUnlocked]);
+  }, [isFullyUnlocked]);
 
   const fireConfetti = useCallback(async () => {
     if (confettiFired.current) return;
@@ -1244,16 +1319,29 @@ export default function BirthdayPage() {
     setTimeout(() => fireConfetti(), 900);
   }, [fireConfetti]);
 
-  const handleUnlock = useCallback(() => {
-    setIsUnlocked(true);
+  const handlePasswordVerified = useCallback(() => {
+    try {
+      sessionStorage.setItem("miang_password_verified", "true");
+    } catch { }
+    setIsPasswordVerified(true);
+    if (isMidnightPassed()) {
+      setIsMidnightUnlocked(true);
+    }
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
+  const handleMidnightUnlock = useCallback(() => {
+    setIsMidnightUnlocked(true);
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
   const handleRelock = useCallback(() => {
     try {
-      sessionStorage.removeItem("miang_unlocked");
+      sessionStorage.removeItem("miang_password_verified");
+      sessionStorage.removeItem("miang_midnight_bypassed");
     } catch { }
-    setIsUnlocked(false);
+    setIsPasswordVerified(false);
+    setIsMidnightUnlocked(false);
     setEnvelopeOpened(false);
     confettiFired.current = false;
     setSessionKey((prev) => prev + 1);
@@ -1271,7 +1359,7 @@ export default function BirthdayPage() {
       <StarField />
 
       {/* Quick Floating Lock Button */}
-      {isUnlocked && (
+      {isFullyUnlocked && (
         <button
           className="floating-lock-btn"
           onClick={handleRelock}
@@ -1283,91 +1371,102 @@ export default function BirthdayPage() {
         </button>
       )}
 
-      {!isUnlocked && (
+      {/* Step 1: Secret Password Gate (MUST ENTER PASSWORD) */}
+      {!isPasswordVerified && (
         <PasswordGate
           key={`gate-${sessionKey}`}
-          onUnlock={handleUnlock}
+          onUnlock={handlePasswordVerified}
         />
       )}
 
-      <EnvelopeIntro
-        key={`envelope-${sessionKey}`}
-        onOpen={handleEnvelopeOpen}
-      />
+      {/* Step 2: Midnight Countdown Gate (AFTER PASSWORD, UNTIL MIDNIGHT) */}
+      {isPasswordVerified && !isMidnightUnlocked && (
+        <MidnightCountdownGate
+          key={`midnight-${sessionKey}`}
+          onUnlock={handleMidnightUnlock}
+        />
+      )}
 
-      <main key={`main-${sessionKey}`}>
-        {/* ─── Hero Section ─── */}
-        <section className="hero-section">
-          <FloatingHearts />
-          <div className="hero-content">
-            <div className="birthday-badge">🎂 Happy Birthday 🎂</div>
-            <div className="hero-title-wrapper">
-              <h1 className="hero-title">{BIRTHDAY_NAME}</h1>
-            </div>
-            <p className="hero-subtitle">✨ The Most Beautiful Soul ✨</p>
-            <p className="hero-age-line">
-              Celebrating <span>{age}</span> Years of Pure Magic
-            </p>
-            <p className="hero-message">
-              A special birthday celebration for the most amazing person — <strong className="sweet-potato-highlight">Moiiiiiiii Wifey G</strong>! It&apos;s the <strong>{age}rd Birthday</strong> of my Sweet potato 🎂💖 Today and always, you deserve all the love, all the stars, and all the happiness in the entire universe. ✨
-            </p>
-            <button
-              className="cta-button"
-              onClick={() => document.getElementById("countdown")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              🌟 Explore Your Surprises 🌟
-            </button>
-          </div>
-          <div
-            className="scroll-indicator"
-            onClick={() => document.getElementById("countdown")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            <span />
-          </div>
-        </section>
+      {/* Step 3: Celebration Envelope & Website Content */}
+      {isFullyUnlocked && (
+        <>
+          <EnvelopeIntro
+            key={`envelope-${sessionKey}`}
+            onOpen={handleEnvelopeOpen}
+          />
 
-        {/* ─── Countdown ─── */}
-        <Countdown />
+          <main key={`main-${sessionKey}`}>
+            {/* ─── Hero Section ─── */}
+            <section className="hero-section">
+              <FloatingHearts />
+              <div className="hero-content">
+                <div className="birthday-badge">🎂 Happy Birthday 🎂</div>
+                <div className="hero-title-wrapper">
+                  <h1 className="hero-title">{BIRTHDAY_NAME}</h1>
+                </div>
+                <p className="hero-subtitle">✨ The Most Beautiful Soul ✨</p>
+                <p className="hero-age-line">
+                  Celebrating <span>{age}</span> Years of Pure Magic
+                </p>
+                <p className="hero-message">
+                  A special birthday celebration for the most amazing person — <strong className="sweet-potato-highlight">Moiiiiiiii Wifey G</strong>! It&apos;s the <strong>{age}rd Birthday</strong> of my Sweet potato 🎂💖 Today and always, you deserve all the love, all the stars, and all the happiness in the entire universe. ✨
+                </p>
+                <button
+                  className="cta-button"
+                  onClick={() => document.getElementById("qualities")?.scrollIntoView({ behavior: "smooth" })}
+                >
+                  🌟 Explore Your Surprises 🌟
+                </button>
+              </div>
+              <div
+                className="scroll-indicator"
+                onClick={() => document.getElementById("qualities")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                <span />
+              </div>
+            </section>
 
-        {/* ─── Qualities ─── */}
-        <QualitiesSection />
+            {/* ─── Qualities ─── */}
+            <QualitiesSection />
 
-        {/* ─── Cake ─── */}
-        <CakeSection />
+            {/* ─── Cake ─── */}
+            <CakeSection />
 
-        {/* ─── Reasons ─── */}
-        <ReasonsSection />
+            {/* ─── Reasons ─── */}
+            <ReasonsSection />
 
-        {/* ─── Love Letter ─── */}
-        <LoveLetter />
+            {/* ─── Love Letter ─── */}
+            <LoveLetter />
 
-        {/* ─── Photo Memories ─── */}
-        <PhotoMemories />
+            {/* ─── Photo Memories ─── */}
+            <PhotoMemories />
 
-        {/* ─── Surprise Gift ─── */}
-        <GiftSection />
+            {/* ─── Surprise Gift ─── */}
+            <GiftSection />
 
-        {/* ─── Timeline ─── */}
-        <Timeline />
+            {/* ─── Timeline ─── */}
+            <Timeline />
 
-        {/* ─── Footer ─── */}
-        <footer className="footer">
-          <div className="footer-hearts">💖💕💗💝💖</div>
-          <p className="footer-text">Made with all my love for you, {BIRTHDAY_NAME} 🌹</p>
-          <p className="footer-sub">You are my everything, my forever, my always 💍</p>
-          <p className="footer-year">
-            Happy {age}{getOrdinal(age)} Birthday • September 10, {BIRTHDAY_YEAR} 💫
-          </p>
-          <button
-            className="relock-btn"
-            onClick={handleRelock}
-            title="Click to lock again"
-          >
-            🔒 Lock Website
-          </button>
-          <span className="footer-infinity">∞</span>
-        </footer>
-      </main>
+            {/* ─── Footer ─── */}
+            <footer className="footer">
+              <div className="footer-hearts">💖💕💗💝💖</div>
+              <p className="footer-text">Made with all my love for you, {BIRTHDAY_NAME} 🌹</p>
+              <p className="footer-sub">You are my everything, my forever, my always 💍</p>
+              <p className="footer-year">
+                Happy {age}{getOrdinal(age)} Birthday • September 10, {BIRTHDAY_YEAR} 💫
+              </p>
+              <button
+                className="relock-btn"
+                onClick={handleRelock}
+                title="Click to lock again"
+              >
+                🔒 Lock Website
+              </button>
+              <span className="footer-infinity">∞</span>
+            </footer>
+          </main>
+        </>
+      )}
     </>
   );
 }
