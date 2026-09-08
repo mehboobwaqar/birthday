@@ -710,7 +710,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
       return;
     }
 
-    if (trimmed === SECRET_PASSWORD) {
+    if (trimmed.toLowerCase() === SECRET_PASSWORD.toLowerCase()) {
       // SUCCESS!
       setIsSuccess(true);
       setErrorIndex(null);
@@ -917,6 +917,19 @@ export default function BirthdayPage() {
     } catch { }
   }, []);
 
+  // Lock body scroll and keep viewport at top when password gate is active
+  useEffect(() => {
+    if (!isUnlocked) {
+      document.body.classList.add("locked-body");
+      window.scrollTo(0, 0);
+    } else {
+      document.body.classList.remove("locked-body");
+    }
+    return () => {
+      document.body.classList.remove("locked-body");
+    };
+  }, [isUnlocked]);
+
   const fireConfetti = useCallback(async () => {
     if (confettiFired.current) return;
     confettiFired.current = true;
@@ -956,13 +969,14 @@ export default function BirthdayPage() {
   const age = getAge();
 
   return (
-    <main>
+    <>
       <StarField />
       {!isUnlocked && <PasswordGate onUnlock={() => setIsUnlocked(true)} />}
       <EnvelopeIntro onOpen={handleEnvelopeOpen} />
 
-      {/* ─── Hero Section ─── */}
-      <section className="hero-section">
+      <main>
+        {/* ─── Hero Section ─── */}
+        <section className="hero-section">
         <FloatingHearts />
         <div className="hero-content">
           <div className="birthday-badge">🎂 Happy Birthday 🎂</div>
@@ -1042,5 +1056,6 @@ export default function BirthdayPage() {
         <span className="footer-infinity">∞</span>
       </footer>
     </main>
+  </>
   );
 }
