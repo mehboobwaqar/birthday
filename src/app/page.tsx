@@ -73,24 +73,23 @@ function getOrdinal(n: number) {
   return "th";
 }
 
-// ─── Star Field Background ───
+// ─── Star Field Background (Optimized) ───
 function StarField() {
   const stars = useMemo(
     () =>
-      Array.from({ length: 80 }, (_, i) => ({
+      Array.from({ length: 30 }, (_, i) => ({
         id: i,
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-        duration: 3 + Math.random() * 5,
-        delay: Math.random() * 5,
-        brightness: 0.3 + Math.random() * 0.7,
-        size: 1 + Math.random() * 2,
+        left: Math.floor(Math.random() * 100),
+        top: Math.floor(Math.random() * 100),
+        duration: 3 + (i % 4),
+        delay: (i % 5) * 0.7,
+        size: 1.5 + (i % 2),
       })),
     []
   );
 
   return (
-    <div className="starfield">
+    <div className="starfield" aria-hidden="true">
       {stars.map((star) => (
         <div
           key={star.id}
@@ -100,35 +99,34 @@ function StarField() {
             top: `${star.top}%`,
             width: `${star.size}px`,
             height: `${star.size}px`,
+            animationDuration: `${star.duration}s`,
             animationDelay: `${star.delay}s`,
-            "--duration": `${star.duration}s`,
-            "--brightness": star.brightness,
-          } as React.CSSProperties}
+          }}
         />
       ))}
     </div>
   );
 }
 
-// ─── Floating Hearts Component ───
+// ─── Floating Hearts Component (Optimized for Mobile) ───
 function FloatingHearts() {
-  const hearts = ["💖", "💕", "💗", "✨", "🌸", "💝", "🦋", "🌹", "💫", "💐", "🌺", "💎", "⭐", "🎀", "🌷"];
+  const hearts = ["💖", "💕", "✨", "🌸", "🌹", "💫", "💝", "🎀", "💗", "🌷"];
   const items = useMemo(
     () =>
-      Array.from({ length: 25 }, (_, i) => ({
+      Array.from({ length: 12 }, (_, i) => ({
         id: i,
         emoji: hearts[i % hearts.length],
-        left: Math.random() * 100,
-        delay: Math.random() * 12,
-        duration: 10 + Math.random() * 15,
-        size: 0.7 + Math.random() * 1.5,
+        left: 5 + (i * 8) % 90,
+        delay: i * 1.1,
+        duration: 12 + (i % 5) * 2,
+        size: 0.9 + (i % 3) * 0.3,
       })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
   return (
-    <div className="particles-container">
+    <div className="particles-container" aria-hidden="true">
       {items.map((item) => (
         <span
           key={item.id}
@@ -142,18 +140,6 @@ function FloatingHearts() {
         >
           {item.emoji}
         </span>
-      ))}
-      {Array.from({ length: 40 }, (_, i) => (
-        <span
-          key={`sparkle-${i}`}
-          className="sparkle"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 6}s`,
-            animationDuration: `${2 + Math.random() * 4}s`,
-          }}
-        />
       ))}
     </div>
   );
@@ -607,16 +593,20 @@ function PhotoMemories() {
                   </div>
                   {/* Back - Photo */}
                   <div className="memory-card-back">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/photos/${i + 1}.jpg`}
-                      alt={`Memory ${i + 1}`}
-                      loading="lazy"
-                    />
-                    <div className="photo-overlay">
-                      <span className="photo-caption">{captions[i]}</span>
-                      <span className="photo-expand">tap to enlarge</span>
-                    </div>
+                    {isRevealed && (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`/photos/${i + 1}.jpg`}
+                          alt={`Memory ${i + 1}`}
+                          loading="lazy"
+                        />
+                        <div className="photo-overlay">
+                          <span className="photo-caption">{captions[i]}</span>
+                          <span className="photo-expand">tap to enlarge</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

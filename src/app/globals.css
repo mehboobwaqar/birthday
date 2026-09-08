@@ -164,13 +164,15 @@ body {
   height: 2px;
   background: white;
   border-radius: 50%;
-  animation: starTwinkle var(--duration) ease-in-out infinite;
-  opacity: 0;
+  animation: starTwinkle 3.5s ease-in-out infinite;
+  opacity: 0.2;
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 @keyframes starTwinkle {
-  0%, 100% { opacity: 0.1; }
-  50% { opacity: var(--brightness); box-shadow: 0 0 6px rgba(255,255,255,0.5); }
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.85; }
 }
 
 /* ============ HERO SECTION ============ */
@@ -202,6 +204,7 @@ body {
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: 1;
   pointer-events: none;
+  contain: strict;
 }
 
 .floating-heart {
@@ -209,28 +212,20 @@ body {
   animation: floatUp linear infinite;
   opacity: 0;
   z-index: 1;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
 }
 
 @keyframes floatUp {
-  0% { transform: translateY(100vh) rotate(0deg) scale(0); opacity: 0; }
-  10% { opacity: 0.9; transform: translateY(90vh) rotate(20deg) scale(1); }
-  50% { transform: translateY(50vh) rotate(180deg) scale(1.1) translateX(20px); }
+  0% { transform: translate3d(0, 100vh, 0) rotate(0deg) scale(0); opacity: 0; }
+  10% { opacity: 0.9; transform: translate3d(0, 90vh, 0) rotate(20deg) scale(1); }
+  50% { transform: translate3d(15px, 50vh, 0) rotate(180deg) scale(1.1); }
   90% { opacity: 0.5; }
-  100% { transform: translateY(-10vh) rotate(360deg) scale(0.3) translateX(-20px); opacity: 0; }
+  100% { transform: translate3d(-15px, -10vh, 0) rotate(360deg) scale(0.3); opacity: 0; }
 }
 
 .sparkle {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: var(--gold);
-  border-radius: 50%;
-  animation: sparkle 3s ease-in-out infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.5) rotate(180deg); box-shadow: 0 0 10px var(--gold), 0 0 20px var(--gold), 0 0 30px var(--gold); }
+  display: none;
 }
 
 .hero-content {
@@ -1265,13 +1260,11 @@ body {
 .memory-card-front .mystery-emoji {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
-  animation: mysteryPulse 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 10px rgba(255, 0, 128, 0.3));
+  transition: transform 0.25s ease;
 }
 
-@keyframes mysteryPulse {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.1) rotate(5deg); }
+.memory-card:hover .memory-card-front .mystery-emoji {
+  transform: scale(1.15);
 }
 
 .memory-card-front .mystery-text {
@@ -1582,8 +1575,66 @@ body {
   50% { box-shadow: 0 5px 35px rgba(255, 0, 128, 0.6), var(--neon-pink); }
 }
 
-/* ============ RESPONSIVE ============ */
+/* ============ RESPONSIVE & MOBILE PERFORMANCE ============ */
 @media (max-width: 768px) {
+  html, body {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* GPU Layer Promotion */
+  main {
+    transform: translateZ(0);
+  }
+
+  /* Modern Off-Screen Caching (content-visibility saves massive GPU/CPU on scroll) */
+  .countdown-section,
+  .qualities-section,
+  .cake-section,
+  .reasons-section,
+  .wishes-section,
+  .letter-section,
+  .memories-section,
+  .gift-section,
+  .timeline {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 600px;
+  }
+
+  /* Optimize heavy backdrop-filter blurs which cause mobile scroll stutter */
+  .quality-card,
+  .reason-item,
+  .wish-card,
+  .letter-paper,
+  .memory-card-front,
+  .timeline-content,
+  .birthday-badge,
+  .countdown-item,
+  .cake-card,
+  .gift-box-wrapper,
+  .password-card {
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  /* Disable heavy infinite hover transforms on mobile touch */
+  .quality-card:hover,
+  .wish-card:hover,
+  .memory-card:hover .memory-card-front {
+    transform: none !important;
+  }
+
+  /* Reduce star and particle load by 50% on mobile */
+  .star:nth-child(even) {
+    display: none !important;
+  }
+
+  .floating-heart:nth-child(2n) {
+    display: none !important;
+  }
+
+  /* Timeline mobile layout */
   .timeline::before { left: 20px; }
 
   .timeline-item,
@@ -1606,6 +1657,7 @@ body {
 
 @media (max-width: 480px) {
   .qualities-grid { grid-template-columns: repeat(2, 1fr); }
+  .memories-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ============ PASSWORD GATE OVERLAY ============ */
