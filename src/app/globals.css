@@ -1475,6 +1475,154 @@ body {
   margin-bottom: 0.8rem;
 }
 
+/* Multi-photo badge on card */
+.timeline-multi-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: rgba(18, 2, 28, 0.85);
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  border-radius: 50px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #ffd700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Multi-photo slider area in modal */
+.timeline-photo-slider-area {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-photo-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 6;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(18, 2, 28, 0.82);
+  border: 1.5px solid rgba(255, 107, 157, 0.5);
+  color: #ffffff;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(10px);
+}
+
+.timeline-photo-nav:hover {
+  background: rgba(255, 0, 128, 0.5);
+  border-color: #ffd700;
+  color: #ffd700;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.timeline-photo-prev { left: 8px; }
+.timeline-photo-next { right: 8px; }
+
+.timeline-photo-counter {
+  display: inline-block;
+  font-size: 0.72rem;
+  color: #ffb3d1;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  margin-top: -0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+/* Horizontal thumbnail preview strip */
+.timeline-thumb-strip {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  overflow-x: auto;
+  padding: 4px;
+  max-width: 100%;
+}
+
+.timeline-thumb-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 107, 157, 0.25);
+  background: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.timeline-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.timeline-thumb-btn.active {
+  border-color: #ffd700;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+  transform: scale(1.08);
+}
+
+/* Meetup Chapter Switcher Bar at Bottom */
+.timeline-meetup-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255, 107, 157, 0.2);
+  margin-top: 0.6rem;
+  gap: 8px;
+}
+
+.meetup-switcher-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.35rem 0.8rem;
+  background: rgba(255, 0, 128, 0.12);
+  border: 1px solid rgba(255, 107, 157, 0.3);
+  border-radius: 50px;
+  color: #ffd700;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  max-width: 45%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meetup-switcher-btn:hover {
+  background: rgba(255, 0, 128, 0.25);
+  border-color: #ffd700;
+  transform: scale(1.04);
+}
+
+.meetup-switcher-center {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
 /* ============ SURPRISE GIFT SECTION ============ */
 .gift-section {
   padding: 6rem 2rem;
@@ -2616,10 +2764,12 @@ body {
   }
 
   .floating-lock-btn {
-    top: 12px;
-    right: 12px;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.72rem;
+    top: auto;
+    bottom: 22px;
+    right: 16px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.74rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75), 0 0 15px rgba(255, 0, 128, 0.4);
   }
 
   /* Compact Envelope on Mobile */

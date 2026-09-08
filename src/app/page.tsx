@@ -545,158 +545,259 @@ function LoveLetter() {
 }
 
 // ─── Timeline Section ───
+// ─── Timeline Section (Our Journey & Meetups) ───
 function Timeline() {
   const age = getAge();
   const [timelineModalIndex, setTimelineModalIndex] = useState<number | null>(null);
-  const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
+  const [activePhotoIdx, setActivePhotoIdx] = useState<number>(0);
+  const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
+  const [loadedPhotos, setLoadedPhotos] = useState<Record<string, boolean>>({});
 
   const milestones = [
     {
       id: 1,
       emoji: "👶",
+      badge: "Blessed Beginning",
+      title: "The Day My Angel Was Born",
       date: "September 10, 2003",
-      title: "The Day An Angel Was Born",
-      text: "The most blessed day when Allah gifted this world an angel — meri pyari Laiba! ❤️",
+      text: "Wo khubsurat din jab Allah Pak ne meri pyari Laiba ko is duniya mein bheja — meri poori kainaat aur meri zindagi ka noor! ❤️",
+      photos: ["/timeline/1.jpg", "/timeline/1_2.jpg", "/timeline/1_3.jpg", "/timeline/1_4.jpg"],
     },
     {
       id: 2,
       emoji: "😘",
+      badge: "The Spark",
+      title: "Where It All Started ('This way 😘')",
       date: "The Beginning",
-      title: "Start of Our Story ('This way 😘')",
-      text: "'This way 😘' se shuru hua safar jo aahista aahista meri poori rooh aur zindagi ban gaya.",
+      text: "'This way 😘' se shuru hone wali baat jo aahista aahista meri poori rooh, meri saans aur meri zindagi ban gayi.",
+      photos: ["/timeline/2.jpg", "/timeline/2_2.jpg", "/timeline/2_3.jpg", "/timeline/2_4.jpg"],
     },
     {
       id: 3,
       emoji: "🌸",
-      date: "Pre-Birthday Chapter",
+      badge: "Pehli Mulakat",
       title: "Our Very First Meetup",
-      text: "Pehli dafa aamne saamne dekh kar dil ki jo halat thi... aankhon mein sharm aur dharhkan tez! Wo lamha hamesha dil mein zinda hai.",
+      date: "First Time In Person",
+      text: "Pehli dafa aamne saamne dekh kar dil ki jo halat thi... aankhon mein sharm, chehre par muskurahat aur dharhkan tez! Wo lamha hamesha dil mein zinda hai.",
+      photos: ["/timeline/3.jpg", "/timeline/3_2.jpg", "/timeline/3_3.jpg", "/timeline/3_4.jpg"],
     },
     {
       id: 4,
-      emoji: "🎂",
-      date: "September 10, 2024",
-      title: "1st Birthday Together",
-      text: "Ek ek din gin kar intezar kiya — dulha dulhan ko dekh kar hamesha ke liye ek hone ka khwaab dekha.",
+      emoji: "🍨",
+      badge: "Random Sweet Day",
+      title: "Ice Cream & Endless Talks",
+      date: "Sweet Memories",
+      text: "Bina kisi plan ke milna, ice cream khana, be-matlab ki baatein aur ghanton ek doosre ki aankhon mein dekhte rehna.",
+      photos: ["/timeline/4.jpg", "/timeline/4_2.jpg", "/timeline/4_3.jpg", "/timeline/4_4.jpg"],
     },
     {
       id: 5,
-      emoji: "🍨",
-      date: "Post-Birthday Days",
-      title: "Sweet Post-Birthday Meetup",
-      text: "Birthday ke baad ki pehli mulakat — khushiyan, hansi, dher sari baatein aur hath thamne ka pyara ehsaas.",
+      emoji: "💍",
+      badge: "Sacred Bond",
+      title: "Bound in Sacred Love & Nikah",
+      date: "Milestone of Hearts",
+      text: "Wo muqaddas din jab hum hamesha ke liye ek pakke aur pak rishte mein bandh gaye — Meri Official Wifey, Laiba Mehboob!",
+      photos: ["/timeline/5.jpg", "/timeline/5_2.jpg", "/timeline/5_3.jpg", "/timeline/5_4.jpg"],
     },
     {
       id: 6,
-      emoji: "💍",
-      date: "Milestone of Hearts",
-      title: "Bound in Sacred Love & Nikah",
-      text: "Wo din jab hum aik pakke aur muqaddas rishte mein bandh gaye — Meri Official Wifey, Laiba Mehboob!",
+      emoji: "🎂",
+      badge: "1st Birthday Together",
+      title: "Our 1st Birthday Celebrated Together",
+      date: "September 10, 2024",
+      text: "Ek ek din gin kar intezar kiya tha — dulha dulhan ko dekh kar ek hone ke khwaab dekhe aur khushiyon bhari duayein mangi theen.",
+      photos: ["/timeline/6.jpg", "/timeline/6_2.jpg", "/timeline/6_3.jpg", "/timeline/6_4.jpg"],
     },
     {
       id: 7,
-      emoji: "👑",
-      date: "September 10, 2025",
-      title: "2nd Birthday Together",
-      text: "Shukar Alhamdulillah ke meri wifey Laiba Mehboob ban chuki theen — Meri Mallika, Meri Jaan!",
+      emoji: "🚗",
+      badge: "Lambi Drive Meetup",
+      title: "Late Night Drive & Cold Breeze",
+      date: "Cherished Moments",
+      text: "Gaadi ki khirki se aati thandi hawa, slow music, tumhara hath mere hath mein aur be-panaah sukoon ka ehsaas.",
+      photos: ["/timeline/7.jpg", "/timeline/7_2.jpg", "/timeline/7_3.jpg", "/timeline/7_4.jpg"],
     },
     {
       id: 8,
-      emoji: "🚗",
-      date: "Cherished Moments",
-      title: "Romantic Outings & Drives",
-      text: "Sath guzare haseen safar, lambi drives, thandi hawayen aur aik doosre ki baahon mein be-panah sukoon.",
+      emoji: "☕",
+      badge: "Pure Sukoon",
+      title: "Rainy Day Chai & Heartfelt Talks",
+      date: "Peaceful Evening",
+      text: "Duniya ki har fikar se be-parwah, sirf tum aur main... asy jasy 'Majjjaa a gyaaaa Yaar life ka!' Har lamha khubsurat!",
+      photos: ["/timeline/8.jpg", "/timeline/8_2.jpg", "/timeline/8_3.jpg", "/timeline/8_4.jpg"],
     },
     {
       id: 9,
-      emoji: "☕",
-      date: "Unforgettable Evening",
-      title: "Our Pure Sukoon Meetup",
-      text: "Duniya se be-khabar, sirf tum aur main... ghanton baatein karte rehna aur waqt ka pata hi na chalna.",
+      emoji: "👑",
+      badge: "2nd Birthday Together",
+      title: "Our 2nd Birthday Together",
+      date: "September 10, 2025",
+      text: "Shukar Alhamdulillah ke meri wifey Laiba Mehboob ban chuki theen — Meri Mallika, Meri Jaan ke sath zindagi ka sab se haseen saal!",
+      photos: ["/timeline/9.jpg", "/timeline/9_2.jpg", "/timeline/9_3.jpg", "/timeline/9_4.jpg"],
     },
     {
       id: 10,
-      emoji: "🥺",
-      date: "Memorable Goodbye",
-      title: "Last Meetup (Jaane Se Pehle) 💔",
-      text: "Rukhsat hone se pehle ki aakhri mulakat... bhari aankhein, nam dil, par dil mein hamesha ke liye aik doosre ka sath aur intezar ka wada.",
+      emoji: "🛍️",
+      badge: "Happy Little Outing",
+      title: "Shopping & Walking Hand in Hand",
+      date: "Fun Times Together",
+      text: "Sath ghoomna, choti choti baaton par khilkhila kar hansna, tumhari pasand ki shopping aur hath tham kar chalna.",
+      photos: ["/timeline/10.jpg", "/timeline/10_2.jpg", "/timeline/10_3.jpg", "/timeline/10_4.jpg"],
     },
     {
       id: 11,
+      emoji: "🥺",
+      badge: "Aakhri Mulakat",
+      title: "Last Meetup (Jaane Se Pehle) 💔",
+      date: "Memorable Goodbye",
+      text: "Rukhsat hone se pehle ki aakhri mulakat... bhari aankhein, nam dil, par dil mein hamesha ke liye ek doosre ka sath aur intezar ka pakka wada.",
+      photos: ["/timeline/11.jpg", "/timeline/11_2.jpg", "/timeline/11_3.jpg", "/timeline/11_4.jpg"],
+    },
+    {
+      id: 12,
       emoji: "💖",
+      badge: "Turning 23 🎉",
+      title: `3rd Birthday Together (Turning ${age})`,
       date: `September 10, ${BIRTHDAY_YEAR}`,
-      title: `3rd Birthday Together (Turning ${age}) 🎉`,
-      text: `23 saal ki meri haseen Begum! Duriyan hain magar dilon ka fasla koi nahi — Forever & Always Mahol pura wavy!`,
+      text: `23 saal ki meri haseen Begum! Faslay chahe jitne bhi hon, dilon ka fasla koi nahi — Forever & Always Mahol pura wavy!`,
+      photos: ["/timeline/12.jpg", "/timeline/12_2.jpg", "/timeline/12_3.jpg", "/timeline/12_4.jpg"],
     },
   ];
 
-  const goToPrev = useCallback(() => {
+  // Pre-probe candidate images to detect which ones exist
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    milestones.forEach((item) => {
+      item.photos.forEach((url) => {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => {
+          setLoadedPhotos((prev) => ({ ...prev, [url]: true }));
+        };
+        img.onerror = () => {
+          setFailedPhotos((prev) => ({ ...prev, [url]: true }));
+        };
+      });
+    });
+  }, []);
+
+  const openModal = (index: number) => {
+    setTimelineModalIndex(index);
+    setActivePhotoIdx(0);
+  };
+
+  const currentMilestone = timelineModalIndex !== null ? milestones[timelineModalIndex] : null;
+
+  // Compute available photos for current milestone
+  const currentValidPhotos = currentMilestone
+    ? currentMilestone.photos.filter((url) => loadedPhotos[url] || (!failedPhotos[url] && url === currentMilestone.photos[0]))
+    : [];
+
+  const currentPhotoUrl = currentValidPhotos[activePhotoIdx] || (currentMilestone ? currentMilestone.photos[0] : "");
+  const hasAnyLoaded = currentMilestone ? currentMilestone.photos.some((url) => loadedPhotos[url]) : false;
+  const isCurrentFailed = failedPhotos[currentPhotoUrl] && !hasAnyLoaded;
+
+  const goToPrevPhoto = useCallback(() => {
+    if (!currentValidPhotos.length) return;
+    setActivePhotoIdx((prev) => (prev > 0 ? prev - 1 : currentValidPhotos.length - 1));
+  }, [currentValidPhotos.length]);
+
+  const goToNextPhoto = useCallback(() => {
+    if (!currentValidPhotos.length) return;
+    setActivePhotoIdx((prev) => (prev < currentValidPhotos.length - 1 ? prev + 1 : 0));
+  }, [currentValidPhotos.length]);
+
+  const goToPrevChapter = useCallback(() => {
     setTimelineModalIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : milestones.length - 1));
+    setActivePhotoIdx(0);
   }, [milestones.length]);
 
-  const goToNext = useCallback(() => {
+  const goToNextChapter = useCallback(() => {
     setTimelineModalIndex((prev) => (prev !== null && prev < milestones.length - 1 ? prev + 1 : 0));
+    setActivePhotoIdx(0);
   }, [milestones.length]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (timelineModalIndex === null) return;
       if (e.key === "Escape") setTimelineModalIndex(null);
-      if (e.key === "ArrowLeft") goToPrev();
-      if (e.key === "ArrowRight") goToNext();
+      if (e.key === "ArrowLeft") {
+        if (currentValidPhotos.length > 1) {
+          goToPrevPhoto();
+        } else {
+          goToPrevChapter();
+        }
+      }
+      if (e.key === "ArrowRight") {
+        if (currentValidPhotos.length > 1) {
+          goToNextPhoto();
+        } else {
+          goToNextChapter();
+        }
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [timelineModalIndex, goToPrev, goToNext]);
+  }, [timelineModalIndex, currentValidPhotos.length, goToPrevPhoto, goToNextPhoto, goToPrevChapter, goToNextChapter]);
 
   return (
     <section className="timeline-section" id="timeline">
       <h2 className="section-title">✨ Our Beautiful Story ✨</h2>
-      <p className="timeline-hint">Tap any chapter to view memory photo &amp; details 📸</p>
+      <p className="timeline-hint">Tap any chapter to view photos &amp; memories 📸</p>
       <div className="section-divider" />
 
       <div className="timeline">
         {milestones.map((item, i) => {
-          const hasError = imgErrors[item.id];
+          const loadedCount = item.photos.filter((url) => loadedPhotos[url]).length;
+          const primaryUrl = item.photos[0];
+          const isPrimaryFailed = failedPhotos[primaryUrl] && loadedCount === 0;
+
           return (
             <div className="timeline-item" key={item.id}>
               <div className="timeline-dot" />
               <div
                 className="timeline-content"
-                onClick={() => setTimelineModalIndex(i)}
+                onClick={() => openModal(i)}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setTimelineModalIndex(i);
+                    openModal(i);
                   }
                 }}
               >
                 <div className="timeline-header">
                   <span className="timeline-emoji">{item.emoji}</span>
-                  <span className="timeline-date-badge">{item.date}</span>
+                  <span className="timeline-date-badge">{item.badge}</span>
                 </div>
                 <h3 className="timeline-title">{item.title}</h3>
                 <p className="timeline-text">{item.text}</p>
 
                 <div className="timeline-photo-box">
-                  {!hasError ? (
+                  {loadedCount > 1 && (
+                    <span className="timeline-multi-badge">
+                      📸 {loadedCount} Photos
+                    </span>
+                  )}
+
+                  {!isPrimaryFailed ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={`/timeline/${item.id}.jpg`}
+                      src={primaryUrl}
                       alt={item.title}
                       loading="lazy"
-                      onError={() => setImgErrors((prev) => ({ ...prev, [item.id]: true }))}
+                      onLoad={() => setLoadedPhotos((prev) => ({ ...prev, [primaryUrl]: true }))}
+                      onError={() => setFailedPhotos((prev) => ({ ...prev, [primaryUrl]: true }))}
                     />
                   ) : (
                     <div className="timeline-photo-placeholder">
                       <span className="placeholder-icon">📸</span>
-                      <span className="placeholder-text">Photo #{item.id} • Tap to view</span>
+                      <span className="placeholder-text">Meetup #{item.id} • Tap to view</span>
                     </div>
                   )}
                   <div className="timeline-photo-overlay">
-                    <span>🔍 Tap to view photo</span>
+                    <span>🔍 Tap to view gallery</span>
                   </div>
                 </div>
               </div>
@@ -705,8 +806,8 @@ function Timeline() {
         })}
       </div>
 
-      {/* ─── Timeline Lightbox Modal ─── */}
-      {timelineModalIndex !== null && (
+      {/* ─── Timeline Multi-Photo Lightbox Modal ─── */}
+      {timelineModalIndex !== null && currentMilestone && (
         <div className="lightbox-overlay" onClick={() => setTimelineModalIndex(null)}>
           <div
             className="lightbox-content timeline-lightbox-content"
@@ -720,58 +821,103 @@ function Timeline() {
               ✕
             </button>
 
-            <button
-              className="lightbox-nav prev"
-              onClick={goToPrev}
-              aria-label="Previous chapter"
-            >
-              ‹
-            </button>
-
             <div className="timeline-modal-body">
-              {!imgErrors[milestones[timelineModalIndex].id] ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={`/timeline/${milestones[timelineModalIndex].id}.jpg`}
-                  alt={milestones[timelineModalIndex].title}
-                  className="timeline-modal-img"
-                  onError={() =>
-                    setImgErrors((prev) => ({
-                      ...prev,
-                      [milestones[timelineModalIndex].id]: true,
-                    }))
-                  }
-                />
-              ) : (
-                <div className="timeline-modal-placeholder">
-                  <span className="modal-placeholder-emoji">
-                    {milestones[timelineModalIndex].emoji}
+              {/* Photo Area with Next/Prev Arrows if Multiple Photos */}
+              <div className="timeline-photo-slider-area">
+                {currentValidPhotos.length > 1 && (
+                  <button
+                    className="timeline-photo-nav timeline-photo-prev"
+                    onClick={goToPrevPhoto}
+                    aria-label="Previous photo"
+                  >
+                    ‹
+                  </button>
+                )}
+
+                {!isCurrentFailed && currentPhotoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={currentPhotoUrl}
+                    alt={`${currentMilestone.title} - Photo ${activePhotoIdx + 1}`}
+                    className="timeline-modal-img"
+                    onLoad={() => setLoadedPhotos((prev) => ({ ...prev, [currentPhotoUrl]: true }))}
+                    onError={() => setFailedPhotos((prev) => ({ ...prev, [currentPhotoUrl]: true }))}
+                  />
+                ) : (
+                  <div className="timeline-modal-placeholder">
+                    <span className="modal-placeholder-emoji">
+                      {currentMilestone.emoji}
+                    </span>
+                    <p className="modal-placeholder-tip">
+                      📸 Add photo(s) for this meetup in:<br />
+                      <code>public/timeline/{currentMilestone.id}.jpg</code><br />
+                      <code>public/timeline/{currentMilestone.id}_2.jpg (extra)</code>
+                    </p>
+                  </div>
+                )}
+
+                {currentValidPhotos.length > 1 && (
+                  <button
+                    className="timeline-photo-nav timeline-photo-next"
+                    onClick={goToNextPhoto}
+                    aria-label="Next photo"
+                  >
+                    ›
+                  </button>
+                )}
+              </div>
+
+              {/* Multi-photo indicator and thumbnails */}
+              {currentValidPhotos.length > 1 && (
+                <>
+                  <span className="timeline-photo-counter">
+                    Photo {activePhotoIdx + 1} of {currentValidPhotos.length}
                   </span>
-                  <p className="modal-placeholder-tip">
-                    📸 Upload photo for this moment to:<br />
-                    <code>public/timeline/{milestones[timelineModalIndex].id}.jpg</code>
-                  </p>
-                </div>
+                  <div className="timeline-thumb-strip">
+                    {currentValidPhotos.map((url, idx) => (
+                      <button
+                        key={url}
+                        type="button"
+                        className={`timeline-thumb-btn ${idx === activePhotoIdx ? "active" : ""}`}
+                        onClick={() => setActivePhotoIdx(idx)}
+                        title={`View photo ${idx + 1}`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} alt={`Thumbnail ${idx + 1}`} />
+                      </button>
+                    ))}
+                  </div>
+                </>
               )}
 
-              <span className="timeline-modal-date">{milestones[timelineModalIndex].date}</span>
+              <span className="timeline-modal-date">{currentMilestone.badge}</span>
               <h3 className="timeline-modal-title">
-                <span>{milestones[timelineModalIndex].emoji}</span>
-                <span>{milestones[timelineModalIndex].title}</span>
+                <span>{currentMilestone.emoji}</span>
+                <span>{currentMilestone.title}</span>
               </h3>
-              <p className="timeline-modal-desc">{milestones[timelineModalIndex].text}</p>
-              <p className="lightbox-counter">
-                {timelineModalIndex + 1} / {milestones.length}
-              </p>
-            </div>
+              <p className="timeline-modal-desc">{currentMilestone.text}</p>
 
-            <button
-              className="lightbox-nav next"
-              onClick={goToNext}
-              aria-label="Next chapter"
-            >
-              ›
-            </button>
+              {/* Chapter switcher bar */}
+              <div className="timeline-meetup-switcher">
+                <button
+                  type="button"
+                  className="meetup-switcher-btn"
+                  onClick={goToPrevChapter}
+                >
+                  ‹ Prev Meetup
+                </button>
+                <span className="meetup-switcher-center">
+                  Meetup {timelineModalIndex + 1} of {milestones.length}
+                </span>
+                <button
+                  type="button"
+                  className="meetup-switcher-btn"
+                  onClick={goToNextChapter}
+                >
+                  Next Meetup ›
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
