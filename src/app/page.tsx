@@ -435,31 +435,31 @@ function LoveLetter() {
 
             <div className="letter-body">
               <p>
-                Happy {age}rd Birthday, meri jaan! 🎂💖 Aaj jab hum apna <span className="highlight">3rd birthday together</span> celebrate kar rahe hain, to dil me itna shukar aur itna pyaar hai ke lafzon me bayaan karna mushkil hai.
+                Happy {age}rd Birthday to the love of my life, my queen, and my forever! 🎂💖 Today as we celebrate our <span className="highlight">3rd birthday together</span>, my heart is overflowing with so much gratitude and love. Words can never truly capture how precious and valuable you are to me.
               </p>
 
               <p>
-                Mujhe hamara <span className="highlight">pehla birthday (2024)</span> yaad aata hai — jab maine ek ek din gin gin kar intezar kiya tha. Yaad hai jab maine dulha dulhan ko dekh kar hum dono ko unki jagah imagine kiya tha? Maine socha tha ke Haye Allah g, wo din kitna awesome hoga jab hum hamesha ke liye ek rishte me bandh jayenge. Maine aapse promise kiya tha ke chahe mujhe sahi se manana na bhi aata ho, <span className="highlight">main aap ke liye sab seekh loonga</span>, kyun ke aap hi to meri life ki saari raunak ho, mera Gollluu Motlluu Panda! 🐼🫀
+                Who would have thought that a journey starting with a sweet little <span className="highlight">&ldquo;This way 😘&rdquo;</span> would bring us here today? Shukar Alhamdulillah, lakh lakh shukar ke meri life partner, meri wifey aap ho. Maine kabhi zindagi me nahi socha tha ke main kisi ke liye aese crave kar sakta hoon, kisi se itna toot kar pyaar kar sakta hoon... <span className="highlight">but you walked into my life, and you made me complete</span>.
               </p>
 
               <p>
-                Aur phir hamara <span className="highlight">doosra birthday (2025)</span>... kis ko pata tha ke jo rishta <span className="highlight">&ldquo;This way 😘&rdquo;</span> se start hua tha, wo yahan tak pohanch jayega! Shukar Alhamdulillah, lakh lakh shukar ke meri life partner, meri wifey aap ho. Maine kabhi nahi socha tha main kisi se itna pyaar kar sakta hoon, but with you, I became complete. Wo vibe, wo sukoon, wo peace jo aap ke saath hai wo duniya ke kisi rishte me nahi hai — asy jasy <span className="highlight">&ldquo;Majjjaa a gyaaaa Yaar life ka!&rdquo;</span> Aur maine aapse wada kiya tha ke har birthday full josh aur <span className="highlight">&ldquo;Mahol pura wavy wala scene&rdquo;</span> ke saath manaoonga! 💃✨
+                With you, I found a peace, a sukoon, and a vibe that exists nowhere else in this entire world. Wo har pal ka maza, wo hansi, wo be-panaah sukoon — asy jasy <span className="highlight">&ldquo;Majjjaa a gyaaaa Yaar life ka!&rdquo;</span> When I look at you, my entire world feels blessed. Aap sirf meri biwi nahi ho, aap meri lifeline ho, mera Gollluu Motlluu Panda 🐼, Zoiiii ki Mama, Shahzain ki Chachiii, meri Cutie Puttitieee, aur mera Sweet potato ho! 🥺🥔💖
               </p>
 
               <p>
-                Aur aaj, hamare is <span className="highlight">3rd birthday (2026)</span> par, jab aap {age} saal ki ho rahi ho, I want you to know that my love for you has only grown deeper, purer, and stronger with every single breath. Aap sirf meri biwi nahi ho — aap mera Sakoon ho, mera Proud ho, Zoiiii ki Mama, Shahzain ki Chachiii, meri Cutie Puttitieee, aur mera Sweet potato ho! 🥺🥔💖
+                I know kabhi kabhi main aap ko naraz kar deta hoon, aur mujhe theek se manana bhi nahi aata... but I promise I will learn everything for you, because <span className="highlight">you are my everything</span>. Aap ke bina meri life bilkul adhoori hai — main ab apni zindagi ka ek pal bhi aap ke bagair imagine nahi kar sakta. Aap se hi to meri life ki saari raunqein aur khushiyan hain!
               </p>
 
               <p>
-                Aap ke bagair meri life bilkul adhoori hai — main ab apni life aap ke bagair imagine bhi nahi kar sakta. Mera dil karta hai main aap ke liye sab kuch karoon, aap ke har khwaab ko poora karoon, aur <span className="highlight">aap ke liye duniya se lad jaaoon</span>. InshaAllah main hamesha aap ke saath khada rahoonga, har aansoo, har hansi aur har lamhe me. 💖
+                My promise to you will never fade: <span className="highlight">I will fight the entire world for your happiness</span>, protect every single smile of yours, and do everything in my power to make every dream of yours come true. Har saal, har birthday aap ke saath usi pehli mulaqat jaisi excitement, usi deewangi aur <span className="highlight">&ldquo;Mahol pura wavy&rdquo;</span> ke saath manaoonga! 💃✨
               </p>
 
               <p>
-                Allah Pak hum dono ko hamesha aese hi khush aur ek doosre ke pyaar me aabad rakhe, buri nazar se bachaye, aur hamara yeh rishta hamesha ke liye aese hi mehakta rahe. <span className="highlight">Ameeeeen Summa Ameeeeen!</span> 🤲🌸💍
+                You are my today, my tomorrow, and every beautiful dream I have for the future. May Allah Pak keep our bond blessed, protect our pure love from every evil eye, and keep us smiling together forever. <span className="highlight">Ameeeeen Summa Ameeeeen!</span> 🤲🌸💍
               </p>
 
               <p>
-                I love you soooooooooooooooooooooooooooooo much, Begum Jaan... itna ke aap soch bhi nahi sakti! 🥺❤️
+                I love you soooooooooooooooooooooooooooooo much, Begum Jaan... more than words could ever say and more than you could ever imagine! 🥺❤️
               </p>
             </div>
 
