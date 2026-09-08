@@ -262,22 +262,26 @@ body {
 }
 
 .hero-title {
-  font-family: 'Great Vibes', cursive;
-  font-size: clamp(3.5rem, 9vw, 8rem);
-  background: linear-gradient(135deg, var(--magenta) 0%, var(--pink) 25%, var(--gold) 50%, var(--rose) 75%, var(--magenta) 100%);
-  background-size: 200% 200%;
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 7.5vw, 6.2rem);
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #ffffff 0%, #ff80b3 30%, #ffd700 68%, #ffffff 100%);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  line-height: 1.2;
-  animation: titleReveal 1.5s ease-out, gradientShift 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 40px rgba(255, 0, 128, 0.4));
+  line-height: 1.25;
+  animation: titleReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1), gradientShift 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 35px rgba(255, 0, 128, 0.45));
+  padding: 0.1rem 0;
+  word-break: keep-all;
 }
 
 @keyframes titleReveal {
-  0% { opacity: 0; transform: translateY(40px) scale(0.8); letter-spacing: -10px; }
-  50% { letter-spacing: 5px; }
-  100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: normal; }
+  0% { opacity: 0; transform: translateY(30px) scale(0.92); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes gradientShift {
