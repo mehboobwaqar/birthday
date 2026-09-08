@@ -1607,3 +1607,422 @@ body {
 @media (max-width: 480px) {
   .qualities-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ============ PASSWORD GATE OVERLAY ============ */
+.password-gate-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2500;
+  background: radial-gradient(ellipse at 50% 30%, #170030 0%, #080017 60%, #030009 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  backdrop-filter: blur(16px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+}
+
+.password-gate-overlay.fading-out {
+  opacity: 0;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+.password-gate-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(2px 2px at 15% 25%, rgba(255, 215, 0, 0.8), transparent),
+    radial-gradient(2px 2px at 75% 15%, rgba(255, 0, 128, 0.7), transparent),
+    radial-gradient(1px 1px at 30% 65%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(2px 2px at 85% 75%, rgba(0, 245, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 50% 85%, rgba(255, 215, 0, 0.6), transparent);
+  animation: starTwinkle 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes starTwinkle {
+  0% { opacity: 0.4; transform: scale(0.99); }
+  100% { opacity: 1; transform: scale(1.01); }
+}
+
+.password-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  background: rgba(26, 0, 48, 0.78);
+  border: 1px solid rgba(255, 107, 157, 0.35);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(255, 0, 128, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-radius: 28px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.password-card.shake {
+  animation: cardShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  border-color: rgba(255, 51, 102, 0.8) !important;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.7),
+    0 0 50px rgba(255, 51, 102, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+@keyframes cardShake {
+  10%, 90% { transform: translate3d(-3px, 0, 0); }
+  20%, 80% { transform: translate3d(5px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+  40%, 60% { transform: translate3d(8px, 0, 0); }
+}
+
+.password-card.success-state {
+  border-color: rgba(255, 215, 0, 0.8);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.8),
+    0 0 60px rgba(255, 215, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  animation: successPulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.02); }
+}
+
+.lock-icon-halo {
+  width: 75px;
+  height: 75px;
+  margin: 0 auto 1.2rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 0, 128, 0.25) 0%, rgba(255, 0, 128, 0.05) 70%, transparent 100%);
+  border: 2px solid rgba(255, 107, 157, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(255, 0, 128, 0.35);
+  animation: lockHaloPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes lockHaloPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 128, 0.3); }
+  50% { transform: scale(1.08); box-shadow: 0 0 35px rgba(255, 0, 128, 0.6), 0 0 15px rgba(255, 215, 0, 0.4); }
+}
+
+.lock-emoji {
+  font-size: 2.2rem;
+}
+
+.private-badge {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  background: rgba(255, 0, 128, 0.15);
+  border: 1px solid rgba(255, 0, 128, 0.35);
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ff80b3;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+}
+
+.gate-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff, #ffb3d1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.gate-subtitle {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.gate-subtitle strong {
+  color: #ff80b3;
+}
+
+.gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  width: 100%;
+  padding: 0.95rem 3.2rem 0.95rem 1.2rem;
+  background: rgba(10, 0, 20, 0.7);
+  border: 2px solid rgba(255, 107, 157, 0.35);
+  border-radius: 16px;
+  font-size: 1.15rem;
+  color: #ffd700;
+  font-weight: 600;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.password-input:focus {
+  border-color: #ff0080;
+  box-shadow: 0 0 25px rgba(255, 0, 128, 0.4);
+  background: rgba(15, 0, 30, 0.9);
+}
+
+.eye-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.2s, transform 0.2s;
+  padding: 4px;
+}
+
+.eye-toggle-btn:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.15);
+}
+
+.gate-submit-btn {
+  position: relative;
+  width: 100%;
+  padding: 0.95rem 1.5rem;
+  background: linear-gradient(135deg, #ff0080 0%, #9c27b0 50%, #ffd700 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(255, 0, 128, 0.4);
+  transition: all 0.3s ease;
+}
+
+.gate-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(255, 0, 128, 0.6), 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.gate-submit-btn:active {
+  transform: translateY(1px);
+}
+
+/* ============ FUNNY ERROR BANNER ============ */
+.funny-error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background: rgba(255, 30, 80, 0.12);
+  border: 1px solid rgba(255, 51, 102, 0.45);
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  text-align: left;
+  animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.funny-emoji {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  animation: headWiggle 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes headWiggle {
+  0% { transform: rotate(-8deg); }
+  100% { transform: rotate(8deg); }
+}
+
+.funny-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.funny-title {
+  color: #ff5277;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.funny-desc {
+  color: #ffc4d0;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.attempt-tag {
+  display: inline-block;
+  margin-top: 0.3rem;
+  font-size: 0.74rem;
+  color: #ffd700;
+  font-weight: 600;
+}
+
+/* ============ HINT SECTION ============ */
+.gate-hint-section {
+  margin-top: 1.4rem;
+}
+
+.hint-toggle-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 180, 210, 0.85);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+.hint-toggle-btn:hover {
+  color: #ffd700;
+}
+
+.hint-card {
+  margin-top: 0.8rem;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px dashed rgba(255, 215, 0, 0.35);
+  border-radius: 14px;
+  padding: 0.8rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.hint-text {
+  font-size: 0.84rem;
+  color: #fff4bd;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ============ SUCCESS VIEW ============ */
+.success-welcome-view {
+  padding: 1.5rem 0.5rem;
+  animation: scaleUpIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleUpIn {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.royal-crown-burst {
+  font-size: 4rem;
+  margin-bottom: 0.8rem;
+  animation: crownFloat 1.2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+}
+
+@keyframes crownFloat {
+  0% { transform: translateY(0) rotate(-3deg); }
+  100% { transform: translateY(-8px) rotate(3deg); }
+}
+
+.unlocked-badge {
+  display: inline-block;
+  padding: 0.35rem 1.1rem;
+  background: rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.6);
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffd700;
+  margin-bottom: 1rem;
+}
+
+.welcome-queen-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+  text-shadow: 0 0 25px rgba(255, 0, 128, 0.7);
+}
+
+.welcome-queen-subtitle {
+  font-size: 1.05rem;
+  color: #ffd700;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  font-family: 'Dancing Script', cursive;
+}
+
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.loading-dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ffd700;
+  box-shadow: 0 0 10px #ffd700;
+  animation: dotPulse 1.2s infinite ease-in-out;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; background: #ff0080; box-shadow: 0 0 10px #ff0080; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; background: #00f5ff; box-shadow: 0 0 10px #00f5ff; }
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(0.5); opacity: 0.4; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Re-lock Button in Footer */
+.relock-btn {
+  margin: 1.2rem auto 0;
+  padding: 0.5rem 1.2rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 107, 157, 0.3);
+  border-radius: 50px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.relock-btn:hover {
+  background: rgba(255, 0, 128, 0.2);
+  border-color: #ff0080;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(255, 0, 128, 0.4);
+}

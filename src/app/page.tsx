@@ -6,6 +6,51 @@ import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 const BIRTHDAY_NAME = "Laiba Ahmad";
 const BIRTHDAY_DATE = new Date("2003-09-10");
 const BIRTHDAY_YEAR = 2026;
+const SECRET_PASSWORD = "MianG";
+
+// ─── Audio Tone Effects (Web Audio API) ───
+function playAudioCue(type: "success" | "wrong") {
+  if (typeof window === "undefined") return;
+  try {
+    const AudioCtx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (type === "wrong") {
+      // Funny buzzer / boing sound
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(280, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(75, ctx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } else {
+      // Royal sweet victory chord (C5, E5, G5, C6)
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        const startTime = ctx.currentTime + idx * 0.08;
+        osc.frequency.setValueAtTime(freq, startTime);
+        gain.gain.setValueAtTime(0.2, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.9);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.9);
+      });
+    }
+  } catch {
+    // Ignore audio policy restrictions
+  }
+}
 
 function getNextBirthday() {
   const now = new Date();
@@ -607,6 +652,242 @@ function PhotoMemories() {
   );
 }
 
+// ─── Funny Error Dialogues ───
+const FUNNY_ERROR_LIST = [
+  {
+    emoji: "🤨",
+    title: "Arey Kaun Ho Bhai?!",
+    desc: "Sirf MianG ki Laiba ko access hai! Chalo shabash, side pe ho jao! 😂🚫",
+  },
+  {
+    emoji: "🧐",
+    title: "Wait A Second...",
+    desc: "Tum Laiba nahi lag rahi! Pehle MianG se NOC (permission) le kar aao! 😜",
+  },
+  {
+    emoji: "🚨",
+    title: "FBI OPEN UP!",
+    desc: "Wrong Password! Yeh secret surprise sirf MianG ki begum k liye reserved hai! 🚔😂",
+  },
+  {
+    emoji: "🙈",
+    title: "Haww Hayee!",
+    desc: "Chori chori surprise dekhne ki koshish? Password bilkul galat hai boss! 🙅‍♀️",
+  },
+  {
+    emoji: "🚪",
+    title: "Galat Darwaza!",
+    desc: "Bhai sahab / behn ji, galat gali aagaye aap! MianG ka secret code daalo! 💖😂",
+  },
+  {
+    emoji: "👸",
+    title: "Access Denied!",
+    desc: "System bol raha hai: 'Sirf MianG ki future wifey allowed hai yahan!' 💍✨",
+  },
+  {
+    emoji: "🕵️",
+    title: "Nice Try Chor!",
+    desc: "Lekin MianG ka password itna aasan nahi! Dimaag pe zor daalo! 🤪",
+  },
+];
+
+// ─── Secret Password Gate ───
+function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorIndex, setErrorIndex] = useState<number | null>(null);
+  const [isShaking, setIsShaking] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [attemptCount, setAttemptCount] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (isSuccess) return;
+
+    const trimmed = password.trim();
+    if (!trimmed) {
+      setIsShaking(true);
+      setErrorIndex(0);
+      playAudioCue("wrong");
+      setTimeout(() => setIsShaking(false), 600);
+      return;
+    }
+
+    if (trimmed.toLowerCase() === SECRET_PASSWORD.toLowerCase()) {
+      // SUCCESS!
+      setIsSuccess(true);
+      setErrorIndex(null);
+      playAudioCue("success");
+
+      // Confetti burst for royal entrance
+      import("canvas-confetti")
+        .then((module) => {
+          const confetti = module.default;
+          confetti({
+            particleCount: 120,
+            spread: 90,
+            origin: { y: 0.5 },
+            colors: ["#ffd700", "#ff0080", "#00f5ff", "#ce93d8"],
+          });
+          setTimeout(() => {
+            confetti({
+              particleCount: 60,
+              angle: 60,
+              spread: 60,
+              origin: { x: 0, y: 0.6 },
+              colors: ["#ffd700", "#ff6b9d"],
+            });
+            confetti({
+              particleCount: 60,
+              angle: 120,
+              spread: 60,
+              origin: { x: 1, y: 0.6 },
+              colors: ["#ffd700", "#00f5ff"],
+            });
+          }, 300);
+        })
+        .catch(() => {});
+
+      try {
+        sessionStorage.setItem("miang_unlocked", "true");
+      } catch {}
+
+      setTimeout(() => {
+        setIsFadingOut(true);
+      }, 1600);
+
+      setTimeout(() => {
+        onUnlock();
+      }, 2100);
+    } else {
+      // WRONG PASSWORD!
+      setIsShaking(true);
+      playAudioCue("wrong");
+      if (typeof window !== "undefined" && window.navigator && "vibrate" in window.navigator) {
+        try {
+          window.navigator.vibrate([150, 60, 150]);
+        } catch {}
+      }
+
+      setErrorIndex((prev) => (prev === null ? 0 : (prev + 1) % FUNNY_ERROR_LIST.length));
+      setAttemptCount((prev) => prev + 1);
+
+      setTimeout(() => {
+        setIsShaking(false);
+        inputRef.current?.select();
+      }, 600);
+    }
+  };
+
+  const currentError = errorIndex !== null ? FUNNY_ERROR_LIST[errorIndex] : null;
+
+  return (
+    <div className={`password-gate-overlay ${isFadingOut ? "fading-out" : ""}`}>
+      <div className="password-gate-stars" />
+      <div
+        className={`password-card ${isShaking ? "shake" : ""} ${isSuccess ? "success-state" : ""}`}
+      >
+        {isSuccess ? (
+          <div className="success-welcome-view">
+            <div className="royal-crown-burst">👑</div>
+            <span className="unlocked-badge">✨ ACCESS GRANTED ✨</span>
+            <h2 className="welcome-queen-title">Welcome My Queen, Laiba! 💖</h2>
+            <p className="welcome-queen-subtitle">
+              MianG&apos;s heart & this special surprise are unlocked only for you! 🌹💍
+            </p>
+            <div className="loading-dots">
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="lock-icon-halo">
+              <span className="lock-emoji">🔒</span>
+            </div>
+            <span className="private-badge">🔐 PRIVATE SURPRISE</span>
+            <h2 className="gate-title">Enter Secret Password</h2>
+            <p className="gate-subtitle">
+              Only for <strong>Laiba Ahmad</strong> 💖
+              <br />
+              Enter the magic password to enter!
+            </p>
+
+            <form onSubmit={handleSubmit} className="gate-form">
+              <div className="input-group">
+                <input
+                  ref={inputRef}
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter Password..."
+                  className="password-input"
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <button
+                  type="button"
+                  className="eye-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
+
+              {currentError && (
+                <div className="funny-error-banner">
+                  <div className="funny-emoji">{currentError.emoji}</div>
+                  <div className="funny-content">
+                    <strong className="funny-title">{currentError.title}</strong>
+                    <p className="funny-desc">{currentError.desc}</p>
+                    {attemptCount >= 2 && (
+                      <span className="attempt-tag">
+                        ⚠️ Wrong attempts: {attemptCount} (MianG dekh raha hai 👀)
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <button type="submit" className="gate-submit-btn">
+                <span>Unlock My Surprise 💖</span>
+              </button>
+            </form>
+
+            <div className="gate-hint-section">
+              <button
+                type="button"
+                className="hint-toggle-btn"
+                onClick={() => setShowHint(!showHint)}
+              >
+                💡 {showHint ? "Hide Hint" : "Need a hint?"}
+              </button>
+              {showHint && (
+                <div className="hint-card">
+                  <p className="hint-text">
+                    ❤️ <strong>Hint:</strong> Jo aapse sabse zyada pyaar karta hai... unka naam / laqab! 😉
+                    <br />
+                    <em>(Starts with <strong>M</strong>, 5 letters: M***G)</em>
+                  </p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Envelope Intro ───
 function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
   const [opened, setOpened] = useState(false);
@@ -630,8 +911,17 @@ function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
 
 // ─── Main Page ───
 export default function BirthdayPage() {
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const confettiFired = useRef(false);
+
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem("miang_unlocked") === "true") {
+        setIsUnlocked(true);
+      }
+    } catch {}
+  }, []);
 
   const fireConfetti = useCallback(async () => {
     if (confettiFired.current) return;
@@ -674,6 +964,7 @@ export default function BirthdayPage() {
   return (
     <main>
       <StarField />
+      {!isUnlocked && <PasswordGate onUnlock={() => setIsUnlocked(true)} />}
       <EnvelopeIntro onOpen={handleEnvelopeOpen} />
 
       {/* ─── Hero Section ─── */}
@@ -742,6 +1033,18 @@ export default function BirthdayPage() {
         <p className="footer-year">
           Happy {age}{getOrdinal(age)} Birthday • September 10, {BIRTHDAY_YEAR} 💫
         </p>
+        <button
+          className="relock-btn"
+          onClick={() => {
+            try {
+              sessionStorage.removeItem("miang_unlocked");
+            } catch {}
+            setIsUnlocked(false);
+          }}
+          title="Click to lock again"
+        >
+          🔒 Lock Website
+        </button>
         <span className="footer-infinity">∞</span>
       </footer>
     </main>
