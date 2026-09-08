@@ -762,8 +762,12 @@ body {
 
 .quality-word {
   font-family: 'Dancing Script', cursive;
-  font-size: 1.1rem;
-  color: var(--pink);
+  font-size: clamp(1.15rem, 2.8vw, 1.35rem);
+  font-weight: 700;
+  color: #ffb3d1;
+  text-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+  line-height: 1.25;
+  display: block;
 }
 
 /* ============ CUTE INTERACTIVE LOVE LETTER SECTION ============ */

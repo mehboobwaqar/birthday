@@ -207,18 +207,18 @@ function Countdown() {
 // ─── Qualities Section ───
 function QualitiesSection() {
   const qualities = [
-    { emoji: "👑", word: "Queen" },
-    { emoji: "🌹", word: "Beautiful" },
-    { emoji: "💎", word: "Precious" },
-    { emoji: "🦋", word: "Graceful" },
-    { emoji: "⭐", word: "Amazing" },
-    { emoji: "🌸", word: "Kind" },
-    { emoji: "💖", word: "Loving" },
-    { emoji: "✨", word: "Magical" },
-    { emoji: "🌺", word: "Stunning" },
-    { emoji: "🎀", word: "Perfect" },
-    { emoji: "💫", word: "Radiant" },
-    { emoji: "🌷", word: "Elegant" },
+    { emoji: "💍", word: "Laiba Mehboob" },
+    { emoji: "👑", word: "Wifey G" },
+    { emoji: "🎀", word: "Cutie Puttitiee" },
+    { emoji: "🌹", word: "Moiii Bagam" },
+    { emoji: "🥰", word: "Baybooo" },
+    { emoji: "🦋", word: "Lailaaaaa" },
+    { emoji: "👸", word: "Princess" },
+    { emoji: "🍠", word: "Sweet potato" },
+    { emoji: "🥺", word: "Mara Bacha" },
+    { emoji: "🌟", word: "My Proud" },
+    { emoji: "🕊️", word: "Moiii Sakoon" },
+    { emoji: "🐥", word: "Sonu kaka" },
   ];
 
   return (
