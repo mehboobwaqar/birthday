@@ -1546,7 +1546,13 @@ export default function BirthdayPage() {
             <section className="hero-section">
               <FloatingHearts />
               <div className="hero-content">
-                <div className="birthday-badge">🎂 Happy Birthday 🎂</div>
+                <div className="birthday-badge">
+                  <span className="badge-sparkle">✨</span>
+                  <span className="badge-emoji">🎂</span>
+                  <span className="badge-text">Happy Birthday</span>
+                  <span className="badge-emoji">🎂</span>
+                  <span className="badge-sparkle">✨</span>
+                </div>
                 <div className="hero-title-wrapper">
                   <h1 className="hero-title">{BIRTHDAY_NAME}</h1>
                 </div>

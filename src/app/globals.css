@@ -322,32 +322,114 @@ body {
 }
 
 .birthday-badge {
-  display: inline-block;
-  padding: 0.6rem 2rem;
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(156, 39, 176, 0.2));
-  border: 1px solid rgba(255, 0, 128, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 2.2rem;
+  background: linear-gradient(135deg, rgba(255, 0, 128, 0.22) 0%, rgba(38, 4, 55, 0.9) 50%, rgba(255, 215, 0, 0.2) 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.65);
   border-radius: 50px;
-  font-size: 0.85rem;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--pink);
-  margin-bottom: 1.5rem;
-  backdrop-filter: blur(15px);
-  animation: badgeGlow 3s ease-in-out infinite;
+  margin-bottom: 1.6rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.55), 0 0 30px rgba(255, 0, 128, 0.35), inset 0 0 18px rgba(255, 215, 0, 0.22);
+  position: relative;
+  overflow: hidden;
+  animation: badgeFloatingGlow 3.5s ease-in-out infinite;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: default;
 }
 
-@keyframes badgeGlow {
+/* Light shimmer sweep across badge */
+.birthday-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), rgba(255, 215, 0, 0.45), transparent);
+  transform: skewX(-25deg);
+  animation: badgeShimmer 4.5s infinite ease-in-out;
+  pointer-events: none;
+}
 
-  0%,
-  100% {
-    box-shadow: 0 0 15px rgba(255, 0, 128, 0.15);
-    border-color: rgba(255, 0, 128, 0.3);
+@keyframes badgeShimmer {
+  0% { left: -120%; }
+  35%, 100% { left: 160%; }
+}
+
+@keyframes badgeFloatingGlow {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.55), 0 0 25px rgba(255, 0, 128, 0.3), inset 0 0 15px rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.6);
   }
-
   50% {
-    box-shadow: 0 0 40px rgba(255, 0, 128, 0.4), 0 0 80px rgba(255, 0, 128, 0.15);
-    border-color: rgba(255, 215, 0, 0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 45px rgba(255, 0, 128, 0.5), 0 0 45px rgba(255, 215, 0, 0.45), inset 0 0 25px rgba(255, 0, 128, 0.25);
+    border-color: #ffd700;
   }
+}
+
+.birthday-badge:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 15px 50px rgba(255, 0, 128, 0.6), 0 0 50px rgba(255, 215, 0, 0.55);
+}
+
+.birthday-badge .badge-text {
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: clamp(0.85rem, 2.6vw, 1.05rem);
+  font-weight: 800;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ffffff 0%, #ffd700 45%, #ff80b3 75%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  animation: badgeTextShine 4s linear infinite;
+  display: inline-block;
+}
+
+@keyframes badgeTextShine {
+  to { background-position: 200% center; }
+}
+
+.birthday-badge .badge-emoji {
+  font-size: 1.35rem;
+  line-height: 1;
+  display: inline-block;
+  animation: badgeCakeBounce 2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+}
+
+.birthday-badge .badge-emoji:last-of-type {
+  animation-delay: 1s;
+}
+
+@keyframes badgeCakeBounce {
+  0% { transform: translateY(0) scale(1) rotate(0deg); }
+  100% { transform: translateY(-3px) scale(1.15) rotate(6deg); }
+}
+
+.birthday-badge .badge-sparkle {
+  font-size: 1.1rem;
+  line-height: 1;
+  color: #ffd700;
+  display: inline-block;
+  animation: badgeSparkleTwinkle 1.8s infinite ease-in-out alternate;
+  filter: drop-shadow(0 0 8px #ffd700);
+}
+
+.birthday-badge .badge-sparkle:last-child {
+  animation-delay: 0.9s;
+}
+
+@keyframes badgeSparkleTwinkle {
+  0% { transform: scale(0.7) rotate(0deg); opacity: 0.4; }
+  100% { transform: scale(1.3) rotate(30deg); opacity: 1; }
 }
 
 /* Typewriter effect */
