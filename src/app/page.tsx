@@ -287,30 +287,13 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
   );
 }
 
-// ─── Qualities Section (Interactive Kiss Shower) ───
-interface KissParticle {
-  id: number;
-  emoji: string;
-  startX: number;
-  startY: number;
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  x3: number;
-  y3: number;
+// ─── Qualities Section (Interactive Kiss Emojis 😘) ───
+interface ScreenKiss {
+  id: string;
+  x: number;
+  y: number;
   scale: number;
-  rotStart: number;
-  rotMid: number;
-  rotEnd: number;
-  duration: number;
-}
-
-interface ActiveKissShower {
-  id: number;
-  word: string;
-  giantKissEmoji: string;
-  particles: KissParticle[];
+  delay: number;
 }
 
 function QualitiesSection() {
@@ -329,83 +312,69 @@ function QualitiesSection() {
     { emoji: "🐥", word: "Sonu kaka" },
   ];
 
-  const [activeKiss, setActiveKiss] = useState<ActiveKissShower | null>(null);
+  const [activeKisses, setActiveKisses] = useState<ScreenKiss[]>([]);
   const [clickedCardIdx, setClickedCardIdx] = useState<number | null>(null);
   const kissTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleCardClick = (q: { emoji: string; word: string }, idx: number, e: React.MouseEvent<HTMLDivElement>) => {
-    playAudioCue("kiss");
+  const handleCardClick = (idx: number) => {
     setClickedCardIdx(idx);
-    setTimeout(() => setClickedCardIdx(null), 600);
+    setTimeout(() => setClickedCardIdx(null), 500);
 
-    const vpWidth = typeof window !== "undefined" ? window.innerWidth : 400;
-    const vpHeight = typeof window !== "undefined" ? window.innerHeight : 700;
-
-    let clickX = vpWidth / 2;
-    let clickY = vpHeight / 2;
-    if (e && typeof e.clientX === "number" && e.clientX > 0) {
-      clickX = e.clientX;
-      clickY = e.clientY;
+    // Random count: kabhi 1, kabhi 2 ya 3, kabhi 3 ya 4
+    const rand = Math.random();
+    let count = 1;
+    if (rand < 0.3) {
+      count = 1;
+    } else if (rand < 0.7) {
+      count = Math.random() < 0.5 ? 2 : 3;
+    } else {
+      count = Math.random() < 0.5 ? 3 : 4;
     }
 
-    // Romantic pink and gold confetti burst
-    import("canvas-confetti")
-      .then((module) => {
-        const confetti = module.default;
-        confetti({
-          particleCount: 32,
-          spread: 85,
-          origin: {
-            x: clickX / vpWidth,
-            y: clickY / vpHeight,
-          },
-          colors: ["#ff007f", "#ff4081", "#ffd700", "#ff80bf", "#ce93d8"],
-        });
-      })
-      .catch(() => {});
+    // Play kiss audio cues matching count
+    playAudioCue("kiss");
+    if (count > 1) {
+      setTimeout(() => playAudioCue("kiss"), 140);
+    }
+    if (count > 2) {
+      setTimeout(() => playAudioCue("kiss"), 280);
+    }
 
-    // 26 flying kiss emojis across full screen
-    const kissEmojis = ["💋", "😘", "😚", "💖", "💕", "✨", "💋", "💋", "🥰", "🌸"];
-    const particles: KissParticle[] = Array.from({ length: 26 }, (_, i) => {
-      const fromClick = Math.random() > 0.35;
-      const startX = fromClick
-        ? Math.min(Math.max(20, clickX + (Math.random() * 100 - 50)), vpWidth - 40)
-        : Math.random() * (vpWidth - 40) + 20;
-      const startY = fromClick
-        ? Math.min(Math.max(40, clickY + (Math.random() * 80 - 40)), vpHeight - 40)
-        : vpHeight * 0.35 + Math.random() * (vpHeight * 0.45);
+    // Generate positions for 1, 2, 3, or 4 kissing face emojis (😘)
+    const now = Date.now();
+    let newKisses: ScreenKiss[] = [];
+    const jitter = () => (Math.random() - 0.5) * 8;
 
-      return {
-        id: i,
-        emoji: kissEmojis[Math.floor(Math.random() * kissEmojis.length)],
-        startX,
-        startY,
-        x1: (Math.random() - 0.5) * 140,
-        y1: -(50 + Math.random() * 90),
-        x2: (Math.random() - 0.5) * 220,
-        y2: -(160 + Math.random() * 150),
-        x3: (Math.random() - 0.5) * 280,
-        y3: -(280 + Math.random() * 240),
-        scale: 0.9 + Math.random() * 0.95,
-        rotStart: (Math.random() - 0.5) * 50,
-        rotMid: (Math.random() - 0.5) * 70,
-        rotEnd: (Math.random() - 0.5) * 100,
-        duration: 1.5 + Math.random() * 0.8,
-      };
-    });
+    if (count === 1) {
+      newKisses = [
+        { id: `${now}-0`, x: 50 + jitter(), y: 46 + jitter(), scale: 1.15, delay: 0 },
+      ];
+    } else if (count === 2) {
+      newKisses = [
+        { id: `${now}-0`, x: 38 + jitter(), y: 45 + jitter(), scale: 1.05, delay: 0 },
+        { id: `${now}-1`, x: 62 + jitter(), y: 48 + jitter(), scale: 1.08, delay: 0.14 },
+      ];
+    } else if (count === 3) {
+      newKisses = [
+        { id: `${now}-0`, x: 30 + jitter(), y: 44 + jitter(), scale: 1.0, delay: 0 },
+        { id: `${now}-1`, x: 70 + jitter(), y: 46 + jitter(), scale: 1.05, delay: 0.12 },
+        { id: `${now}-2`, x: 50 + jitter(), y: 36 + jitter(), scale: 1.1, delay: 0.24 },
+      ];
+    } else {
+      // 4 kisses
+      newKisses = [
+        { id: `${now}-0`, x: 28 + jitter(), y: 40 + jitter(), scale: 0.95, delay: 0 },
+        { id: `${now}-1`, x: 72 + jitter(), y: 43 + jitter(), scale: 1.0, delay: 0.1 },
+        { id: `${now}-2`, x: 42 + jitter(), y: 54 + jitter(), scale: 1.05, delay: 0.22 },
+        { id: `${now}-3`, x: 58 + jitter(), y: 33 + jitter(), scale: 1.0, delay: 0.32 },
+      ];
+    }
 
-    const newShower: ActiveKissShower = {
-      id: Date.now(),
-      word: q.word,
-      giantKissEmoji: Math.random() > 0.35 ? "💋" : "😘",
-      particles,
-    };
-
-    setActiveKiss(newShower);
+    setActiveKisses(newKisses);
 
     if (kissTimeoutRef.current) clearTimeout(kissTimeoutRef.current);
     kissTimeoutRef.current = setTimeout(() => {
-      setActiveKiss(null);
+      setActiveKisses([]);
     }, 2200);
   };
 
@@ -414,69 +383,43 @@ function QualitiesSection() {
       <h2 className="section-title">👑 Words That Describe You 👑</h2>
       <div className="section-divider" />
       <p className="qualities-hint">
-        ✨ Tap any card for sweet flying kisses! <span className="hint-kiss">💋</span>
+        ✨ Tap any card for sweet kisses! <span className="hint-kiss">😘</span>
       </p>
       <div className="qualities-grid">
         {qualities.map((q, i) => (
           <div
             className={`quality-card ${clickedCardIdx === i ? "card-kissed" : ""}`}
             key={i}
-            onClick={(e) => handleCardClick(q, i, e)}
+            onClick={() => handleCardClick(i)}
             role="button"
             tabIndex={0}
-            title={`Tap for kisses for ${q.word}! 💋`}
+            title={`Tap for kisses for ${q.word}! 😘`}
           >
-            <span className="card-tap-kiss" aria-hidden="true">💋</span>
+            <span className="card-tap-kiss" aria-hidden="true">😘</span>
             <span className="quality-emoji">{q.emoji}</span>
             <span className="quality-word">{q.word}</span>
           </div>
         ))}
       </div>
 
-      {/* Full Screen Kiss Shower Overlay */}
-      {activeKiss && (
-        <div className="kiss-screen-overlay" aria-hidden="true">
-          {/* Radial Expanding Shockwave */}
-          <div key={`shock-${activeKiss.id}`} className="kiss-shockwave" />
-
-          {/* Giant Center Kiss Stamp */}
-          <div key={`giant-${activeKiss.id}`} className="giant-kiss-stamp">
-            {activeKiss.giantKissEmoji}
-          </div>
-
-          {/* 26 Flying Kiss Particles across full screen */}
-          {activeKiss.particles.map((p) => (
-            <span
-              key={`${activeKiss.id}-${p.id}`}
-              className="flying-kiss-particle"
+      {/* Full Screen Kiss Emoji Overlay (😘 with flying heart 💖) */}
+      {activeKisses.length > 0 && (
+        <div className="screen-kiss-overlay" aria-hidden="true">
+          {activeKisses.map((kiss) => (
+            <div
+              key={kiss.id}
+              className="screen-kiss-item"
               style={{
-                left: `${p.startX}px`,
-                top: `${p.startY}px`,
-                fontSize: `${p.scale * 2.2}rem`,
-                ["--kiss-x1" as string]: `${p.x1}px`,
-                ["--kiss-y1" as string]: `${p.y1}px`,
-                ["--kiss-x2" as string]: `${p.x2}px`,
-                ["--kiss-y2" as string]: `${p.y2}px`,
-                ["--kiss-x3" as string]: `${p.x3}px`,
-                ["--kiss-y3" as string]: `${p.y3}px`,
-                ["--kiss-rot-start" as string]: `${p.rotStart}deg`,
-                ["--kiss-rot-mid" as string]: `${p.rotMid}deg`,
-                ["--kiss-rot-end" as string]: `${p.rotEnd}deg`,
-                ["--kiss-scale" as string]: `${p.scale}`,
-                ["--kiss-duration" as string]: `${p.duration}s`,
+                left: `${kiss.x}%`,
+                top: `${kiss.y}%`,
+                animationDelay: `${kiss.delay}s`,
+                transform: `translate(-50%, -50%) scale(${kiss.scale})`,
               }}
             >
-              {p.emoji}
-            </span>
+              <span className="screen-kiss-face">😘</span>
+              <span className="screen-kiss-heart">💖</span>
+            </div>
           ))}
-
-          {/* Romantic Floating Kiss Banner */}
-          <div key={`toast-${activeKiss.id}`} className="kiss-toast-banner">
-            <span className="kiss-toast-icon">💋</span>
-            <span className="kiss-toast-text">
-              Mwahhh! Endless kisses for my <span className="kiss-toast-highlight">{activeKiss.word}</span>! 😘💖
-            </span>
-          </div>
         </div>
       )}
     </section>
