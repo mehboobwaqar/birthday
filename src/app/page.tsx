@@ -73,7 +73,7 @@ function isMidnightPassed() {
     if (sessionStorage.getItem("miang_midnight_bypassed") === "true") {
       return true;
     }
-  } catch {}
+  } catch { }
   const now = new Date();
   const target = getMidnightTarget();
   return now.getTime() >= target.getTime();
@@ -184,7 +184,7 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
             import("canvas-confetti").then((m) => {
               m.default({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
             });
-          } catch {}
+          } catch { }
           setTimeout(() => {
             onUnlock();
           }, 1500);
@@ -208,7 +208,7 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
   const handleManualPreview = () => {
     try {
       sessionStorage.setItem("miang_midnight_bypassed", "true");
-    } catch {}
+    } catch { }
     onUnlock();
   };
 
@@ -219,12 +219,12 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
         <div className="midnight-crown-icon">👑</div>
         <span className="midnight-badge">🔐 BIRTHDAY SURPRISE VAULT</span>
 
-        <h2 className="midnight-title">Shhh... Sabar Meri Jaan! 🤫💖</h2>
+        <h2 className="midnight-title">Shhh.... Sabar Meri Jaan! 🤫💖</h2>
 
         <p className="midnight-subtitle">
-          Aapka secret birthday surprise lock hai!
+          Wifey G Aapka secret birthday surprise lock hai!
           <br />
-          <strong>10 September raat 12:00:00 baje</strong> ye darwaza khud ba khud khul jayega... 🎂✨
+          <strong>When your time start </strong> this door will be open automatically... 🎂✨
         </p>
 
         {/* ─── Glowing Countdown Grid ─── */}
@@ -246,7 +246,7 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
 
         <div className="midnight-romantic-note">
           <p className="note-urdu">
-            &ldquo;Waqt aahista chal raha hai kyunke khushi bohot badi hai... bas thora sa intezar meri Wifey!&rdquo; 🥺❤️
+            &ldquo;Waqt aahista chal raha hai kyunke khushi bohot badi hai... bas thora sa intezar <span className="note-highlight">meri Wifey!</span>&rdquo; 🥺❤️
           </p>
           <div className="midnight-pulse-heart">💓</div>
         </div>
