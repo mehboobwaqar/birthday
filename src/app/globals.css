@@ -2209,6 +2209,42 @@ body {
   box-shadow: 0 0 15px rgba(255, 0, 128, 0.4);
 }
 
+/* Floating Lock Pill Button */
+.floating-lock-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  background: rgba(26, 4, 38, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 107, 157, 0.35);
+  border-radius: 50px;
+  color: #ffb3d1;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(255, 0, 128, 0.2);
+}
+
+.floating-lock-btn:hover {
+  background: rgba(255, 0, 128, 0.25);
+  border-color: #ff0080;
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 25px rgba(255, 0, 128, 0.45);
+}
+
+.floating-lock-btn:active {
+  transform: scale(0.96);
+}
+
 /* ============ COMPACT STYLES FOR SMALL MOBILE SCREENS ============ */
 @media (max-height: 760px), (max-width: 480px) {
   .password-gate-overlay {
@@ -2286,5 +2322,12 @@ body {
 
   .hint-text {
     font-size: 0.76rem;
+  }
+
+  .floating-lock-btn {
+    top: 12px;
+    right: 12px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.72rem;
   }
 }

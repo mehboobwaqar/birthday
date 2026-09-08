@@ -967,6 +967,7 @@ function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
 export default function BirthdayPage() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
+  const [sessionKey, setSessionKey] = useState(0);
   const confettiFired = useRef(false);
 
   useEffect(() => {
@@ -1026,15 +1027,58 @@ export default function BirthdayPage() {
     setTimeout(() => fireConfetti(), 900);
   }, [fireConfetti]);
 
+  const handleUnlock = useCallback(() => {
+    setIsUnlocked(true);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
+  const handleRelock = useCallback(() => {
+    try {
+      sessionStorage.removeItem("miang_unlocked");
+    } catch { }
+    setIsUnlocked(false);
+    setEnvelopeOpened(false);
+    confettiFired.current = false;
+    setSessionKey((prev) => prev + 1);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (typeof document !== "undefined") {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+  }, []);
+
   const age = getAge();
 
   return (
     <>
       <StarField />
-      {!isUnlocked && <PasswordGate onUnlock={() => setIsUnlocked(true)} />}
-      <EnvelopeIntro onOpen={handleEnvelopeOpen} />
 
-      <main>
+      {/* Quick Floating Lock Button */}
+      {isUnlocked && (
+        <button
+          className="floating-lock-btn"
+          onClick={handleRelock}
+          title="Lock Website"
+          aria-label="Lock Website"
+        >
+          <span>🔒</span>
+          <span>Lock</span>
+        </button>
+      )}
+
+      {!isUnlocked && (
+        <PasswordGate
+          key={`gate-${sessionKey}`}
+          onUnlock={handleUnlock}
+        />
+      )}
+
+      <EnvelopeIntro
+        key={`envelope-${sessionKey}`}
+        onOpen={handleEnvelopeOpen}
+      />
+
+      <main key={`main-${sessionKey}`}>
         {/* ─── Hero Section ─── */}
         <section className="hero-section">
         <FloatingHearts />
@@ -1100,12 +1144,7 @@ export default function BirthdayPage() {
         </p>
         <button
           className="relock-btn"
-          onClick={() => {
-            try {
-              sessionStorage.removeItem("miang_unlocked");
-            } catch { }
-            setIsUnlocked(false);
-          }}
+          onClick={handleRelock}
           title="Click to lock again"
         >
           🔒 Lock Website
