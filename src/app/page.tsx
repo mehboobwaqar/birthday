@@ -459,11 +459,11 @@ function LoveLetter() {
               </p>
 
               <p>
-                I love you soooooooooooooooooooooooooooooo much, Begum Jaan... more than words could ever say and more than you could ever imagine! 🥺❤️
+                I love you sooooooooooooooooo much, Begum Jaan... more than words could ever say and more than you could ever imagine! 🥺❤️
               </p>
             </div>
 
-            <p className="letter-signature">Forever &amp; Always Yours, Your MianG (Mehboob) ❤️💍</p>
+            <p className="letter-signature">Forever &amp; Always Yours, Your MianG (Mehboob Waqar) ❤️💍</p>
 
             <button className="reseal-letter-btn" onClick={handleClose}>
               <span>💌 Fold &amp; Seal Letter Again</span>
@@ -478,30 +478,234 @@ function LoveLetter() {
 // ─── Timeline Section ───
 function Timeline() {
   const age = getAge();
+  const [timelineModalIndex, setTimelineModalIndex] = useState<number | null>(null);
+  const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
+
   const milestones = [
-    { emoji: "👶", title: "September 10, 2003", text: "An angel was born & the world became a beautiful place" },
-    { emoji: "😘", title: "Start of Our Story", text: "'This way 😘' se shuru hua safar jo meri poori duniya ban gaya" },
-    { emoji: "🎂", title: "1st Birthday Together (2024)", text: "Ek ek din gin kar intezar kiya — dulha dulhan ko dekh kar ek hone ka khwaab dekha" },
-    { emoji: "💍", title: "2nd Birthday Together (2025)", text: "Shukar Alhamdulillah ke meri life partner aur wifey Laiba Mehboob ban chuki theen" },
-    { emoji: "💖", title: `3rd Birthday Together (${BIRTHDAY_YEAR})`, text: `Turning ${age} — Mahol pura wavy aur hamesha ke liye ek doosre ka sukoon!` },
+    {
+      id: 1,
+      emoji: "👶",
+      date: "September 10, 2003",
+      title: "The Day An Angel Was Born",
+      text: "The most blessed day when Allah gifted this world an angel — meri pyari Laiba! ❤️",
+    },
+    {
+      id: 2,
+      emoji: "😘",
+      date: "The Beginning",
+      title: "Start of Our Story ('This way 😘')",
+      text: "'This way 😘' se shuru hua safar jo aahista aahista meri poori rooh aur zindagi ban gaya.",
+    },
+    {
+      id: 3,
+      emoji: "🌸",
+      date: "Pre-Birthday Chapter",
+      title: "Our Very First Meetup",
+      text: "Pehli dafa aamne saamne dekh kar dil ki jo halat thi... aankhon mein sharm aur dharhkan tez! Wo lamha hamesha dil mein zinda hai.",
+    },
+    {
+      id: 4,
+      emoji: "🎂",
+      date: "September 10, 2024",
+      title: "1st Birthday Together",
+      text: "Ek ek din gin kar intezar kiya — dulha dulhan ko dekh kar hamesha ke liye ek hone ka khwaab dekha.",
+    },
+    {
+      id: 5,
+      emoji: "🍨",
+      date: "Post-Birthday Days",
+      title: "Sweet Post-Birthday Meetup",
+      text: "Birthday ke baad ki pehli mulakat — khushiyan, hansi, dher sari baatein aur hath thamne ka pyara ehsaas.",
+    },
+    {
+      id: 6,
+      emoji: "💍",
+      date: "Milestone of Hearts",
+      title: "Bound in Sacred Love & Nikah",
+      text: "Wo din jab hum aik pakke aur muqaddas rishte mein bandh gaye — Meri Official Wifey, Laiba Mehboob!",
+    },
+    {
+      id: 7,
+      emoji: "👑",
+      date: "September 10, 2025",
+      title: "2nd Birthday Together",
+      text: "Shukar Alhamdulillah ke meri wifey Laiba Mehboob ban chuki theen — Meri Mallika, Meri Jaan!",
+    },
+    {
+      id: 8,
+      emoji: "🚗",
+      date: "Cherished Moments",
+      title: "Romantic Outings & Drives",
+      text: "Sath guzare haseen safar, lambi drives, thandi hawayen aur aik doosre ki baahon mein be-panah sukoon.",
+    },
+    {
+      id: 9,
+      emoji: "☕",
+      date: "Unforgettable Evening",
+      title: "Our Pure Sukoon Meetup",
+      text: "Duniya se be-khabar, sirf tum aur main... ghanton baatein karte rehna aur waqt ka pata hi na chalna.",
+    },
+    {
+      id: 10,
+      emoji: "🥺",
+      date: "Memorable Goodbye",
+      title: "Last Meetup (Jaane Se Pehle) 💔",
+      text: "Rukhsat hone se pehle ki aakhri mulakat... bhari aankhein, nam dil, par dil mein hamesha ke liye aik doosre ka sath aur intezar ka wada.",
+    },
+    {
+      id: 11,
+      emoji: "💖",
+      date: `September 10, ${BIRTHDAY_YEAR}`,
+      title: `3rd Birthday Together (Turning ${age}) 🎉`,
+      text: `23 saal ki meri haseen Begum! Duriyan hain magar dilon ka fasla koi nahi — Forever & Always Mahol pura wavy!`,
+    },
   ];
+
+  const goToPrev = useCallback(() => {
+    setTimelineModalIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : milestones.length - 1));
+  }, [milestones.length]);
+
+  const goToNext = useCallback(() => {
+    setTimelineModalIndex((prev) => (prev !== null && prev < milestones.length - 1 ? prev + 1 : 0));
+  }, [milestones.length]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (timelineModalIndex === null) return;
+      if (e.key === "Escape") setTimelineModalIndex(null);
+      if (e.key === "ArrowLeft") goToPrev();
+      if (e.key === "ArrowRight") goToNext();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [timelineModalIndex, goToPrev, goToNext]);
 
   return (
     <section className="timeline-section" id="timeline">
       <h2 className="section-title">✨ Our Beautiful Story ✨</h2>
+      <p className="timeline-hint">Tap any chapter to view memory photo &amp; details 📸</p>
       <div className="section-divider" />
+
       <div className="timeline">
-        {milestones.map((item, i) => (
-          <div className="timeline-item" key={i}>
-            <div className="timeline-dot" />
-            <div className="timeline-content">
-              <span className="timeline-emoji">{item.emoji}</span>
-              <h3 className="timeline-title">{item.title}</h3>
-              <p className="timeline-text">{item.text}</p>
+        {milestones.map((item, i) => {
+          const hasError = imgErrors[item.id];
+          return (
+            <div className="timeline-item" key={item.id}>
+              <div className="timeline-dot" />
+              <div
+                className="timeline-content"
+                onClick={() => setTimelineModalIndex(i)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setTimelineModalIndex(i);
+                  }
+                }}
+              >
+                <div className="timeline-header">
+                  <span className="timeline-emoji">{item.emoji}</span>
+                  <span className="timeline-date-badge">{item.date}</span>
+                </div>
+                <h3 className="timeline-title">{item.title}</h3>
+                <p className="timeline-text">{item.text}</p>
+
+                <div className="timeline-photo-box">
+                  {!hasError ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={`/timeline/${item.id}.jpg`}
+                      alt={item.title}
+                      loading="lazy"
+                      onError={() => setImgErrors((prev) => ({ ...prev, [item.id]: true }))}
+                    />
+                  ) : (
+                    <div className="timeline-photo-placeholder">
+                      <span className="placeholder-icon">📸</span>
+                      <span className="placeholder-text">Photo #{item.id} • Tap to view</span>
+                    </div>
+                  )}
+                  <div className="timeline-photo-overlay">
+                    <span>🔍 Tap to view photo</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      {/* ─── Timeline Lightbox Modal ─── */}
+      {timelineModalIndex !== null && (
+        <div className="lightbox-overlay" onClick={() => setTimelineModalIndex(null)}>
+          <div
+            className="lightbox-content timeline-lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="lightbox-close"
+              onClick={() => setTimelineModalIndex(null)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            <button
+              className="lightbox-nav prev"
+              onClick={goToPrev}
+              aria-label="Previous chapter"
+            >
+              ‹
+            </button>
+
+            <div className="timeline-modal-body">
+              {!imgErrors[milestones[timelineModalIndex].id] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`/timeline/${milestones[timelineModalIndex].id}.jpg`}
+                  alt={milestones[timelineModalIndex].title}
+                  className="timeline-modal-img"
+                  onError={() =>
+                    setImgErrors((prev) => ({
+                      ...prev,
+                      [milestones[timelineModalIndex].id]: true,
+                    }))
+                  }
+                />
+              ) : (
+                <div className="timeline-modal-placeholder">
+                  <span className="modal-placeholder-emoji">
+                    {milestones[timelineModalIndex].emoji}
+                  </span>
+                  <p className="modal-placeholder-tip">
+                    📸 Upload photo for this moment to:<br />
+                    <code>public/timeline/{milestones[timelineModalIndex].id}.jpg</code>
+                  </p>
+                </div>
+              )}
+
+              <span className="timeline-modal-date">{milestones[timelineModalIndex].date}</span>
+              <h3 className="timeline-modal-title">
+                <span>{milestones[timelineModalIndex].emoji}</span>
+                <span>{milestones[timelineModalIndex].title}</span>
+              </h3>
+              <p className="timeline-modal-desc">{milestones[timelineModalIndex].text}</p>
+              <p className="lightbox-counter">
+                {timelineModalIndex + 1} / {milestones.length}
+              </p>
+            </div>
+
+            <button
+              className="lightbox-nav next"
+              onClick={goToNext}
+              aria-label="Next chapter"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
