@@ -710,7 +710,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
       return;
     }
 
-    if (trimmed.toLowerCase() === SECRET_PASSWORD.toLowerCase()) {
+    if (trimmed === SECRET_PASSWORD) {
       // SUCCESS!
       setIsSuccess(true);
       setErrorIndex(null);
@@ -867,6 +867,10 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
                     ✨ <strong>If you know, you know...</strong> 😉
                     <br />
                     And if you really know, you don&apos;t need any hint! 💖
+                    <br />
+                    <span style={{ display: "inline-block", marginTop: "4px", color: "#ffd700" }}>
+                      <em>(Jo aap mujhe pyaar se bulati ho... Starts with <strong>M</strong>)</em>
+                    </span>
                   </p>
                 </div>
               )}
