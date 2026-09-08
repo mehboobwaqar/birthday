@@ -1089,11 +1089,10 @@ export default function BirthdayPage() {
           </div>
           <p className="hero-subtitle">✨ The Most Beautiful Soul ✨</p>
           <p className="hero-age-line">
-            Celebrating <span>{age}</span> years of pure magic
+            Celebrating <span>{age}</span> Years of Pure Magic
           </p>
           <p className="hero-message">
-            Today we celebrate the most amazing, kind-hearted, and beautiful person in the entire universe.
-            A day as special as you deserves all the love, all the stars, and all the happiness in the world. 💖
+            A special birthday celebration for the most amazing person — <strong className="sweet-potato-highlight">Moiiiiiiii Wifey G</strong>! It&apos;s the <strong>{age}rd Birthday</strong> of my Sweet potato 🎂💖 Today and always, you deserve all the love, all the stars, and all the happiness in the entire universe. ✨
           </p>
           <button
             className="cta-button"
