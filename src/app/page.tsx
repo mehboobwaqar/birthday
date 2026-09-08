@@ -657,37 +657,37 @@ const FUNNY_ERROR_LIST = [
   {
     emoji: "🤨",
     title: "Arey Kaun Ho Bhai?!",
-    desc: "Sirf MianG ki Laiba ko access hai! Chalo shabash, side pe ho jao! 😂🚫",
+    desc: "Sirf meri Wifey ko access hai! Chalo shabash, side pe ho jao! 😂🚫",
   },
   {
     emoji: "🧐",
     title: "Wait A Second...",
-    desc: "Tum Laiba nahi lag rahi! Pehle MianG se NOC (permission) le kar aao! 😜",
+    desc: "Tum meri Wifey nahi lag rahi! Pehle ja kar permission le kar aao! 😜",
   },
   {
     emoji: "🚨",
     title: "FBI OPEN UP!",
-    desc: "Wrong Password! Yeh secret surprise sirf MianG ki begum k liye reserved hai! 🚔😂",
+    desc: "Wrong Password! Yeh secret surprise sirf meri Wifey k liye reserved hai! 🚔😂",
   },
   {
     emoji: "🙈",
     title: "Haww Hayee!",
-    desc: "Chori chori surprise dekhne ki koshish? Password bilkul galat hai boss! 🙅‍♀️",
+    desc: "Chori chori meri Wifey ka surprise dekhne aagaye? Password bilkul galat hai boss! 🙅‍♀️",
   },
   {
     emoji: "🚪",
     title: "Galat Darwaza!",
-    desc: "Bhai sahab / behn ji, galat gali aagaye aap! MianG ka secret code daalo! 💖😂",
+    desc: "Bhai sahab / behn ji, galat gali aagaye aap! Meri Wifey ka secret code daalo! 💖😂",
   },
   {
     emoji: "👸",
     title: "Access Denied!",
-    desc: "System bol raha hai: 'Sirf MianG ki future wifey allowed hai yahan!' 💍✨",
+    desc: "System bol raha hai: 'Sirf meri Wifey allowed hai yahan!' 💍✨",
   },
   {
     emoji: "🕵️",
     title: "Nice Try Chor!",
-    desc: "Lekin MianG ka password itna aasan nahi! Dimaag pe zor daalo! 🤪",
+    desc: "Lekin meri Wifey ka secret code itna aasan nahi! Dimaag pe zor daalo! 🤪",
   },
 ];
 
@@ -798,9 +798,9 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
           <div className="success-welcome-view">
             <div className="royal-crown-burst">👑</div>
             <span className="unlocked-badge">✨ ACCESS GRANTED ✨</span>
-            <h2 className="welcome-queen-title">Welcome My Queen, Laiba! 💖</h2>
+            <h2 className="welcome-queen-title">Welcome My Beautiful Wifey! 💖</h2>
             <p className="welcome-queen-subtitle">
-              MianG&apos;s heart & this special surprise are unlocked only for you! 🌹💍
+              This special surprise is unlocked only for you, my forever Wifey! 🌹💍
             </p>
             <div className="loading-dots">
               <span />
@@ -816,7 +816,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
             <span className="private-badge">🔐 PRIVATE SURPRISE</span>
             <h2 className="gate-title">Enter Secret Password</h2>
             <p className="gate-subtitle">
-              Only for <strong>Laiba Ahmad</strong> 💖
+              Only for <strong>Meri Wifey</strong> 💖
               <br />
               Enter the magic password to enter!
             </p>
@@ -851,7 +851,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
                     <p className="funny-desc">{currentError.desc}</p>
                     {attemptCount >= 2 && (
                       <span className="attempt-tag">
-                        ⚠️ Wrong attempts: {attemptCount} (MianG dekh raha hai 👀)
+                        ⚠️ Wrong attempts: {attemptCount} (Sirf meri Wifey allowed hai 👀)
                       </span>
                     )}
                   </div>
