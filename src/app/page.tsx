@@ -9,7 +9,7 @@ const BIRTHDAY_YEAR = 2026;
 const SECRET_PASSWORD = "MianG";
 
 // ─── Audio Tone Effects (Web Audio API) ───
-function playAudioCue(type: "success" | "wrong" | "kiss") {
+function playAudioCue(type: "success" | "wrong" | "kiss" | "twinkle") {
   if (typeof window === "undefined") return;
   try {
     const AudioCtx =
@@ -44,6 +44,22 @@ function playAudioCue(type: "success" | "wrong" | "kiss") {
       gain.connect(ctx.destination);
       osc.start();
       osc.stop(ctx.currentTime + 0.22);
+    } else if (type === "twinkle") {
+      // Gentle sparkling fairy chime
+      const notes = [1318.51, 1567.98];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        const startTime = ctx.currentTime + idx * 0.06;
+        osc.frequency.setValueAtTime(freq, startTime);
+        gain.gain.setValueAtTime(0.18, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.32);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + 0.32);
+      });
     } else {
       // Royal sweet victory chord (C5, E5, G5, C6)
       const notes = [523.25, 659.25, 783.99, 1046.5];
@@ -287,9 +303,11 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
   );
 }
 
-// ─── Qualities Section (Interactive Kiss Emojis 😘) ───
-interface ScreenKiss {
+// ─── Qualities Section (Interactive Cute Reactions: 🌸, 😘, 🥰, 💖) ───
+interface ScreenReactionItem {
   id: string;
+  emoji: string;
+  subEmoji?: string;
   x: number;
   y: number;
   scale: number;
@@ -312,13 +330,26 @@ function QualitiesSection() {
     { emoji: "🐥", word: "Sonu kaka" },
   ];
 
-  const [activeKisses, setActiveKisses] = useState<ScreenKiss[]>([]);
+  const [activeReactions, setActiveReactions] = useState<ScreenReactionItem[]>([]);
   const [clickedCardIdx, setClickedCardIdx] = useState<number | null>(null);
-  const kissTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleCardClick = (idx: number) => {
     setClickedCardIdx(idx);
     setTimeout(() => setClickedCardIdx(null), 500);
+
+    // 4 cute themes (Ak card click par in ma sa AK hi aayega):
+    // 1. Pink Flower (🌸)
+    // 2. Emoji Wali Kiss (😘)
+    // 3. Cute Face with Hearts (🥰)
+    // 4. Heart (💖)
+    const themes = [
+      { emoji: "🌸", subEmoji: "✨", sound: "twinkle" as const },
+      { emoji: "😘", subEmoji: "💖", sound: "kiss" as const },
+      { emoji: "🥰", subEmoji: "💕", sound: "twinkle" as const },
+      { emoji: "💖", subEmoji: "✨", sound: "twinkle" as const },
+    ];
+    const chosen = themes[Math.floor(Math.random() * themes.length)];
 
     // Random count: kabhi 1, kabhi 2 ya 3, kabhi 3 ya 4
     const rand = Math.random();
@@ -331,50 +362,50 @@ function QualitiesSection() {
       count = Math.random() < 0.5 ? 3 : 4;
     }
 
-    // Play kiss audio cues matching count
-    playAudioCue("kiss");
+    // Play appropriate sound cue matching count
+    playAudioCue(chosen.sound);
     if (count > 1) {
-      setTimeout(() => playAudioCue("kiss"), 140);
+      setTimeout(() => playAudioCue(chosen.sound), 140);
     }
     if (count > 2) {
-      setTimeout(() => playAudioCue("kiss"), 280);
+      setTimeout(() => playAudioCue(chosen.sound), 280);
     }
 
-    // Generate positions for 1, 2, 3, or 4 kissing face emojis (😘)
+    // Generate positions for 1, 2, 3, or 4 of ONLY the chosen emoji
     const now = Date.now();
-    let newKisses: ScreenKiss[] = [];
+    let newItems: ScreenReactionItem[] = [];
     const jitter = () => (Math.random() - 0.5) * 8;
 
     if (count === 1) {
-      newKisses = [
-        { id: `${now}-0`, x: 50 + jitter(), y: 46 + jitter(), scale: 1.15, delay: 0 },
+      newItems = [
+        { id: `${now}-0`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 50 + jitter(), y: 46 + jitter(), scale: 1.15, delay: 0 },
       ];
     } else if (count === 2) {
-      newKisses = [
-        { id: `${now}-0`, x: 38 + jitter(), y: 45 + jitter(), scale: 1.05, delay: 0 },
-        { id: `${now}-1`, x: 62 + jitter(), y: 48 + jitter(), scale: 1.08, delay: 0.14 },
+      newItems = [
+        { id: `${now}-0`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 38 + jitter(), y: 45 + jitter(), scale: 1.05, delay: 0 },
+        { id: `${now}-1`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 62 + jitter(), y: 48 + jitter(), scale: 1.08, delay: 0.14 },
       ];
     } else if (count === 3) {
-      newKisses = [
-        { id: `${now}-0`, x: 30 + jitter(), y: 44 + jitter(), scale: 1.0, delay: 0 },
-        { id: `${now}-1`, x: 70 + jitter(), y: 46 + jitter(), scale: 1.05, delay: 0.12 },
-        { id: `${now}-2`, x: 50 + jitter(), y: 36 + jitter(), scale: 1.1, delay: 0.24 },
+      newItems = [
+        { id: `${now}-0`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 30 + jitter(), y: 44 + jitter(), scale: 1.0, delay: 0 },
+        { id: `${now}-1`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 70 + jitter(), y: 46 + jitter(), scale: 1.05, delay: 0.12 },
+        { id: `${now}-2`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 50 + jitter(), y: 36 + jitter(), scale: 1.1, delay: 0.24 },
       ];
     } else {
-      // 4 kisses
-      newKisses = [
-        { id: `${now}-0`, x: 28 + jitter(), y: 40 + jitter(), scale: 0.95, delay: 0 },
-        { id: `${now}-1`, x: 72 + jitter(), y: 43 + jitter(), scale: 1.0, delay: 0.1 },
-        { id: `${now}-2`, x: 42 + jitter(), y: 54 + jitter(), scale: 1.05, delay: 0.22 },
-        { id: `${now}-3`, x: 58 + jitter(), y: 33 + jitter(), scale: 1.0, delay: 0.32 },
+      // 4 items
+      newItems = [
+        { id: `${now}-0`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 28 + jitter(), y: 40 + jitter(), scale: 0.95, delay: 0 },
+        { id: `${now}-1`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 72 + jitter(), y: 43 + jitter(), scale: 1.0, delay: 0.1 },
+        { id: `${now}-2`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 42 + jitter(), y: 54 + jitter(), scale: 1.05, delay: 0.22 },
+        { id: `${now}-3`, emoji: chosen.emoji, subEmoji: chosen.subEmoji, x: 58 + jitter(), y: 33 + jitter(), scale: 1.0, delay: 0.32 },
       ];
     }
 
-    setActiveKisses(newKisses);
+    setActiveReactions(newItems);
 
-    if (kissTimeoutRef.current) clearTimeout(kissTimeoutRef.current);
-    kissTimeoutRef.current = setTimeout(() => {
-      setActiveKisses([]);
+    if (reactionTimeoutRef.current) clearTimeout(reactionTimeoutRef.current);
+    reactionTimeoutRef.current = setTimeout(() => {
+      setActiveReactions([]);
     }, 2200);
   };
 
@@ -383,7 +414,7 @@ function QualitiesSection() {
       <h2 className="section-title">👑 Words That Describe You 👑</h2>
       <div className="section-divider" />
       <p className="qualities-hint">
-        ✨ Tap any card for sweet kisses! <span className="hint-kiss">😘</span>
+        ✨ Tap any card for cute surprises! <span className="hint-kiss">🌸 😘 🥰 💖</span>
       </p>
       <div className="qualities-grid">
         {qualities.map((q, i) => (
@@ -393,31 +424,31 @@ function QualitiesSection() {
             onClick={() => handleCardClick(i)}
             role="button"
             tabIndex={0}
-            title={`Tap for kisses for ${q.word}! 😘`}
+            title={`Tap for surprises for ${q.word}! ✨`}
           >
-            <span className="card-tap-kiss" aria-hidden="true">😘</span>
+            <span className="card-tap-kiss" aria-hidden="true">✨</span>
             <span className="quality-emoji">{q.emoji}</span>
             <span className="quality-word">{q.word}</span>
           </div>
         ))}
       </div>
 
-      {/* Full Screen Kiss Emoji Overlay (😘 with flying heart 💖) */}
-      {activeKisses.length > 0 && (
+      {/* Full Screen Cute Reaction Overlay (One theme: 🌸 / 😘 / 🥰 / 💖) */}
+      {activeReactions.length > 0 && (
         <div className="screen-kiss-overlay" aria-hidden="true">
-          {activeKisses.map((kiss) => (
+          {activeReactions.map((item) => (
             <div
-              key={kiss.id}
+              key={item.id}
               className="screen-kiss-item"
               style={{
-                left: `${kiss.x}%`,
-                top: `${kiss.y}%`,
-                animationDelay: `${kiss.delay}s`,
-                transform: `translate(-50%, -50%) scale(${kiss.scale})`,
+                left: `${item.x}%`,
+                top: `${item.y}%`,
+                animationDelay: `${item.delay}s`,
+                transform: `translate(-50%, -50%) scale(${item.scale})`,
               }}
             >
-              <span className="screen-kiss-face">😘</span>
-              <span className="screen-kiss-heart">💖</span>
+              <span className="screen-kiss-face">{item.emoji}</span>
+              {item.subEmoji && <span className="screen-kiss-heart">{item.subEmoji}</span>}
             </div>
           ))}
         </div>
