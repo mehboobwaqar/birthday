@@ -302,16 +302,16 @@ function CakeSection() {
 // ─── Reasons to Love Section ───
 function ReasonsSection() {
   const reasons = [
-    { text: "Your smile can literally light up the entire room", emoji: "😊" },
-    { text: "The way you care about everyone around you", emoji: "💝" },
-    { text: "Your beautiful heart that's full of kindness", emoji: "💖" },
-    { text: "How strong and brave you are in everything", emoji: "💪" },
-    { text: "Your laughter is the sweetest sound in the world", emoji: "😂" },
-    { text: "The way you make everything feel so special", emoji: "✨" },
-    { text: "Your eyes that tell the most beautiful stories", emoji: "👀" },
-    { text: "How you inspire me to be a better person every day", emoji: "🌟" },
-    { text: "Your intelligence and wisdom beyond your years", emoji: "🧠" },
-    { text: "Simply everything about you — you are perfect", emoji: "👑" },
+    { text: "Start 'This way 😘' se hua tha, aur aaj aap meri poori duniya aur lifeline ban chuki ho", emoji: "💍" },
+    { text: "Aap ke saath jo sukoon, peace aur vibe milti hai, wo duniya ke kisi aur kone me nahi hai", emoji: "🕊️" },
+    { text: "Mera Gollluu Motlluu Panda 🐼 — aap ke bagair meri life bilkul adhoori hai, ek pal bhi aap ke bina nahi reh sakta", emoji: "🥺" },
+    { text: "You are the greatest blessing of my life — aap ke aane ke baad meri zindagi itni haseen ho gayi ke shukar karte thakta nahi", emoji: "🌸" },
+    { text: "Chahe jitna bhi naraz ho jao, aap ko manana aur aap ke har khwaab ke liye duniya se ladna meri responsibility hai", emoji: "😇" },
+    { text: "Hamari memories itni achi hain ke jab bhi socho dil khush ho jata hai — 'Majjjaa a gyaaaa Yaar life ka!'", emoji: "🥰" },
+    { text: "Aap ke chehre ki hansi aur ronak dekh kar dil ko jo chain milta hai, that is my entire world", emoji: "✨" },
+    { text: "Har birthday aap ke saath aese manana hai jaise pehli baar ho — full josh aur 'Mahol pura wavy' ke sath!", emoji: "💃" },
+    { text: "Zoiiii ki Mama, Shahzain ki Chachi, meri Cutie Puttitieee — har roop me aap meri absolute Queen ho", emoji: "👑" },
+    { text: "Poori life aap ke saath guzarni hai — proud and blessed to call you Laiba Mehboob", emoji: "❤️" },
   ];
 
   return (
@@ -427,38 +427,46 @@ function LoveLetter() {
           <div className="letter-paper">
             <div className="letter-header-decor">
               <span className="decor-heart">🌹</span>
-              <span className="decor-date">September 10, {BIRTHDAY_YEAR}</span>
+              <span className="decor-date">Our 3rd Birthday Together • September 10, {BIRTHDAY_YEAR}</span>
               <span className="decor-heart">🌹</span>
             </div>
 
-            <p className="letter-greeting">My Dearest Laiba (Meri Wifey),</p>
+            <p className="letter-greeting">My Dearest Begum Jaan (Laiba Mehboob), 🫀🌹</p>
 
             <div className="letter-body">
               <p>
-                On this beautiful day, the world became infinitely more magical because you were born into it.
-                Your smile lights up my darkest days, and your laughter is the <span className="highlight">sweetest melody</span> I&apos;ve ever heard.
+                Happy {age}rd Birthday, meri jaan! 🎂💖 Aaj jab hum apna <span className="highlight">3rd birthday together</span> celebrate kar rahe hain, to dil me itna shukar aur itna pyaar hai ke lafzon me bayaan karna mushkil hai.
               </p>
+
               <p>
-                You are not just beautiful on the outside — your kind heart, your pure soul, your gentle touch — <span className="highlight">everything about you is absolute perfection</span>.
-                Every single day with you feels like a blessing I am endlessly grateful for.
+                Mujhe hamara <span className="highlight">pehla birthday (2024)</span> yaad aata hai — jab maine ek ek din gin gin kar intezar kiya tha. Yaad hai jab maine dulha dulhan ko dekh kar hum dono ko unki jagah imagine kiya tha? Maine socha tha ke Haye Allah g, wo din kitna awesome hoga jab hum hamesha ke liye ek rishte me bandh jayenge. Maine aapse promise kiya tha ke chahe mujhe sahi se manana na bhi aata ho, <span className="highlight">main aap ke liye sab seekh loonga</span>, kyun ke aap hi to meri life ki saari raunak ho, mera Gollluu Motlluu Panda! 🐼🫀
               </p>
+
               <p>
-                As you turn <span className="highlight">{age}</span>, I want you to know that my love for you grows deeper with every heartbeat.
-                You are my today, my tomorrow, and my forever. Happy Birthday, my love! 🌹
+                Aur phir hamara <span className="highlight">doosra birthday (2025)</span>... kis ko pata tha ke jo rishta <span className="highlight">&ldquo;This way 😘&rdquo;</span> se start hua tha, wo yahan tak pohanch jayega! Shukar Alhamdulillah, lakh lakh shukar ke meri life partner, meri wifey aap ho. Maine kabhi nahi socha tha main kisi se itna pyaar kar sakta hoon, but with you, I became complete. Wo vibe, wo sukoon, wo peace jo aap ke saath hai wo duniya ke kisi rishte me nahi hai — asy jasy <span className="highlight">&ldquo;Majjjaa a gyaaaa Yaar life ka!&rdquo;</span> Aur maine aapse wada kiya tha ke har birthday full josh aur <span className="highlight">&ldquo;Mahol pura wavy wala scene&rdquo;</span> ke saath manaoonga! 💃✨
               </p>
+
               <p>
-                May this year bring you all the happiness, peace, and every dream your beautiful heart desires.
-                I promise to stand right beside you through <span className="highlight">every moment, every tear, every laughter, and every dream</span>. 💖
+                Aur aaj, hamare is <span className="highlight">3rd birthday (2026)</span> par, jab aap {age} saal ki ho rahi ho, I want you to know that my love for you has only grown deeper, purer, and stronger with every single breath. Aap sirf meri biwi nahi ho — aap mera Sakoon ho, mera Proud ho, Zoiiii ki Mama, Shahzain ki Chachiii, meri Cutie Puttitieee, aur mera Sweet potato ho! 🥺🥔💖
               </p>
+
               <p>
-                You make ordinary life feel like a fairy tale. I want to spend the rest of my days making sure you always know just how <span className="highlight">deeply, truly, and completely loved</span> you are. 🥺💕
+                Aap ke bagair meri life bilkul adhoori hai — main ab apni life aap ke bagair imagine bhi nahi kar sakta. Mera dil karta hai main aap ke liye sab kuch karoon, aap ke har khwaab ko poora karoon, aur <span className="highlight">aap ke liye duniya se lad jaaoon</span>. InshaAllah main hamesha aap ke saath khada rahoonga, har aansoo, har hansi aur har lamhe me. 💖
+              </p>
+
+              <p>
+                Allah Pak hum dono ko hamesha aese hi khush aur ek doosre ke pyaar me aabad rakhe, buri nazar se bachaye, aur hamara yeh rishta hamesha ke liye aese hi mehakta rahe. <span className="highlight">Ameeeeen Summa Ameeeeen!</span> 🤲🌸💍
+              </p>
+
+              <p>
+                I love you soooooooooooooooooooooooooooooo much, Begum Jaan... itna ke aap soch bhi nahi sakti! 🥺❤️
               </p>
             </div>
 
-            <p className="letter-signature">Forever & Always Yours, MianG ❤️💍</p>
+            <p className="letter-signature">Forever &amp; Always Yours, Your MianG (Mehboob) ❤️💍</p>
 
             <button className="reseal-letter-btn" onClick={handleClose}>
-              <span>💌 Fold & Seal Letter Again</span>
+              <span>💌 Fold &amp; Seal Letter Again</span>
             </button>
           </div>
         </div>
@@ -472,10 +480,10 @@ function Timeline() {
   const age = getAge();
   const milestones = [
     { emoji: "👶", title: "September 10, 2003", text: "An angel was born & the world became a beautiful place" },
-    { emoji: "🌸", title: "Growing Up Beautiful", text: "Becoming the most incredible, kind, and amazing person" },
-    { emoji: "💕", title: "Our Paths Crossed", text: "The best thing that ever happened in this universe" },
-    { emoji: "💍", title: "My Future Wifey", text: "The person I want to spend my entire life with" },
-    { emoji: "🎂", title: `Turning ${age} in ${BIRTHDAY_YEAR}`, text: "This is just the beginning of our beautiful forever" },
+    { emoji: "😘", title: "Start of Our Story", text: "'This way 😘' se shuru hua safar jo meri poori duniya ban gaya" },
+    { emoji: "🎂", title: "1st Birthday Together (2024)", text: "Ek ek din gin kar intezar kiya — dulha dulhan ko dekh kar ek hone ka khwaab dekha" },
+    { emoji: "💍", title: "2nd Birthday Together (2025)", text: "Shukar Alhamdulillah ke meri life partner aur wifey Laiba Mehboob ban chuki theen" },
+    { emoji: "💖", title: `3rd Birthday Together (${BIRTHDAY_YEAR})`, text: `Turning ${age} — Mahol pura wavy aur hamesha ke liye ek doosre ka sukoon!` },
   ];
 
   return (
