@@ -527,7 +527,7 @@ function PhotoMemories() {
         colors: ["#ff0080", "#ffd700", "#ce93d8"],
         scalar: 0.8,
       });
-    } catch (_) {}
+    } catch (_) { }
 
     setTimeout(() => setJustRevealed(null), 900);
   }, [revealedCards]);
@@ -538,7 +538,7 @@ function PhotoMemories() {
     try {
       const confetti = (await import("canvas-confetti")).default;
       confetti({ particleCount: 100, spread: 120, origin: { y: 0.5 }, colors: ["#ff0080", "#ffd700", "#ce93d8", "#00f5ff"] });
-    } catch (_) {}
+    } catch (_) { }
   }, []);
 
   // Lightbox navigation (only among revealed cards)
@@ -656,8 +656,8 @@ function PhotoMemories() {
 const FUNNY_ERROR_LIST = [
   {
     emoji: "🤨",
-    title: "Arey Kaun Ho Bhai?!",
-    desc: "Sirf meri Wifey ko access hai! Chalo shabash, side pe ho jao! 😂🚫",
+    title: "Aree Kaun Ho Bhai Ap?!",
+    desc: "Sirf Meri Wifey ko access hai! Chalo shabash, side pe ho jao! 😂🚫",
   },
   {
     emoji: "🧐",
@@ -753,11 +753,11 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
             });
           }, 300);
         })
-        .catch(() => {});
+        .catch(() => { });
 
       try {
         sessionStorage.setItem("miang_unlocked", "true");
-      } catch {}
+      } catch { }
 
       setTimeout(() => {
         setIsFadingOut(true);
@@ -773,7 +773,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
       if (typeof window !== "undefined" && window.navigator && "vibrate" in window.navigator) {
         try {
           window.navigator.vibrate([150, 60, 150]);
-        } catch {}
+        } catch { }
       }
 
       setErrorIndex((prev) => (prev === null ? 0 : (prev + 1) % FUNNY_ERROR_LIST.length));
@@ -874,9 +874,9 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
               {showHint && (
                 <div className="hint-card">
                   <p className="hint-text">
-                    ❤️ <strong>Hint:</strong> Jo aapse sabse zyada pyaar karta hai... unka naam / laqab! 😉
+                    ✨ <strong>If you know, you know...</strong> 😉
                     <br />
-                    <em>(Starts with <strong>M</strong>, 5 letters: M***G)</em>
+                    And if you really know, you don&apos;t need any hint! 💖
                   </p>
                 </div>
               )}
@@ -920,7 +920,7 @@ export default function BirthdayPage() {
       if (sessionStorage.getItem("miang_unlocked") === "true") {
         setIsUnlocked(true);
       }
-    } catch {}
+    } catch { }
   }, []);
 
   const fireConfetti = useCallback(async () => {
@@ -1038,7 +1038,7 @@ export default function BirthdayPage() {
           onClick={() => {
             try {
               sessionStorage.removeItem("miang_unlocked");
-            } catch {}
+            } catch { }
             setIsUnlocked(false);
           }}
           title="Click to lock again"
