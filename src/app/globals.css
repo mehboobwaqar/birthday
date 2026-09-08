@@ -1007,6 +1007,29 @@ body {
   overflow: hidden;
 }
 
+.qualities-hint {
+  text-align: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(0.9rem, 2.4vw, 1.05rem);
+  color: #ffb3d1;
+  margin-top: -0.6rem;
+  margin-bottom: 2rem;
+  letter-spacing: 0.5px;
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+.qualities-hint .hint-kiss {
+  display: inline-block;
+  animation: kissWiggle 1.8s infinite ease-in-out alternate;
+}
+
+@keyframes kissWiggle {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.25) rotate(-12deg); }
+  100% { transform: scale(1.15) rotate(12deg); }
+}
+
 .qualities-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1027,7 +1050,11 @@ body {
   -webkit-backdrop-filter: blur(15px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  cursor: default;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
 }
 
 .quality-card:hover {
@@ -1035,6 +1062,42 @@ body {
   border-color: rgba(255, 107, 157, 0.6);
   box-shadow: 0 15px 40px rgba(255, 0, 128, 0.35), 0 0 20px rgba(255, 215, 0, 0.2);
   background: linear-gradient(145deg, rgba(255, 0, 128, 0.15) 0%, rgba(156, 39, 176, 0.2) 100%);
+}
+
+.quality-card:active {
+  transform: scale(0.92) translateY(2px);
+  border-color: #ffd700;
+  box-shadow: 0 4px 18px rgba(255, 0, 128, 0.5), 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.quality-card.card-kissed {
+  animation: cardKissBounce 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-color: #ffd700;
+  box-shadow: 0 0 35px rgba(255, 0, 128, 0.8), inset 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+@keyframes cardKissBounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.92) rotate(-3deg); }
+  65% { transform: scale(1.08) rotate(3deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.card-tap-kiss {
+  position: absolute;
+  top: 9px;
+  right: 11px;
+  font-size: 0.85rem;
+  opacity: 0.45;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 5px rgba(255, 0, 128, 0.5));
+  pointer-events: none;
+}
+
+.quality-card:hover .card-tap-kiss,
+.quality-card:active .card-tap-kiss {
+  opacity: 1;
+  transform: scale(1.35) rotate(15deg);
 }
 
 .quality-emoji {
@@ -1063,6 +1126,181 @@ body {
   filter: drop-shadow(0 2px 8px rgba(255, 0, 128, 0.35));
   display: block;
   margin-top: 0.2rem;
+}
+
+/* ============ FULL SCREEN KISS SHOWER EFFECT ============ */
+.kiss-screen-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Giant Screen Kiss Stamp */
+.giant-kiss-stamp {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(6.5rem, 26vw, 12rem);
+  line-height: 1;
+  filter: drop-shadow(0 0 45px rgba(255, 0, 128, 0.95)) drop-shadow(0 0 85px rgba(255, 105, 180, 0.7));
+  animation: giantKissImpact 1.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  pointer-events: none;
+  z-index: 100000;
+  user-select: none;
+}
+
+@keyframes giantKissImpact {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.15) rotate(-25deg);
+  }
+  28% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.35) rotate(8deg);
+  }
+  48% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(-4deg);
+  }
+  78% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.06) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.4) rotate(12deg);
+  }
+}
+
+/* Kiss Shockwave Ripple */
+.kiss-shockwave {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin-left: -50px;
+  margin-top: -50px;
+  border-radius: 50%;
+  border: 3.5px solid rgba(255, 0, 128, 0.85);
+  box-shadow: 0 0 35px rgba(255, 0, 128, 0.85), inset 0 0 35px rgba(255, 105, 180, 0.65);
+  animation: kissShockwaveExpand 1.3s ease-out forwards;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+@keyframes kissShockwaveExpand {
+  0% {
+    transform: scale(0.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(9);
+    opacity: 0;
+  }
+}
+
+/* Flying Kiss Particles */
+.flying-kiss-particle {
+  position: fixed;
+  user-select: none;
+  pointer-events: none;
+  z-index: 100000;
+  line-height: 1;
+  will-change: transform, opacity;
+  animation: flyAndSwayKiss var(--kiss-duration, 1.8s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  filter: drop-shadow(0 0 14px rgba(255, 0, 128, 0.7));
+}
+
+@keyframes flyAndSwayKiss {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3) rotate(var(--kiss-rot-start, 0deg));
+  }
+  18% {
+    opacity: 1;
+    transform: translate(var(--kiss-x1, 0px), var(--kiss-y1, -45px)) scale(var(--kiss-scale, 1.2)) rotate(var(--kiss-rot-mid, 15deg));
+  }
+  68% {
+    opacity: 0.95;
+    transform: translate(var(--kiss-x2, 20px), var(--kiss-y2, -190px)) scale(var(--kiss-scale, 1.2)) rotate(var(--kiss-rot-end, -15deg));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--kiss-x3, -15px), var(--kiss-y3, -340px)) scale(0.75) rotate(var(--kiss-rot-end, 30deg));
+  }
+}
+
+/* Floating Romantic Kiss Banner */
+.kiss-toast-banner {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(32, 2, 42, 0.96) 0%, rgba(255, 0, 128, 0.38) 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.8);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.65), 0 0 30px rgba(255, 0, 128, 0.55), inset 0 0 18px rgba(255, 215, 0, 0.25);
+  border-radius: 50px;
+  padding: 0.75rem 1.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  z-index: 100001;
+  pointer-events: none;
+  animation: kissToastPopup 2.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  max-width: calc(100vw - 32px);
+  text-align: center;
+}
+
+@keyframes kissToastPopup {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -40px) scale(0.85);
+  }
+  16% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.05);
+  }
+  26% {
+    transform: translate(-50%, 0) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -25px) scale(0.9);
+  }
+}
+
+.kiss-toast-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  animation: kissWiggle 1.2s infinite ease-in-out alternate;
+}
+
+.kiss-toast-text {
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: clamp(0.86rem, 2.4vw, 1.05rem);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+  line-height: 1.35;
+}
+
+.kiss-toast-highlight {
+  color: #ffd700;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
 }
 
 /* ============ CUTE INTERACTIVE LOVE LETTER SECTION ============ */
