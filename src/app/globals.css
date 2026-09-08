@@ -739,166 +739,291 @@ body {
   color: var(--pink);
 }
 
-/* ============ WISHES SECTION ============ */
-.wishes-section {
-  padding: 6rem 2rem;
-  background: var(--bg-dark);
-  position: relative;
-  overflow: hidden;
-}
-
-.wishes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  max-width: 950px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-.wish-card {
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.06) 0%, rgba(156, 39, 176, 0.06) 100%);
-  border: 1px solid rgba(255, 0, 128, 0.1);
-  border-radius: 24px;
-  padding: 2rem;
-  backdrop-filter: blur(20px);
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(40px);
-  animation: cardReveal 0.8s ease-out forwards;
-}
-
-.wish-card:nth-child(1) { animation-delay: 0.1s; }
-.wish-card:nth-child(2) { animation-delay: 0.2s; }
-.wish-card:nth-child(3) { animation-delay: 0.3s; }
-.wish-card:nth-child(4) { animation-delay: 0.4s; }
-.wish-card:nth-child(5) { animation-delay: 0.5s; }
-.wish-card:nth-child(6) { animation-delay: 0.6s; }
-
-@keyframes cardReveal {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.wish-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
-  transition: left 0.6s;
-}
-
-.wish-card:hover::before { left: 100%; }
-
-.wish-card:hover {
-  transform: translateY(-10px) scale(1.03);
-  border-color: rgba(255, 0, 128, 0.4);
-  box-shadow: 0 20px 60px rgba(255, 0, 128, 0.2), 0 0 20px rgba(255, 0, 128, 0.05);
-}
-
-.wish-icon {
-  font-size: 2.8rem;
-  margin-bottom: 1rem;
-  display: block;
-  transition: transform 0.3s ease;
-}
-
-.wish-card:hover .wish-icon { transform: scale(1.15) rotate(-5deg); }
-
-.wish-title {
-  font-family: 'Dancing Script', cursive;
-  font-size: 1.5rem;
-  color: var(--pink);
-  margin-bottom: 0.75rem;
-}
-
-.wish-text {
-  font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.55);
-  line-height: 1.8;
-  font-weight: 300;
-}
-
-/* ============ LOVE LETTER SECTION ============ */
+/* ============ CUTE INTERACTIVE LOVE LETTER SECTION ============ */
 .letter-section {
-  padding: 6rem 2rem;
-  background: linear-gradient(180deg, var(--bg-dark) 0%, #0d0025 50%, var(--bg-dark) 100%);
+  padding: 6rem 1.5rem;
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #12002b 50%, var(--bg-dark) 100%);
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
-.letter-container {
+/* ─── Sealed Envelope ─── */
+.sealed-envelope-wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+  background: linear-gradient(145deg, rgba(42, 10, 56, 0.88), rgba(20, 4, 30, 0.95));
+  border: 2px solid rgba(255, 107, 157, 0.35);
+  border-radius: 26px;
+  padding: 2.4rem 2rem 2rem;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.7),
+    0 0 35px rgba(255, 0, 128, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+
+.sealed-envelope-wrapper:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(255, 215, 0, 0.6);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.8),
+    0 0 45px rgba(255, 0, 128, 0.35),
+    0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.sealed-envelope-wrapper.unsealing {
+  animation: unsealBurst 0.55s ease-out forwards;
+}
+
+@keyframes unsealBurst {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08) rotate(-2deg); filter: brightness(1.3); }
+  100% { transform: scale(0.95); opacity: 0; }
+}
+
+.envelope-stamp {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  border: 2px dashed rgba(255, 215, 0, 0.5);
+  border-radius: 8px;
+  padding: 4px 8px;
+  background: rgba(255, 215, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.stamp-sub {
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+.stamp-heart {
+  font-size: 1rem;
+}
+
+.envelope-badge {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  background: rgba(255, 0, 128, 0.15);
+  border: 1px solid rgba(255, 0, 128, 0.35);
+  border-radius: 50px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #ff80b3;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+}
+
+.envelope-address {
+  text-align: left;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 14px;
+  padding: 0.9rem 1.2rem;
+  border-left: 3px solid #ff0080;
+  margin-bottom: 1.5rem;
+}
+
+.envelope-address p {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.35rem;
+  line-height: 1.4;
+}
+
+.envelope-address p:last-child {
+  margin-bottom: 0;
+}
+
+.envelope-address strong {
+  color: #ffffff;
+}
+
+.envelope-address .to-line strong {
+  color: #ff80b3;
+}
+
+.envelope-address .from-line strong {
+  color: #ffd700;
+}
+
+/* Wax Seal */
+.wax-seal-container {
+  margin: 1.5rem auto 1.2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.wax-seal {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff2a6d, #b80044 55%, #7a0026 100%);
+  border: 3px dashed rgba(255, 215, 0, 0.45);
+  box-shadow:
+    0 10px 30px rgba(255, 0, 100, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: waxPulse 2.4s ease-in-out infinite alternate;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.sealed-envelope-wrapper:hover .wax-seal {
+  transform: scale(1.1) rotate(5deg);
+}
+
+@keyframes waxPulse {
+  0% { box-shadow: 0 8px 25px rgba(255, 0, 100, 0.4); }
+  100% { box-shadow: 0 12px 35px rgba(255, 0, 100, 0.7), 0 0 15px rgba(255, 215, 0, 0.5); }
+}
+
+.seal-heart {
+  font-size: 1.8rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.seal-text {
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ffe6eb;
+  margin-top: 2px;
+}
+
+.envelope-cta {
+  margin-top: 1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #ffd700;
+  animation: floatCta 2s ease-in-out infinite alternate;
+}
+
+@keyframes floatCta {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-3px); color: #ff80b3; }
+}
+
+/* ─── Unfolded Romantic Parchment Letter ─── */
+.unfolded-letter-container {
   max-width: 680px;
   margin: 0 auto;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
-  border: 1px solid rgba(255, 0, 128, 0.15);
-  border-radius: 32px;
-  padding: clamp(2rem, 6vw, 4rem);
-  backdrop-filter: blur(25px);
+  animation: letterUnfold 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes letterUnfold {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.letter-paper {
+  background: linear-gradient(145deg, rgba(30, 8, 42, 0.92), rgba(16, 3, 24, 0.96));
+  border: 2px solid rgba(255, 107, 157, 0.35);
+  border-radius: 28px;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.8),
+    0 0 50px rgba(255, 0, 128, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
   position: relative;
-  overflow: hidden;
-  transition: all 0.4s ease;
+  text-align: left;
 }
 
-.letter-container:hover {
-  border-color: rgba(255, 0, 128, 0.3);
-  box-shadow: 0 20px 60px rgba(255, 0, 128, 0.1);
+.letter-header-decor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 107, 157, 0.2);
+  padding-bottom: 0.8rem;
+  margin-bottom: 1.8rem;
 }
 
-.letter-container::before {
-  content: '💌';
-  position: absolute;
-  top: -15px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 2rem;
-  z-index: 1;
-  filter: drop-shadow(0 0 10px rgba(255, 0, 128, 0.5));
+.decor-heart {
+  font-size: 1.2rem;
 }
 
-.letter-container::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--magenta), var(--gold), var(--magenta), transparent);
+.decor-date {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #ffd700;
+  text-transform: uppercase;
 }
 
 .letter-greeting {
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
   color: var(--pink);
-  margin-bottom: 2rem;
-  text-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 25px rgba(255, 0, 128, 0.4);
 }
 
 .letter-body {
-  font-size: clamp(0.9rem, 2vw, 1rem);
-  color: rgba(255, 255, 255, 0.7);
+  font-size: clamp(0.92rem, 2vw, 1.02rem);
+  color: rgba(255, 255, 255, 0.82);
   line-height: 2;
   font-weight: 300;
-  text-align: left;
   margin-bottom: 2rem;
 }
 
 .letter-body p {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.4rem;
 }
 
 .letter-body .highlight {
-  color: var(--pink);
-  font-weight: 500;
+  color: #ff80b3;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
 }
 
 .letter-signature {
   font-family: 'Great Vibes', cursive;
-  font-size: 2rem;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
   color: var(--gold);
   text-shadow: var(--neon-gold);
   text-align: right;
+  margin-bottom: 2rem;
+}
+
+.reseal-letter-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 0.7rem 1.6rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 107, 157, 0.35);
+  border-radius: 50px;
+  color: #ffd700;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reseal-letter-btn:hover {
+  background: rgba(255, 0, 128, 0.2);
+  border-color: #ff0080;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.4);
 }
 
 /* ============ REASONS SECTION ============ */
@@ -1593,7 +1718,6 @@ body {
   .qualities-section,
   .cake-section,
   .reasons-section,
-  .wishes-section,
   .letter-section,
   .memories-section,
   .gift-section,
@@ -1605,8 +1729,8 @@ body {
   /* Optimize heavy backdrop-filter blurs which cause mobile scroll stutter */
   .quality-card,
   .reason-item,
-  .wish-card,
   .letter-paper,
+  .sealed-envelope-wrapper,
   .memory-card-front,
   .timeline-content,
   .birthday-badge,
@@ -1621,7 +1745,6 @@ body {
 
   /* Disable heavy infinite hover transforms on mobile touch */
   .quality-card:hover,
-  .wish-card:hover,
   .memory-card:hover .memory-card-front {
     transform: none !important;
   }

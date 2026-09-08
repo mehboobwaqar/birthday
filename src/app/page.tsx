@@ -331,68 +331,128 @@ function ReasonsSection() {
   );
 }
 
-// ─── Wishes Section ───
-function WishesSection() {
-  const wishes = [
-    { icon: "🌟", title: "Shine Bright", text: "May your light continue to brighten every room you walk into. You are the star of every story worth telling." },
-    { icon: "🦋", title: "Beautiful Soul", text: "Your kindness and grace make this world a better place. Never stop being the incredible person you are." },
-    { icon: "🌹", title: "Eternal Love", text: "Every moment with you is a blessing. My heart belongs to you today, tomorrow, and for all of eternity." },
-    { icon: "🎓", title: "Dream Big", text: "May all your wildest dreams come true this year. The world is waiting for someone as extraordinary as you." },
-    { icon: "💎", title: "Precious Gem", text: "You are rare, precious, and absolutely priceless. The universe created its masterpiece when it made you." },
-    { icon: "🌈", title: "Endless Joy", text: "May your days overflow with laughter, love, and every color of happiness that life has to offer." },
-  ];
-
-  return (
-    <section className="wishes-section" id="wishes">
-      <h2 className="section-title">🌟 Birthday Wishes for You 🌟</h2>
-      <div className="section-divider" />
-      <div className="wishes-grid">
-        {wishes.map((wish, i) => (
-          <div className="wish-card" key={i}>
-            <span className="wish-icon">{wish.icon}</span>
-            <h3 className="wish-title">{wish.title}</h3>
-            <p className="wish-text">{wish.text}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-// ─── Love Letter Section ───
+// ─── Cute Interactive Love Letter Section ───
 function LoveLetter() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
   const age = getAge();
+
+  const handleOpen = useCallback(async () => {
+    if (isOpen) return;
+    setIsOpening(true);
+    playAudioCue("success");
+
+    // Burst of heart & golden confetti
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      const heart = confetti.shapeFromPath({
+        path: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z",
+      });
+      confetti({
+        shapes: [heart],
+        particleCount: 50,
+        spread: 80,
+        origin: { y: 0.6 },
+        scalar: 2,
+        colors: ["#ff0080", "#ff6b9d", "#ffd700", "#ff1744"],
+      });
+    } catch (_) {}
+
+    setTimeout(() => {
+      setIsOpen(true);
+      setIsOpening(false);
+    }, 550);
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   return (
     <section className="letter-section" id="letter">
       <h2 className="section-title">💌 A Letter From My Heart 💌</h2>
       <div className="section-divider" />
-      <div className="letter-container">
-        <p className="letter-greeting">My Dearest Laiba,</p>
-        <div className="letter-body">
-          <p>
-            On this beautiful day, the world became a better place because you were born into it.
-            Your smile lights up the darkest days, and your laughter is the <span className="highlight">sweetest melody</span> I&apos;ve ever heard.
-          </p>
-          <p>
-            You are not just beautiful on the outside — your heart, your soul, your kindness — <span className="highlight">everything about you is absolutely perfect</span>.
-            Every single day with you feels like a gift I don&apos;t deserve but am infinitely grateful for.
-          </p>
-          <p>
-            As you turn <span className="highlight">{age}</span>, I want you to know that my love for you grows deeper with every passing second.
-            You are my today, my tomorrow, and my forever. Happy Birthday, my love! 🌹
-          </p>
-          <p>
-            May this year bring you everything your heart desires and more.
-            You deserve all the happiness, all the love, and all the beautiful things this world has to offer.
-            I promise to be right beside you through <span className="highlight">every moment, every dream, every adventure</span>. 💖
-          </p>
-          <p>
-            You make me want to be a better person. You make every ordinary moment extraordinary.
-            And I want to spend the rest of my life making sure you know just how <span className="highlight">special and loved</span> you truly are. 🥺💕
+
+      {!isOpen ? (
+        /* ─── Sealed Vintage Love Envelope ─── */
+        <div
+          className={`sealed-envelope-wrapper ${isOpening ? "unsealing" : ""}`}
+          onClick={handleOpen}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && handleOpen()}
+          aria-label="Open Love Letter"
+        >
+          <div className="envelope-stamp">
+            <span className="stamp-sub">AIR MAIL</span>
+            <div className="stamp-heart">💖</div>
+            <span className="stamp-sub">WITH LOVE</span>
+          </div>
+
+          <div className="envelope-badge">💌 PRIVATE & CONFIDENTIAL</div>
+
+          <div className="envelope-address">
+            <p className="to-line">
+              To: <strong>Meri Pyaari Wifey, Laiba Ahmad</strong> 🌹
+            </p>
+            <p className="from-line">
+              From: <strong>Your MianG</strong> 💍
+            </p>
+          </div>
+
+          <div className="wax-seal-container">
+            <div className="wax-seal">
+              <span className="seal-heart">💖</span>
+              <span className="seal-text">SEALED</span>
+            </div>
+          </div>
+
+          <p className="envelope-cta">
+            <span>✨ Tap to Break the Seal & Read Letter ✨</span>
           </p>
         </div>
-        <p className="letter-signature">Forever & Always Yours ❤️</p>
-      </div>
+      ) : (
+        /* ─── Unfolded Romantic Parchment Letter ─── */
+        <div className="unfolded-letter-container">
+          <div className="letter-paper">
+            <div className="letter-header-decor">
+              <span className="decor-heart">🌹</span>
+              <span className="decor-date">September 10, {BIRTHDAY_YEAR}</span>
+              <span className="decor-heart">🌹</span>
+            </div>
+
+            <p className="letter-greeting">My Dearest Laiba (Meri Wifey),</p>
+
+            <div className="letter-body">
+              <p>
+                On this beautiful day, the world became infinitely more magical because you were born into it.
+                Your smile lights up my darkest days, and your laughter is the <span className="highlight">sweetest melody</span> I&apos;ve ever heard.
+              </p>
+              <p>
+                You are not just beautiful on the outside — your kind heart, your pure soul, your gentle touch — <span className="highlight">everything about you is absolute perfection</span>.
+                Every single day with you feels like a blessing I am endlessly grateful for.
+              </p>
+              <p>
+                As you turn <span className="highlight">{age}</span>, I want you to know that my love for you grows deeper with every heartbeat.
+                You are my today, my tomorrow, and my forever. Happy Birthday, my love! 🌹
+              </p>
+              <p>
+                May this year bring you all the happiness, peace, and every dream your beautiful heart desires.
+                I promise to stand right beside you through <span className="highlight">every moment, every tear, every laughter, and every dream</span>. 💖
+              </p>
+              <p>
+                You make ordinary life feel like a fairy tale. I want to spend the rest of my days making sure you always know just how <span className="highlight">deeply, truly, and completely loved</span> you are. 🥺💕
+              </p>
+            </div>
+
+            <p className="letter-signature">Forever & Always Yours, MianG ❤️💍</p>
+
+            <button className="reseal-letter-btn" onClick={handleClose}>
+              <span>💌 Fold & Seal Letter Again</span>
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -1017,9 +1077,6 @@ export default function BirthdayPage() {
 
       {/* ─── Reasons ─── */}
       <ReasonsSection />
-
-      {/* ─── Wishes ─── */}
-      <WishesSection />
 
       {/* ─── Love Letter ─── */}
       <LoveLetter />
