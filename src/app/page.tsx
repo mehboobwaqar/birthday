@@ -25,7 +25,10 @@ type AudioCueType =
   | "success"
   | "wrong"
   | "funnyBoing"
-  | "quizYes";
+  | "quizYes"
+  | "fireworkLaunch"
+  | "fireworkBurst"
+  | "royalVictory";
 
 let sharedAudioCtx: AudioContext | null = null;
 
@@ -402,6 +405,55 @@ function playAudioCue(type: AudioCueType) {
       bGain.connect(ctx.destination);
       bell.start(ctx.currentTime + 0.25);
       bell.stop(ctx.currentTime + 0.95);
+    } else if (type === "fireworkLaunch") {
+      // 🚀 Rocket Launch: Upward sweeping whistling whoosh
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(260 + Math.random() * 80, now);
+      osc.frequency.exponentialRampToValueAtTime(950 + Math.random() * 250, now + 0.38);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    } else if (type === "fireworkBurst") {
+      // 💥 Firework Detonation: Deep low-frequency thump + crackling sizzle
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(130 + Math.random() * 30, now);
+      osc.frequency.exponentialRampToValueAtTime(25, now + 0.35);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.38);
+
+      // Crackle sizzle
+      const length = Math.floor(ctx.sampleRate * 0.28);
+      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.08));
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = "highpass";
+      filter.frequency.setValueAtTime(1400, now);
+      const nGain = ctx.createGain();
+      nGain.gain.setValueAtTime(0.14, now);
+      nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+      noise.connect(filter);
+      filter.connect(nGain);
+      nGain.connect(ctx.destination);
+      noise.start(now);
+      noise.stop(now + 0.28);
     } else {
       // 👑 Royal victory chord (C5, E5, G5, C6)
       const notes = [523.25, 659.25, 783.99, 1046.5];
@@ -2049,36 +2101,546 @@ function Timeline() {
   );
 }
 
+// ─── 40-Second Fullscreen Blue Fireworks Show Modal ───
+function FireworksShowModal({ onClose }: { onClose: () => void }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(40);
+  const [isFinished, setIsFinished] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+
+  const lastLaunchSoundRef = useRef<number>(0);
+  const lastBurstSoundRef = useRef<number>(0);
+  const isMutedRef = useRef(false);
+  isMutedRef.current = isMuted;
+
+  // 40-Second Countdown Timer
+  useEffect(() => {
+    if (isFinished) return;
+    const interval = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsFinished(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isFinished]);
+
+  // When completed after 40 seconds: celebratory sound & grand confetti
+  useEffect(() => {
+    if (isFinished) {
+      if (!isMutedRef.current) {
+        playAudioCue("royalVictory");
+      }
+      import("canvas-confetti")
+        .then(({ default: confetti }) => {
+          const heart = confetti.shapeFromPath({
+            path: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z",
+          });
+          confetti({
+            shapes: [heart],
+            particleCount: 90,
+            spread: 120,
+            origin: { y: 0.45 },
+            colors: ["#ffd700", "#ff0080", "#00f5ff", "#ffffff", "#ffbe0b"],
+          });
+          setTimeout(() => {
+            confetti({
+              particleCount: 120,
+              spread: 160,
+              origin: { y: 0.55 },
+              colors: ["#ffd700", "#ff007f", "#38bdf8", "#a855f7", "#ffffff"],
+            });
+          }, 600);
+        })
+        .catch(() => {});
+    }
+  }, [isFinished]);
+
+  // Canvas Fireworks Simulation
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      ctx.fillStyle = "#020a22";
+      ctx.fillRect(0, 0, width, height);
+    };
+    window.addEventListener("resize", handleResize);
+
+    // Initial background paint
+    ctx.fillStyle = "#020a22";
+    ctx.fillRect(0, 0, width, height);
+
+    const PALETTES = [
+      ["#ffd700", "#ffec3d", "#ffbe0b", "#fff3bf"], // Imperial Gold
+      ["#00f0ff", "#38bdf8", "#60a5fa", "#bae6fd"], // Sapphire / Cyan
+      ["#ff2a85", "#ff69b4", "#f43f5e", "#fda4af"], // Neon Rose / Pink
+      ["#c084fc", "#a855f7", "#e879f9", "#f3e8ff"], // Royal Violet
+      ["#06d6a0", "#34d399", "#a7f3d0", "#ffffff"], // Emerald Starlight
+      ["#ffffff", "#fef08a", "#bae6fd", "#fbcfe8"], // Multiverse Diamond
+    ];
+
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      color: string;
+      alpha: number;
+      decay: number;
+      size: number;
+      friction: number;
+      gravity: number;
+      isGlitter?: boolean;
+      history: { x: number; y: number }[];
+    }
+
+    interface Rocket {
+      x: number;
+      y: number;
+      targetY: number;
+      vx: number;
+      vy: number;
+      color: string;
+      palette: string[];
+      burstType: "peony" | "willow" | "heart" | "ring";
+      trail: { x: number; y: number }[];
+    }
+
+    const rockets: Rocket[] = [];
+    const particles: Particle[] = [];
+    let nextLaunchTime = Date.now() + 100;
+
+    const spawnRocket = (
+      customX?: number,
+      customTargetY?: number,
+      forceBurstType?: "peony" | "willow" | "heart" | "ring"
+    ) => {
+      const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+      const startX = customX ?? width * 0.12 + Math.random() * width * 0.76;
+      const targetY = customTargetY ?? height * 0.14 + Math.random() * height * 0.44;
+      const speed = -(13 + Math.random() * 4.5);
+      const dx = customX ? (customX - startX) * 0.05 : (Math.random() - 0.5) * 2;
+
+      const burstTypes: ("peony" | "willow" | "heart" | "ring")[] = [
+        "peony",
+        "peony",
+        "willow",
+        "heart",
+        "heart",
+        "ring",
+      ];
+      const burstType = forceBurstType ?? burstTypes[Math.floor(Math.random() * burstTypes.length)];
+
+      rockets.push({
+        x: startX,
+        y: height + 10,
+        targetY,
+        vx: dx,
+        vy: speed,
+        color: palette[0],
+        palette,
+        burstType,
+        trail: [],
+      });
+
+      // Launch sound effect
+      const now = Date.now();
+      if (!isMutedRef.current && now - lastLaunchSoundRef.current > 130) {
+        lastLaunchSoundRef.current = now;
+        playAudioCue("fireworkLaunch");
+      }
+    };
+
+    const explodeRocket = (rocket: Rocket) => {
+      const { x, y, palette, burstType } = rocket;
+
+      // Burst sound effect
+      const now = Date.now();
+      if (!isMutedRef.current && now - lastBurstSoundRef.current > 110) {
+        lastBurstSoundRef.current = now;
+        playAudioCue("fireworkBurst");
+      }
+
+      if (burstType === "heart") {
+        // Parametric Heart Equation
+        const total = 65;
+        for (let i = 0; i < total; i++) {
+          const t = (i / total) * Math.PI * 2;
+          const hx = 16 * Math.pow(Math.sin(t), 3);
+          const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+          const scale = 0.28 + Math.random() * 0.05;
+          const color = palette[Math.floor(Math.random() * palette.length)];
+          particles.push({
+            x,
+            y,
+            vx: hx * scale + (Math.random() - 0.5) * 0.8,
+            vy: hy * scale + (Math.random() - 0.5) * 0.8,
+            color,
+            alpha: 1,
+            decay: 0.012 + Math.random() * 0.008,
+            size: 2.6 + Math.random() * 1.6,
+            friction: 0.965,
+            gravity: 0.04,
+            history: [],
+          });
+        }
+      } else if (burstType === "willow") {
+        // Golden willow glittering streamers
+        const count = 85;
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 5.8 + 1.2;
+          particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            color: Math.random() > 0.3 ? "#ffd700" : "#fff8db",
+            alpha: 1,
+            decay: 0.008 + Math.random() * 0.006,
+            size: 2.2 + Math.random() * 1.5,
+            friction: 0.94,
+            gravity: 0.08,
+            isGlitter: true,
+            history: [],
+          });
+        }
+      } else if (burstType === "ring") {
+        // Uniform Ring
+        const count = 55;
+        const ringSpeed = 4.8 + Math.random() * 1.8;
+        for (let i = 0; i < count; i++) {
+          const angle = (i / count) * Math.PI * 2;
+          const color = palette[i % palette.length];
+          particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * ringSpeed,
+            vy: Math.sin(angle) * ringSpeed,
+            color,
+            alpha: 1,
+            decay: 0.015 + Math.random() * 0.008,
+            size: 2.8,
+            friction: 0.96,
+            gravity: 0.05,
+            history: [],
+          });
+        }
+      } else {
+        // Classic Peony spherical burst
+        const count = 75 + Math.floor(Math.random() * 30);
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 6.5 + 1.5;
+          const color = palette[Math.floor(Math.random() * palette.length)];
+          particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            color,
+            alpha: 1,
+            decay: 0.014 + Math.random() * 0.01,
+            size: 2.5 + Math.random() * 1.8,
+            friction: 0.958,
+            gravity: 0.055,
+            history: [],
+          });
+        }
+      }
+    };
+
+    // Initial celebratory salvo
+    spawnRocket(width * 0.35, height * 0.3);
+    setTimeout(() => {
+      spawnRocket(width * 0.65, height * 0.28);
+    }, 250);
+
+    const render = () => {
+      // 1. Clear with transparent deep blue for glowing light trails
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "rgba(2, 10, 34, 0.22)";
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Glowing blending mode for fireworks
+      ctx.globalCompositeOperation = "lighter";
+
+      const now = Date.now();
+
+      // Rocket Spawning Logic based on duration stage
+      if (now > nextLaunchTime) {
+        if (!isFinished) {
+          if (secondsLeft <= 6) {
+            // Finale Mode: rapid multi-rocket barrages!
+            spawnRocket(width * (0.2 + Math.random() * 0.6));
+            if (Math.random() > 0.35) {
+              spawnRocket(width * (0.15 + Math.random() * 0.7));
+            }
+            nextLaunchTime = now + (200 + Math.random() * 220);
+          } else {
+            // Regular celebratory flow
+            spawnRocket();
+            if (Math.random() > 0.65) {
+              setTimeout(() => {
+                spawnRocket();
+              }, 120);
+            }
+            nextLaunchTime = now + (480 + Math.random() * 420);
+          }
+        } else {
+          // Ambient romantic sparkles after 40s show finishes
+          spawnRocket();
+          nextLaunchTime = now + (2800 + Math.random() * 1800);
+        }
+      }
+
+      // 3. Update & Draw Rockets
+      for (let i = rockets.length - 1; i >= 0; i--) {
+        const r = rockets[i];
+        r.trail.push({ x: r.x, y: r.y });
+        if (r.trail.length > 7) r.trail.shift();
+
+        r.x += r.vx;
+        r.y += r.vy;
+        r.vy *= 0.99;
+
+        // Draw rocket streak
+        ctx.strokeStyle = r.color;
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        for (let j = 0; j < r.trail.length; j++) {
+          const pt = r.trail[j];
+          if (j === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.stroke();
+
+        // Draw rocket tip
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, 2.8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Explode condition
+        if (r.y <= r.targetY || r.vy >= -1.5) {
+          explodeRocket(r);
+          rockets.splice(i, 1);
+        }
+      }
+
+      // 4. Update & Draw Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.history.push({ x: p.x, y: p.y });
+        if (p.history.length > 4) p.history.shift();
+
+        p.vx *= p.friction;
+        p.vy = p.vy * p.friction + p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        // Draw spark trail
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = p.size;
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.beginPath();
+        for (let j = 0; j < p.history.length; j++) {
+          const pt = p.history[j];
+          if (j === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.stroke();
+
+        // Glitter sparkle effect
+        if (p.isGlitter && Math.random() > 0.4) {
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 1.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    animId = requestAnimationFrame(render);
+
+    // Interactive Click / Tap on Canvas to create instant fireworks!
+    const handleCanvasClick = (e: MouseEvent | TouchEvent) => {
+      let clientX = 0;
+      let clientY = 0;
+      if ("touches" in e && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else if ("clientX" in e) {
+        clientX = (e as MouseEvent).clientX;
+        clientY = (e as MouseEvent).clientY;
+      } else {
+        return;
+      }
+
+      spawnRocket(clientX, clientY, Math.random() > 0.5 ? "heart" : "peony");
+    };
+
+    const canvasElement = canvasRef.current;
+    if (canvasElement) {
+      canvasElement.addEventListener("click", handleCanvasClick);
+      canvasElement.addEventListener("touchstart", handleCanvasClick, { passive: true });
+    }
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", handleResize);
+      if (canvasElement) {
+        canvasElement.removeEventListener("click", handleCanvasClick);
+        canvasElement.removeEventListener("touchstart", handleCanvasClick);
+      }
+    };
+  }, [isFinished, secondsLeft]);
+
+  return (
+    <div className="fireworks-show-overlay">
+      {/* Fullscreen Royal Blue Fireworks Canvas */}
+      <canvas ref={canvasRef} className="fireworks-canvas" />
+
+      {/* Top Controls Header */}
+      <div className="fireworks-modal-header">
+        <div className="fireworks-show-info">
+          <span className="fireworks-live-pulse" />
+          <span className="fireworks-show-badge">
+            {isFinished ? "✨ Grand Celebration ✨" : "🎆 40s Fireworks Show"}
+          </span>
+          {!isFinished && (
+            <span className="fireworks-timer-pill">
+              ⏳ {secondsLeft}s
+            </span>
+          )}
+        </div>
+
+        <div className="fireworks-top-controls">
+          <button
+            className="fireworks-icon-btn"
+            onClick={() => setIsMuted((prev) => !prev)}
+            title={isMuted ? "Unmute Sound" : "Mute Sound"}
+          >
+            {isMuted ? "🔇" : "🔊"}
+          </button>
+          {!isFinished && (
+            <button
+              className="fireworks-skip-btn"
+              onClick={() => {
+                setSecondsLeft(0);
+                setIsFinished(true);
+              }}
+            >
+              Skip to Surprise ⏩
+            </button>
+          )}
+          <button className="fireworks-close-btn" onClick={onClose} title="Close">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      {/* Interactive Tap Hint during fireworks */}
+      {!isFinished && (
+        <div className="fireworks-tap-hint">
+          ✨ Tap anywhere on screen to launch custom fireworks! ✨
+        </div>
+      )}
+
+      {/* 40-Second Completed Surprise Reveal Card */}
+      {isFinished && (
+        <div className="fireworks-reveal-card-container">
+          <div className="fireworks-reveal-card">
+            <div className="fireworks-reveal-badge">🎁 SURPRISE REVEALED 💖</div>
+            <div className="fireworks-reveal-icon">💝</div>
+            <h2 className="fireworks-reveal-title">You are my greatest gift! 💖</h2>
+            <p className="fireworks-reveal-text">
+              No gift in this world compares to having you in my life, Wifeyyy G. You are my everything literally everything. 🥺✨
+            </p>
+            <div className="fireworks-reveal-divider" />
+            <p className="fireworks-reveal-sub">Forever yours, Mehboob Waqar 💕</p>
+            <div className="fireworks-reveal-actions">
+              <button
+                className="fireworks-btn-primary"
+                onClick={() => {
+                  setIsFinished(false);
+                  setSecondsLeft(40);
+                }}
+              >
+                🎆 Watch Fireworks Again (40s)
+              </button>
+              <button className="fireworks-btn-secondary" onClick={onClose}>
+                💕 Back to Celebration
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Surprise Gift Section ───
 function GiftSection() {
   const [opened, setOpened] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
 
   const handleOpen = useCallback(async () => {
-    if (opened) {
-      playAudioCue("heartPop");
-      return;
-    }
-    playAudioCue("giftOpen");
     setOpened(true);
+    setShowFireworks(true);
+    playAudioCue("giftOpen");
     try {
       const confetti = (await import("canvas-confetti")).default;
-      // Heart-shaped confetti
-      const heart = confetti.shapeFromPath({ path: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" });
-      confetti({ shapes: [heart], particleCount: 60, spread: 100, origin: { y: 0.5 }, scalar: 2, colors: ["#ff0080", "#ff6b9d", "#ffd700"] });
-      setTimeout(() => {
-        confetti({ particleCount: 100, spread: 160, origin: { y: 0.6 }, colors: ["#ff0080", "#ffd700", "#ce93d8", "#00f5ff"] });
-      }, 500);
+      const heart = confetti.shapeFromPath({
+        path: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z",
+      });
+      confetti({
+        shapes: [heart],
+        particleCount: 60,
+        spread: 100,
+        origin: { y: 0.5 },
+        scalar: 2,
+        colors: ["#ff0080", "#ff6b9d", "#ffd700"],
+      });
     } catch (e) {
       console.log("Confetti error:", e);
     }
-  }, [opened]);
+  }, []);
 
   return (
     <section className="gift-section" id="gift">
       <h2 className="section-title">🎁 A Surprise for You 🎁</h2>
       <div className="section-divider" />
 
-      <div className={`gift-box ${opened ? "opened" : ""}`} onClick={handleOpen}>
+      <div
+        className={`gift-box ${opened ? "opened" : ""}`}
+        onClick={handleOpen}
+        title="Tap to open surprise fireworks show!"
+      >
         {opened ? "💝" : "🎁"}
       </div>
 
@@ -2092,7 +2654,17 @@ function GiftSection() {
           <p className="gift-reveal-sub">
             No gift in this world compares to having you in my life, Wifeyyy G. You are my everything literally everything. 🥺✨
           </p>
+          <button
+            className="gift-replay-btn"
+            onClick={() => setShowFireworks(true)}
+          >
+            🎆 Watch 40s Fireworks Show Again 🎆
+          </button>
         </div>
+      )}
+
+      {showFireworks && (
+        <FireworksShowModal onClose={() => setShowFireworks(false)} />
       )}
     </section>
   );
