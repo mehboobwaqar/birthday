@@ -78,6 +78,7 @@ html {
 }
 
 body {
+  position: relative;
   font-family: 'Poppins', sans-serif;
   background: var(--body-bg, radial-gradient(circle at 50% 0%, #201227 0%, #130a17 40%, #09050d 100%));
   background-attachment: fixed;
@@ -4002,9 +4003,9 @@ body.fireworks-modal-active .theme-segment-btn {
   box-shadow: 0 0 15px rgba(255, 0, 128, 0.4);
 }
 
-/* ============ TOP FIXED CONTROLS BAR (Theme Switcher + Lock Button Fixed at Top) ============ */
+/* ============ TOP CONTROLS BAR (Theme Switcher + Lock Button at Top, Non-Fixed / Scrolls Away) ============ */
 .top-fixed-bar {
-  position: fixed;
+  position: absolute;
   top: 18px;
   left: 50%;
   transform: translateX(-50%);
