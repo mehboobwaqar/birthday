@@ -685,142 +685,342 @@ function LoveLetter() {
   );
 }
 
-// ─── Timeline Section ───
 // ─── Timeline Section (Our Journey & Meetups) ───
 function Timeline() {
   const age = getAge();
   const [timelineModalIndex, setTimelineModalIndex] = useState<number | null>(null);
   const [activePhotoIdx, setActivePhotoIdx] = useState<number>(0);
-  const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
-  const [loadedPhotos, setLoadedPhotos] = useState<Record<string, boolean>>({});
 
   const milestones = [
     {
       id: 1,
       emoji: "👶",
-      badge: "Blessed Beginning",
-      title: "The Day My Angel Was Born",
-      date: "September 10, 2003",
-      text: "Wo khubsurat din jab Allah Pak ne meri pyari Laiba ko is duniya mein bheja — meri poori kainaat aur meri zindagi ka noor! ❤️",
-      photos: ["/timeline/1.jpg", "/timeline/1_2.jpg", "/timeline/1_3.jpg", "/timeline/1_4.jpg"],
+      badge: "Angel Born & Childhood",
+      title: "Baby Laiba & Childhood Cuteness",
+      date: "Childhood Days",
+      text: "Wo masoom aur pyari bachi jo aage chal kar meri poori duniya banne wali thi — Baby Laiba, cutest since day 1! 🎀",
+      photos: [
+        "/gallery/baby-laiba-1.jpeg",
+        "/gallery/baby-laiba-2.jpeg",
+      ],
     },
     {
       id: 2,
-      emoji: "😘",
-      badge: "The Spark",
-      title: "Where It All Started ('This way 😘')",
-      date: "The Beginning",
-      text: "'This way 😘' se shuru hone wali baat jo aahista aahista meri poori rooh, meri saans aur meri zindagi ban gayi.",
-      photos: ["/timeline/2.jpg", "/timeline/2_2.jpg", "/timeline/2_3.jpg", "/timeline/2_4.jpg"],
+      emoji: "💘",
+      badge: "Love at First Sight",
+      title: "The Pic That Made Me Fall In Love",
+      date: "The Spark",
+      text: "Wo pehli tasveer jisne mere dil ko ek hi nazar mein chura liya... dekh kar bas dil ne gawahi di ke meri kismat yahi hai! ❤️",
+      photos: [
+        "/gallery/first-love.jpeg",
+      ],
     },
     {
       id: 3,
-      emoji: "🌸",
+      emoji: "🥺",
       badge: "Pehli Mulakat",
-      title: "Our Very First Meetup",
+      title: "First Meetup — 'This Way 😘'",
       date: "First Time In Person",
-      text: "Pehli dafa aamne saamne dekh kar dil ki jo halat thi... aankhon mein sharm, chehre par muskurahat aur dharhkan tez! Wo lamha hamesha dil mein zinda hai.",
-      photos: ["/timeline/3.jpg", "/timeline/3_2.jpg", "/timeline/3_3.jpg", "/timeline/3_4.jpg"],
+      text: "Wo pehla aamne saamne milna, 'This way 😘' keh kar bulana... dil ki tezi se dhadakti hui dharhkan aur aankhon mein hamesha reh jaane wali sharm aur muskaan.",
+      photos: [
+        "/gallery/first-meetup.jpeg",
+        "/gallery/wa-moment-1.jpeg",
+      ],
     },
     {
       id: 4,
-      emoji: "🍨",
-      badge: "Random Sweet Day",
-      title: "Ice Cream & Endless Talks",
-      date: "Sweet Memories",
-      text: "Bina kisi plan ke milna, ice cream khana, be-matlab ki baatein aur ghanton ek doosre ki aankhon mein dekhte rehna.",
-      photos: ["/timeline/4.jpg", "/timeline/4_2.jpg", "/timeline/4_3.jpg", "/timeline/4_4.jpg"],
+      emoji: "🏨",
+      badge: "RC Hotel",
+      title: "The Day Going First Time to RC",
+      date: "First RC Visit",
+      text: "Wo din jab hum pehli dafa RC hotel gaye the — wo excitement, wo khushi aur ek doosre ke sath bitaye gaye wo anmol ghante!",
+      photos: [
+        "/gallery/first-rc.jpeg",
+      ],
     },
     {
       id: 5,
-      emoji: "💍",
-      badge: "Sacred Bond",
-      title: "Bound in Sacred Love & Nikah",
-      date: "Milestone of Hearts",
-      text: "Wo muqaddas din jab hum hamesha ke liye ek pakke aur pak rishte mein bandh gaye — Meri Official Wifey, Laiba Mehboob!",
-      photos: ["/timeline/5.jpg", "/timeline/5_2.jpg", "/timeline/5_3.jpg", "/timeline/5_4.jpg"],
+      emoji: "🚤",
+      badge: "Racecourse Park",
+      title: "Racecourse Park — Boat Ride & Lake",
+      date: "Boat Ride Date",
+      text: "Racecourse park mein sath chalna, boat ride par thandi hawa aur sukoon bhari baatein... Racecourse park hamari sab se favorite jagah ban gaya! ⛵💕",
+      photos: [
+        "/gallery/rc-boat.jpeg",
+        "/gallery/rc-boat-ride.jpeg",
+        "/gallery/rc-park1.jpeg",
+      ],
     },
     {
       id: 6,
-      emoji: "🎂",
-      badge: "1st Birthday Together",
-      title: "Our 1st Birthday Celebrated Together",
-      date: "September 10, 2024",
-      text: "Ek ek din gin kar intezar kiya tha — dulha dulhan ko dekh kar ek hone ke khwaab dekhe aur khushiyon bhari duayein mangi theen.",
-      photos: ["/timeline/6.jpg", "/timeline/6_2.jpg", "/timeline/6_3.jpg", "/timeline/6_4.jpg"],
+      emoji: "🌳",
+      badge: "Racecourse Park",
+      title: "Racecourse Park — Hand in Hand Walk",
+      date: "Peaceful Walk",
+      text: "Darakhton ke saaye mein, Racecourse park ke raste par tumhara hath mere hath mein... bas yahi chaha ke yeh rasta kabhi khatam na ho.",
+      photos: [
+        "/gallery/rc-park2.jpeg",
+        "/gallery/wa-moment-2.jpeg",
+      ],
     },
     {
       id: 7,
-      emoji: "🚗",
-      badge: "Lambi Drive Meetup",
-      title: "Late Night Drive & Cold Breeze",
-      date: "Cherished Moments",
-      text: "Gaadi ki khirki se aati thandi hawa, slow music, tumhara hath mere hath mein aur be-panaah sukoon ka ehsaas.",
-      photos: ["/timeline/7.jpg", "/timeline/7_2.jpg", "/timeline/7_3.jpg", "/timeline/7_4.jpg"],
+      emoji: "🌺",
+      badge: "Shalamar Garden Park",
+      title: "Shalamar Garden Park — Mughal Date",
+      date: "Heritage Romance",
+      text: "Tareekhi Shalamar garden park ke fawaron aur khubsurat corridors mein hamara ghoomna — jaise kisi haseen kahani ka manzar ho.",
+      photos: [
+        "/gallery/shalimar-garden.jpeg",
+      ],
     },
     {
       id: 8,
-      emoji: "☕",
-      badge: "Pure Sukoon",
-      title: "Rainy Day Chai & Heartfelt Talks",
-      date: "Peaceful Evening",
-      text: "Duniya ki har fikar se be-parwah, sirf tum aur main... asy jasy 'Majjjaa a gyaaaa Yaar life ka!' Har lamha khubsurat!",
-      photos: ["/timeline/8.jpg", "/timeline/8_2.jpg", "/timeline/8_3.jpg", "/timeline/8_4.jpg"],
+      emoji: "🌸",
+      badge: "3rd Meetup",
+      title: "3rd Meetup — Shalamar Garden Park",
+      date: "3rd Meetup Date",
+      text: "Shalamar garden park mein hamari teesri mulaqat — jahan har baar ki tarah tum aur bhi zyada haseen lag rahi theen aur hamara pyar aur gehra hota gaya.",
+      photos: [
+        "/gallery/shalimar-3rd.jpeg",
+        "/gallery/wa-moment-3.jpeg",
+      ],
     },
     {
       id: 9,
-      emoji: "👑",
-      badge: "2nd Birthday Together",
-      title: "Our 2nd Birthday Together",
-      date: "September 10, 2025",
-      text: "Shukar Alhamdulillah ke meri wifey Laiba Mehboob ban chuki theen — Meri Mallika, Meri Jaan ke sath zindagi ka sab se haseen saal!",
-      photos: ["/timeline/9.jpg", "/timeline/9_2.jpg", "/timeline/9_3.jpg", "/timeline/9_4.jpg"],
+      emoji: "👪",
+      badge: "Shalamar Garden Park",
+      title: "Shalamar Garden Park — Shahzain Meetup",
+      date: "With Shahzain",
+      text: "Chotay Shahzain ke sath Shalamar garden park ki sweet memories — kitni pyari pyari shararten aur muskurahatein theen us din!",
+      photos: [
+        "/gallery/shalimar-shahzain.jpeg",
+      ],
     },
     {
       id: 10,
-      emoji: "🛍️",
-      badge: "Happy Little Outing",
-      title: "Shopping & Walking Hand in Hand",
-      date: "Fun Times Together",
-      text: "Sath ghoomna, choti choti baaton par khilkhila kar hansna, tumhari pasand ki shopping aur hath tham kar chalna.",
-      photos: ["/timeline/10.jpg", "/timeline/10_2.jpg", "/timeline/10_3.jpg", "/timeline/10_4.jpg"],
+      emoji: "🥰",
+      badge: "RC Hotel",
+      title: "RC 2nd Visit — Cuteness Overloaded",
+      date: "RC Hotel 2nd Time",
+      text: "RC hotel mein doosri dafa ka milna — tumhari cute adayein aur wo be-panaah masoomiyat jo mere dil ko chhoo gayi.",
+      photos: [
+        "/gallery/rc-2nd.jpeg",
+        "/gallery/rc-cuteness.jpeg",
+      ],
     },
     {
       id: 11,
-      emoji: "🥺",
-      badge: "Aakhri Mulakat",
-      title: "Last Meetup (Jaane Se Pehle) 💔",
-      date: "Memorable Goodbye",
-      text: "Rukhsat hone se pehle ki aakhri mulakat... bhari aankhein, nam dil, par dil mein hamesha ke liye ek doosre ka sath aur intezar ka pakka wada.",
-      photos: ["/timeline/11.jpg", "/timeline/11_2.jpg", "/timeline/11_3.jpg", "/timeline/11_4.jpg"],
+      emoji: "😍",
+      badge: "RC Hotel",
+      title: "RC 3rd Visit — Ek Doosre Ki Aadat",
+      date: "RC Hotel 3rd Time",
+      text: "Ab RC hotel hamara apna thikana ban chuka tha — ek aisi jagah jahan sirf tum aur main the, duniya se be-khabar!",
+      photos: [
+        "/gallery/rc-3rd.jpeg",
+        "/gallery/rc-3rd-1.jpeg",
+      ],
     },
     {
       id: 12,
-      emoji: "💖",
-      badge: "Turning 23 🎉",
-      title: `3rd Birthday Together (Turning ${age})`,
+      emoji: "🛍️",
+      badge: "Mall Date",
+      title: "Emporium Mall — Outing & Cute Poses",
+      date: "Shopping Time",
+      text: "Emporium mall mein ghoomna, cute cute poses banana aur logon ke darmiyan bhi ek doosre mein khoye rehna.",
+      photos: [
+        "/gallery/emporium-mall.jpeg",
+        "/gallery/emporium-cute.jpeg",
+        "/gallery/wa-shopping-mirror.jpeg",
+      ],
+    },
+    {
+      id: 13,
+      emoji: "😎",
+      badge: "Fun & Swag",
+      title: "Gangster Look at Emporium Mall",
+      date: "Swag Mode",
+      text: "Hamara famous 'gangster pose' at Emporium mall! Kitna haseen aur stylish moment tha — swagger level 100/100! 🔥",
+      photos: [
+        "/gallery/emporium-gangster.jpeg",
+        "/gallery/wa-moment-4.jpeg",
+      ],
+    },
+    {
+      id: 14,
+      emoji: "🍔",
+      badge: "Food Date",
+      title: "Burger O'Clock — Food & Love",
+      date: "Delicious Bites",
+      text: "Burger O'Clock par mil kar burger khana, french fries share karna aur be-shumar meethi meethi baatein.",
+      photos: [
+        "/gallery/burger-oclock.jpeg",
+        "/gallery/burger-oclock-1.jpeg",
+        "/gallery/burger-oclock-2.jpeg",
+      ],
+    },
+    {
+      id: 15,
+      emoji: "🤝",
+      badge: "Cheezious Date",
+      title: "Cheezious — Haath Tham Ke",
+      date: "Together Forever",
+      text: "Table par tumhara hath mere hath mein — Cheezious ki pizza khushboo aur dilon ka pakka wada ke hath kabhi nahi chhodenge.",
+      photos: [
+        "/gallery/cheezious-hands.jpeg",
+        "/gallery/wa-moment-5.jpeg",
+      ],
+    },
+    {
+      id: 16,
+      emoji: "🛒",
+      badge: "Packages Mall",
+      title: "Packages Mall — Peaceful Walks",
+      date: "Mall Fun",
+      text: "Packages mall mein sath ghoomna, window shopping aur choti choti baaton par tumhara khilkhilana.",
+      photos: [
+        "/gallery/packages-mall.jpeg",
+        "/gallery/wa-moment-6.jpeg",
+      ],
+    },
+    {
+      id: 17,
+      emoji: "🎂",
+      badge: "RC Hotel Special",
+      title: "Before Going to RC for Your Birthday",
+      date: "Birthday Celebration",
+      text: "RC hotel jaane ki taiyari tumhari birthday manane ke liye — wo excitement aur special din ki khushi jo lafzon mein bayaan nahi ho sakti.",
+      photos: [
+        "/gallery/rc-birthday.jpeg",
+        "/gallery/wa-moment-7.jpeg",
+      ],
+    },
+    {
+      id: 18,
+      emoji: "🏡",
+      badge: "RC Hotel",
+      title: "RC 5th Visit — Hamara Apna Sukoon",
+      date: "RC Hotel 5th Time",
+      text: "Panchween dafa RC hotel — jahan har deewar aur har kone mein hamare pyar ki yaadein basi hain.",
+      photos: [
+        "/gallery/rc-5th.jpeg",
+        "/gallery/rc-5th-1.jpeg",
+      ],
+    },
+    {
+      id: 19,
+      emoji: "🕌",
+      badge: "Old Lahore Heritage",
+      title: "Badshahi Mosque, Shahi Qila & Delhi Darwaza",
+      date: "Historical Lahore",
+      text: "Tareekhi Badshahi Mosque, Shahi Qila aur Delhi Darwaza ki khubsurat galiyan — jahan humne duaayein maangien aur haseen tasveerein banayein.",
+      photos: [
+        "/gallery/badshahi-mosque.jpeg",
+        "/gallery/shahi-killa.jpeg",
+        "/gallery/delhi-darwaza.jpeg",
+      ],
+    },
+    {
+      id: 20,
+      emoji: "🇵🇰",
+      badge: "Lahore Landmark",
+      title: "Minar-e-Pakistan Visit",
+      date: "Landmark Date",
+      text: "Minar-e-Pakistan ke saaye mein, hawayein aur azaad faza — Lahore ke dil mein hamara ek aur yaadgaar din.",
+      photos: [
+        "/gallery/minar-pakistan.jpeg",
+        "/gallery/wa-moment-8.jpeg",
+      ],
+    },
+    {
+      id: 21,
+      emoji: "🍛",
+      badge: "Desi Food Love",
+      title: "Yaad Hai Daal Chawal? — Pure Simplicity",
+      date: "Desi Taste",
+      text: "Yaad hai wo daal chawal khane ka lamha? Kitna desi, kitna simple aur kitna khoobsurat tha wo pal! Simple things with you are the best.",
+      photos: [
+        "/gallery/daal-chawal.jpeg",
+        "/gallery/wa-moment-9.jpeg",
+      ],
+    },
+    {
+      id: 22,
+      emoji: "🚌",
+      badge: "Travel & Vacations",
+      title: "Devour Drinks & Niazi Adda for Summer Vacation",
+      date: "Summer Vacation Trip",
+      text: "Ghar jane se pehle Devour ki thandi drink aur phir Niazi Adda se summer vacation ke liye rawana hona — safar ki meethi yaadein!",
+      photos: [
+        "/gallery/devour.jpeg",
+        "/gallery/niazi-adda.jpeg",
+        "/gallery/wa-night-walk.jpeg",
+      ],
+    },
+    {
+      id: 23,
+      emoji: "🌙",
+      badge: "Night Glow",
+      title: "Late Night Walks & Secret Smiles",
+      date: "Moonlit Moments",
+      text: "Raat ki thandi hawa mein chalna, khamoshi mein baatein karna aur tumhari aankhon mein sitaron ki chamak dekhna.",
+      photos: [
+        "/gallery/wa-moment-10.jpeg",
+        "/gallery/wa-moment-11.jpeg",
+        "/gallery/wa-moment-12.jpeg",
+      ],
+    },
+    {
+      id: 24,
+      emoji: "✨",
+      badge: "Candid Joy",
+      title: "Unforgettable Giggles & Candid Moments",
+      date: "Heartwarming Laughs",
+      text: "Bina kisi filter ke, bina kisi banaawat ke — bas hum dono aur hamari be-shumaar shararten aur muskurahatein!",
+      photos: [
+        "/gallery/wa-moment-13.jpeg",
+        "/gallery/wa-moment-14.jpeg",
+        "/gallery/wa-moment-15.jpeg",
+      ],
+    },
+    {
+      id: 25,
+      emoji: "🌷",
+      badge: "Cherished Times",
+      title: "Together in Every Season",
+      date: "Timeless Bond",
+      text: "Har mousam, har din, har pal tumhare sath ek nayi khushi ban kar aaya hai. Meri zindagi ki sab se haseen nemat tum ho.",
+      photos: [
+        "/gallery/wa-moment-16.jpeg",
+        "/gallery/wa-moment-17.jpeg",
+        "/gallery/wa-moment-18.jpeg",
+      ],
+    },
+    {
+      id: 26,
+      emoji: "💔",
+      badge: "Emotional Goodbye",
+      title: "Last Meetup — Gulberg (Wapsi Se Pehle)",
+      date: "Gulberg Meetup",
+      text: "Gulberg mein hamari aakhri mulaqat... bhari aankhein, dilon mein be-panaah dard aur ek doosre ko na chhodne ki khwahish. Intezar mushkil hai, par hamara pyar har faslay se bara hai.",
+      photos: [
+        "/gallery/last-meetup.jpeg",
+      ],
+    },
+    {
+      id: 27,
+      emoji: "🎉",
+      badge: "Happy 23rd Birthday Wifeyy! 🎂",
+      title: `Turning ${age} — Cutie Puttiteeee & That Smile I Love!`,
       date: `September 10, ${BIRTHDAY_YEAR}`,
-      text: `23 saal ki meri haseen Begum! Faslay chahe jitne bhi hon, dilon ka fasla koi nahi — Forever & Always Mahol pura wavy!`,
-      photos: ["/timeline/12.jpg", "/timeline/12_2.jpg", "/timeline/12_3.jpg", "/timeline/12_4.jpg"],
+      text: `23rd Birthday Mubarak ho meri jaan, meri rani, meri cutie puttiteeee! Tumhari wo muskurahat jis par main mar mita tha, hamesha aisi hi chamakti rahe! Happy Birthday Meri Wifey! 💖👑`,
+      photos: [
+        "/gallery/cutie-puttitee.jpeg",
+        "/gallery/cutiness.jpeg",
+        "/gallery/that-smile.jpeg",
+      ],
     },
   ];
-
-  // Pre-probe candidate images to detect which ones exist
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    milestones.forEach((item) => {
-      item.photos.forEach((url) => {
-        const img = new Image();
-        img.src = url;
-        img.onload = () => {
-          setLoadedPhotos((prev) => ({ ...prev, [url]: true }));
-        };
-        img.onerror = () => {
-          setFailedPhotos((prev) => ({ ...prev, [url]: true }));
-        };
-      });
-    });
-  }, []);
 
   const openModal = (index: number) => {
     setTimelineModalIndex(index);
@@ -828,25 +1028,18 @@ function Timeline() {
   };
 
   const currentMilestone = timelineModalIndex !== null ? milestones[timelineModalIndex] : null;
-
-  // Compute available photos for current milestone
-  const currentValidPhotos = currentMilestone
-    ? currentMilestone.photos.filter((url) => loadedPhotos[url] || (!failedPhotos[url] && url === currentMilestone.photos[0]))
-    : [];
-
-  const currentPhotoUrl = currentValidPhotos[activePhotoIdx] || (currentMilestone ? currentMilestone.photos[0] : "");
-  const hasAnyLoaded = currentMilestone ? currentMilestone.photos.some((url) => loadedPhotos[url]) : false;
-  const isCurrentFailed = failedPhotos[currentPhotoUrl] && !hasAnyLoaded;
+  const currentPhotos = currentMilestone ? currentMilestone.photos : [];
+  const currentPhotoUrl = currentPhotos[activePhotoIdx] || "";
 
   const goToPrevPhoto = useCallback(() => {
-    if (!currentValidPhotos.length) return;
-    setActivePhotoIdx((prev) => (prev > 0 ? prev - 1 : currentValidPhotos.length - 1));
-  }, [currentValidPhotos.length]);
+    if (!currentPhotos.length) return;
+    setActivePhotoIdx((prev) => (prev > 0 ? prev - 1 : currentPhotos.length - 1));
+  }, [currentPhotos.length]);
 
   const goToNextPhoto = useCallback(() => {
-    if (!currentValidPhotos.length) return;
-    setActivePhotoIdx((prev) => (prev < currentValidPhotos.length - 1 ? prev + 1 : 0));
-  }, [currentValidPhotos.length]);
+    if (!currentPhotos.length) return;
+    setActivePhotoIdx((prev) => (prev < currentPhotos.length - 1 ? prev + 1 : 0));
+  }, [currentPhotos.length]);
 
   const goToPrevChapter = useCallback(() => {
     setTimelineModalIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : milestones.length - 1));
@@ -863,14 +1056,14 @@ function Timeline() {
       if (timelineModalIndex === null) return;
       if (e.key === "Escape") setTimelineModalIndex(null);
       if (e.key === "ArrowLeft") {
-        if (currentValidPhotos.length > 1) {
+        if (currentPhotos.length > 1) {
           goToPrevPhoto();
         } else {
           goToPrevChapter();
         }
       }
       if (e.key === "ArrowRight") {
-        if (currentValidPhotos.length > 1) {
+        if (currentPhotos.length > 1) {
           goToNextPhoto();
         } else {
           goToNextChapter();
@@ -879,72 +1072,56 @@ function Timeline() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [timelineModalIndex, currentValidPhotos.length, goToPrevPhoto, goToNextPhoto, goToPrevChapter, goToNextChapter]);
+  }, [timelineModalIndex, currentPhotos.length, goToPrevPhoto, goToNextPhoto, goToPrevChapter, goToNextChapter]);
 
   return (
     <section className="timeline-section" id="timeline">
-      <h2 className="section-title">✨ Our Beautiful Story ✨</h2>
+      <h2 className="section-title">✨ Our Beautiful Story & Meetups ✨</h2>
       <p className="timeline-hint">Tap any chapter to view photos &amp; memories 📸</p>
       <div className="section-divider" />
 
       <div className="timeline">
-        {milestones.map((item, i) => {
-          const loadedCount = item.photos.filter((url) => loadedPhotos[url]).length;
-          const primaryUrl = item.photos[0];
-          const isPrimaryFailed = failedPhotos[primaryUrl] && loadedCount === 0;
+        {milestones.map((item, i) => (
+          <div className="timeline-item" key={item.id}>
+            <div className="timeline-dot" />
+            <div
+              className="timeline-content"
+              onClick={() => openModal(i)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  openModal(i);
+                }
+              }}
+            >
+              <div className="timeline-header">
+                <span className="timeline-emoji">{item.emoji}</span>
+                <span className="timeline-date-badge">{item.badge}</span>
+              </div>
+              <h3 className="timeline-title">{item.title}</h3>
+              <p className="timeline-text">{item.text}</p>
 
-          return (
-            <div className="timeline-item" key={item.id}>
-              <div className="timeline-dot" />
-              <div
-                className="timeline-content"
-                onClick={() => openModal(i)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    openModal(i);
-                  }
-                }}
-              >
-                <div className="timeline-header">
-                  <span className="timeline-emoji">{item.emoji}</span>
-                  <span className="timeline-date-badge">{item.badge}</span>
-                </div>
-                <h3 className="timeline-title">{item.title}</h3>
-                <p className="timeline-text">{item.text}</p>
-
-                <div className="timeline-photo-box">
-                  {loadedCount > 1 && (
-                    <span className="timeline-multi-badge">
-                      📸 {loadedCount} Photos
-                    </span>
-                  )}
-
-                  {!isPrimaryFailed ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={primaryUrl}
-                      alt={item.title}
-                      loading="lazy"
-                      onLoad={() => setLoadedPhotos((prev) => ({ ...prev, [primaryUrl]: true }))}
-                      onError={() => setFailedPhotos((prev) => ({ ...prev, [primaryUrl]: true }))}
-                    />
-                  ) : (
-                    <div className="timeline-photo-placeholder">
-                      <span className="placeholder-icon">📸</span>
-                      <span className="placeholder-text">Meetup #{item.id} • Tap to view</span>
-                    </div>
-                  )}
-                  <div className="timeline-photo-overlay">
-                    <span>🔍 Tap to view gallery</span>
-                  </div>
+              <div className="timeline-photo-box">
+                {item.photos.length > 1 && (
+                  <span className="timeline-multi-badge">
+                    📸 {item.photos.length} Photos
+                  </span>
+                )}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.photos[0]}
+                  alt={item.title}
+                  loading="lazy"
+                />
+                <div className="timeline-photo-overlay">
+                  <span>🔍 Tap to view gallery ({item.photos.length} photos)</span>
                 </div>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
       {/* ─── Timeline Multi-Photo Lightbox Modal ─── */}
@@ -965,7 +1142,7 @@ function Timeline() {
             <div className="timeline-modal-body">
               {/* Photo Area with Next/Prev Arrows if Multiple Photos */}
               <div className="timeline-photo-slider-area">
-                {currentValidPhotos.length > 1 && (
+                {currentPhotos.length > 1 && (
                   <button
                     className="timeline-photo-nav timeline-photo-prev"
                     onClick={goToPrevPhoto}
@@ -975,29 +1152,14 @@ function Timeline() {
                   </button>
                 )}
 
-                {!isCurrentFailed && currentPhotoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={currentPhotoUrl}
-                    alt={`${currentMilestone.title} - Photo ${activePhotoIdx + 1}`}
-                    className="timeline-modal-img"
-                    onLoad={() => setLoadedPhotos((prev) => ({ ...prev, [currentPhotoUrl]: true }))}
-                    onError={() => setFailedPhotos((prev) => ({ ...prev, [currentPhotoUrl]: true }))}
-                  />
-                ) : (
-                  <div className="timeline-modal-placeholder">
-                    <span className="modal-placeholder-emoji">
-                      {currentMilestone.emoji}
-                    </span>
-                    <p className="modal-placeholder-tip">
-                      📸 Add photo(s) for this meetup in:<br />
-                      <code>public/timeline/{currentMilestone.id}.jpg</code><br />
-                      <code>public/timeline/{currentMilestone.id}_2.jpg (extra)</code>
-                    </p>
-                  </div>
-                )}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={currentPhotoUrl}
+                  alt={`${currentMilestone.title} - Photo ${activePhotoIdx + 1}`}
+                  className="timeline-modal-img"
+                />
 
-                {currentValidPhotos.length > 1 && (
+                {currentPhotos.length > 1 && (
                   <button
                     className="timeline-photo-nav timeline-photo-next"
                     onClick={goToNextPhoto}
@@ -1009,13 +1171,13 @@ function Timeline() {
               </div>
 
               {/* Multi-photo indicator and thumbnails */}
-              {currentValidPhotos.length > 1 && (
+              {currentPhotos.length > 1 && (
                 <>
                   <span className="timeline-photo-counter">
-                    Photo {activePhotoIdx + 1} of {currentValidPhotos.length}
+                    Photo {activePhotoIdx + 1} of {currentPhotos.length}
                   </span>
                   <div className="timeline-thumb-strip">
-                    {currentValidPhotos.map((url, idx) => (
+                    {currentPhotos.map((url, idx) => (
                       <button
                         key={url}
                         type="button"
@@ -1113,24 +1275,44 @@ function GiftSection() {
 
 // ─── Photo Memories Section ───
 function PhotoMemories() {
-  const TOTAL_PHOTOS = 25;
   const [revealedCards, setRevealedCards] = useState<Set<number>>(new Set());
   const [justRevealed, setJustRevealed] = useState<number | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const mysteryEmojis = ["💖", "🎁", "💝", "🌹", "✨", "💕", "🦋", "🌸", "💫", "🎀",
-    "💎", "🌺", "⭐", "🌷", "💗", "🎂", "👑", "🌟", "💐", "🎉",
-    "🥰", "💘", "🌈", "🎊", "💞"];
-
-  const captions = [
-    "Our beautiful moment 💕", "Together forever 💖", "My favorite person 🌹",
-    "Love at first sight 💫", "You & Me ✨", "Perfect together 💝",
-    "My sunshine 🌟", "Sweet memories 🦋", "Us forever 💕", "Best day ever 🎀",
-    "My heart 💖", "Beautiful us 🌸", "Always & forever 💫", "Our story 💝",
-    "My everything ✨", "Love you 🌹", "Priceless moment 💎", "My queen 👑",
-    "Together 💕", "Our journey 🌟", "Soulmates 💖", "My world 🌸",
-    "Forever yours 💫", "Made for each other 💝", "The best of us ✨"
+  const memoriesList = [
+    { src: "/gallery/first-love.jpeg", caption: "The Pic That Made Me Fall In Love 💘", emoji: "💘" },
+    { src: "/gallery/baby-laiba-1.jpeg", caption: "Baby Laiba — Cutest Since Day 1 👶", emoji: "👶" },
+    { src: "/gallery/baby-laiba-2.jpeg", caption: "Childhood Cuteness Overloaded 🎀", emoji: "🎀" },
+    { src: "/gallery/first-meetup.jpeg", caption: "Pehli Mulaqat — 'This Way' 😘", emoji: "🥺" },
+    { src: "/gallery/first-rc.jpeg", caption: "First Time Going to RC 🏨✨", emoji: "🏨" },
+    { src: "/gallery/rc-boat.jpeg", caption: "Racecourse Park Boat Ride 🚤", emoji: "⛵" },
+    { src: "/gallery/rc-boat-ride.jpeg", caption: "Racecourse Park Vibes 🌳🌸", emoji: "🌳" },
+    { src: "/gallery/rc-park1.jpeg", caption: "Racecourse Park Walk Together 🚶‍♂️💕", emoji: "🍃" },
+    { src: "/gallery/rc-park2.jpeg", caption: "Racecourse Park Sweet Memories 💖", emoji: "🌸" },
+    { src: "/gallery/rc-cuteness.jpeg", caption: "RC Cuteness 🥰🏨", emoji: "🥰" },
+    { src: "/gallery/rc-2nd.jpeg", caption: "RC 2nd Time — Missing You Already 💖", emoji: "💕" },
+    { src: "/gallery/rc-3rd.jpeg", caption: "RC 3rd Time — Adat Ho Gayi 😍", emoji: "😍" },
+    { src: "/gallery/rc-3rd-1.jpeg", caption: "RC 3rd Visit — Us Being Us ✨", emoji: "✨" },
+    { src: "/gallery/rc-5th.jpeg", caption: "RC 5th Time — Our Favorite Hotel 🏡", emoji: "🏡" },
+    { src: "/gallery/rc-5th-1.jpeg", caption: "RC 5th Visit Memories 🌟", emoji: "🌟" },
+    { src: "/gallery/rc-birthday.jpeg", caption: "Before Going to RC for Your Birthday 🎂", emoji: "🎂" },
+    { src: "/gallery/shalimar-garden.jpeg", caption: "Shalamar Garden Park Date 🌺", emoji: "🌺" },
+    { src: "/gallery/shalimar-3rd.jpeg", caption: "3rd Meetup — Shalamar Garden Park 🌸", emoji: "🌸" },
+    { src: "/gallery/shalimar-shahzain.jpeg", caption: "Shalamar Garden with Shahzain 👪", emoji: "👪" },
+    { src: "/gallery/emporium-mall.jpeg", caption: "Emporium Mall Outing 🛍️", emoji: "🛍️" },
+    { src: "/gallery/emporium-cute.jpeg", caption: "Emporium Mall — Cute Pose 📸", emoji: "📸" },
+    { src: "/gallery/emporium-gangster.jpeg", caption: "Gangster Look — Emporium Mall 😎", emoji: "😎" },
+    { src: "/gallery/cutie-puttitee.jpeg", caption: "Cutie Puttitieee 🥺💖", emoji: "🥺" },
+    { src: "/gallery/cutiness.jpeg", caption: "Pure Cuteness 💗", emoji: "💗" },
+    { src: "/gallery/that-smile.jpeg", caption: "That Smile I Love Forever 😊", emoji: "😊" },
+    { src: "/gallery/cheezious-hands.jpeg", caption: "Cheezious — Haath Tham Ke 🤝💖", emoji: "🤝" },
+    { src: "/gallery/burger-oclock.jpeg", caption: "Burger O'Clock Date 🍔", emoji: "🍔" },
+    { src: "/gallery/daal-chawal.jpeg", caption: "Yaad Hai Daal Chawal? 🍛", emoji: "🍛" },
+    { src: "/gallery/badshahi-mosque.jpeg", caption: "Badshahi Mosque Visit 🕌", emoji: "🕌" },
+    { src: "/gallery/last-meetup.jpeg", caption: "Last Meetup — Gulberg 💔", emoji: "💔" },
   ];
+
+  const TOTAL_PHOTOS = memoriesList.length;
 
   const handleReveal = useCallback(async (index: number) => {
     if (revealedCards.has(index)) {
@@ -1163,7 +1345,7 @@ function PhotoMemories() {
       const confetti = (await import("canvas-confetti")).default;
       confetti({ particleCount: 100, spread: 120, origin: { y: 0.5 }, colors: ["#ff0080", "#ffd700", "#ce93d8", "#00f5ff"] });
     } catch (_) { }
-  }, []);
+  }, [TOTAL_PHOTOS]);
 
   // Lightbox navigation (only among revealed cards)
   const revealedList = Array.from(revealedCards).sort((a, b) => a - b);
@@ -1198,16 +1380,39 @@ function PhotoMemories() {
     <>
       <section className="memories-section" id="memories">
         <h2 className="section-title">📸 Our Beautiful Memories 📸</h2>
+        <p className="timeline-hint" style={{ textAlign: "center", marginBottom: "1rem" }}>
+          Tap cards to reveal secret photos &amp; memories ✨
+        </p>
         <div className="section-divider" />
 
-        <div style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
           <span className="memories-counter">
             💖 Revealed: <span className="count-num">{revealedCards.size}</span> / {TOTAL_PHOTOS}
           </span>
+          {revealedCards.size < TOTAL_PHOTOS && (
+            <button
+              onClick={handleRevealAll}
+              type="button"
+              style={{
+                background: "linear-gradient(135deg, #ff4081, #e040fb)",
+                border: "none",
+                color: "#fff",
+                padding: "8px 18px",
+                borderRadius: "20px",
+                fontSize: "0.85rem",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 4px 15px rgba(255, 64, 129, 0.35)",
+                transition: "all 0.3s ease",
+              }}
+            >
+              ✨ Reveal All 30 Photos
+            </button>
+          )}
         </div>
 
         <div className="memories-grid">
-          {Array.from({ length: TOTAL_PHOTOS }, (_, i) => {
+          {memoriesList.map((item, i) => {
             const isRevealed = revealedCards.has(i);
             const isJust = justRevealed === i;
             return (
@@ -1221,7 +1426,7 @@ function PhotoMemories() {
                   <div className="memory-card-front">
                     <div className="shimmer-line" />
                     <span className="mystery-num">#{i + 1}</span>
-                    <span className="mystery-emoji">{mysteryEmojis[i]}</span>
+                    <span className="mystery-emoji">{item.emoji}</span>
                     <span className="mystery-text">Tap to reveal</span>
                   </div>
                   {/* Back - Photo */}
@@ -1230,12 +1435,12 @@ function PhotoMemories() {
                       <>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={`/photos/${i + 1}.jpg`}
-                          alt={`Memory ${i + 1}`}
+                          src={item.src}
+                          alt={item.caption}
                           loading="lazy"
                         />
                         <div className="photo-overlay">
-                          <span className="photo-caption">{captions[i]}</span>
+                          <span className="photo-caption">{item.caption}</span>
                           <span className="photo-expand">✨ Tap for Full Screen ✨</span>
                         </div>
                       </>
@@ -1258,10 +1463,10 @@ function PhotoMemories() {
             )}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`/photos/${lightboxIndex + 1}.jpg`}
-              alt={`Memory ${lightboxIndex + 1}`}
+              src={memoriesList[lightboxIndex].src}
+              alt={memoriesList[lightboxIndex].caption}
             />
-            <p className="lightbox-caption">{captions[lightboxIndex]}</p>
+            <p className="lightbox-caption">{memoriesList[lightboxIndex].caption}</p>
             <p className="lightbox-counter">
               {revealedList.indexOf(lightboxIndex) + 1} / {revealedList.length}
             </p>
