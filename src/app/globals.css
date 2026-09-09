@@ -7428,6 +7428,14 @@ body.fireworks-modal-active .theme-segment-btn {
   box-shadow: 0 14px 40px rgba(255, 215, 0, 0.65), 0 0 30px rgba(255, 0, 128, 0.5);
 }
 
+/* Hide Theme Switcher & Floating Lock when Award Screen is open */
+body:has(.award-modal-overlay) .top-theme-switcher,
+body:has(.award-modal-overlay) .floating-lock-btn {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 /* Fullscreen Award Modal */
 .award-modal-overlay {
   position: fixed;

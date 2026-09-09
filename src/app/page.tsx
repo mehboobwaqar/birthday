@@ -4872,7 +4872,7 @@ function VouchersSection() {
 }
 
 // ─── Best Wife of the Universe - Official Royal Award Section ───
-function BestWifeAwardSection() {
+function BestWifeAwardSection({ onModalChange }: { onModalChange?: (isOpen: boolean) => void }) {
   const [isAwardOpen, setIsAwardOpen] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
@@ -4888,11 +4888,13 @@ function BestWifeAwardSection() {
       });
     } catch { }
     setIsAwardOpen(true);
+    onModalChange?.(true);
   };
 
   const handleCloseAward = () => {
     playAudioCue("cardFlip");
     setIsAwardOpen(false);
+    onModalChange?.(false);
   };
 
   const downloadAwardImage = async () => {
@@ -4913,70 +4915,52 @@ function BestWifeAwardSection() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Background: Warm ivory parchment
-    const bgGrad = ctx.createRadialGradient(600, 430, 80, 600, 430, 700);
-    bgGrad.addColorStop(0, "#fffef9");
-    bgGrad.addColorStop(0.7, "#fdf8ee");
-    bgGrad.addColorStop(1, "#f4ebd7");
+    // Background - Luxury Warm Champagne Ivory Cream Parchment
+    const bgGrad = ctx.createLinearGradient(0, 0, 1200, 860);
+    bgGrad.addColorStop(0, "#fffcf7");
+    bgGrad.addColorStop(0.5, "#fff7ee");
+    bgGrad.addColorStop(1, "#fff2e2");
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, 1200, 860);
 
-    // Outer Gold Border
-    ctx.strokeStyle = "#b38222";
-    ctx.lineWidth = 6;
-    ctx.strokeRect(30, 30, 1140, 800);
+    // Outer Royal Filigree Border
+    ctx.strokeStyle = "#c59a3f";
+    ctx.lineWidth = 14;
+    ctx.strokeRect(25, 25, 1150, 810);
 
-    // Inner Fine Gold Border
-    ctx.strokeStyle = "rgba(179, 130, 34, 0.45)";
+    // Inner Delicate Double Gold Borders
+    ctx.strokeStyle = "#801235";
+    ctx.lineWidth = 2.5;
+    ctx.strokeRect(38, 38, 1124, 784);
+
+    ctx.strokeStyle = "#e8ba55";
     ctx.lineWidth = 1.5;
-    ctx.strokeRect(42, 42, 1116, 776);
+    ctx.strokeRect(44, 44, 1112, 772);
 
-    // Corner Ornaments
-    const drawCorner = (x: number, y: number, angle: number) => {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle);
-      ctx.strokeStyle = "#b38222";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(0, 0, 24, 0, Math.PI * 0.5);
-      ctx.stroke();
-      ctx.fillStyle = "#b38222";
-      ctx.beginPath();
-      ctx.arc(10, 10, 4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    };
-    drawCorner(55, 55, 0);
-    drawCorner(1145, 55, Math.PI * 0.5);
-    drawCorner(1145, 805, Math.PI);
-    drawCorner(55, 805, Math.PI * 1.5);
-
-    // Royal Header
+    // Header Badge / Council Name
     ctx.fillStyle = "#801235";
-    ctx.font = "bold 15px sans-serif";
+    ctx.font = "bold 15px Georgia, serif";
     ctx.textAlign = "center";
-    ctx.fillText("👑 THE SUPREME ROYAL COUNCIL OF MEHBOOB'S HEART 👑", 600, 95);
+    ctx.fillText("👑 THE ROYAL COUNCIL OF MEHBOOB'S HEART 👑", 600, 105);
 
-    ctx.fillStyle = "#b38222";
-    ctx.font = "bold 13px sans-serif";
-    ctx.fillText("OFFICIAL DIPLOMA OF ETERNAL EXCELLENCE • 2026 EDITION", 600, 125);
-
-    // Divider Line
-    ctx.strokeStyle = "rgba(179, 130, 34, 0.35)";
-    ctx.beginPath();
-    ctx.moveTo(250, 145);
-    ctx.lineTo(950, 145);
-    ctx.stroke();
-
-    // Presenting
-    ctx.fillStyle = "#3b1029";
-    ctx.font = "italic 18px Georgia, serif";
-    ctx.fillText("This prestigious royal honor is proudly conferred upon", 600, 190);
-
-    // Recipient Name
+    // Main Diploma Title
     ctx.fillStyle = "#1c0819";
-    ctx.font = "bold 46px Georgia, serif";
+    ctx.font = "bold 38px 'Playfair Display', Georgia, serif";
+    ctx.fillText("OFFICIAL DIPLOMA OF ETERNAL EXCELLENCE", 600, 155);
+
+    // Subtitle
+    ctx.fillStyle = "#9e6d15";
+    ctx.font = "600 14px sans-serif";
+    ctx.fillText("2026 ROYAL BIRTHDAY EDITION • DIPLOMA NO. LM-QUEEN-001", 600, 185);
+
+    // Conferred Text
+    ctx.fillStyle = "#4a1432";
+    ctx.font = "italic 17px Georgia, serif";
+    ctx.fillText("This highest royal honor in the cosmos is proudly conferred upon:", 600, 225);
+
+    // Recipient Name - LAIBA MEHBOOB
+    ctx.fillStyle = "#801235";
+    ctx.font = "bold 44px 'Playfair Display', Georgia, serif";
     ctx.fillText("LAIBA MEHBOOB", 600, 255);
 
     // Underline
@@ -5041,13 +5025,11 @@ function BestWifeAwardSection() {
     ctx.font = "15px Georgia, serif";
     ctx.fillText(
       "Certified with unconditional love, lifetime loyalty, and infinite affection.",
-      600,
-      585
+      600, 585
     );
     ctx.fillText(
       "Issued with royal authority on September 10, 2026 • 23rd Birthday Royal Proclamation",
-      600,
-      610
+      600, 610
     );
 
     // Bottom Line
@@ -5126,7 +5108,7 @@ function BestWifeAwardSection() {
           </h2>
           <div className="section-divider" />
           <p className="award-teaser-desc">
-            By supreme decree of the Royal Council of Mehboob&apos;s Heart, a formal lifetime honor has been officially ratified and sealed for you.
+            A formal lifetime royal honor officially awarded and sealed for the Queen of Mehboob&apos;s Heart.
           </p>
 
           <button
@@ -5134,7 +5116,7 @@ function BestWifeAwardSection() {
             className="award-open-btn"
             onClick={handleOpenAward}
           >
-            🏆 Break Seal &amp; Open Official Award ✨
+            🏆 Open Official Royal Award ✨
           </button>
         </div>
 
@@ -5166,7 +5148,7 @@ function BestWifeAwardSection() {
                   <span className="cert-corner cert-corner-br">⚜️</span>
 
                   <div className="cert-header">
-                    <span className="cert-council">👑 THE SUPREME ROYAL COUNCIL OF MEHBOOB&apos;S HEART 👑</span>
+                    <span className="cert-council">👑 THE ROYAL COUNCIL OF MEHBOOB&apos;S HEART 👑</span>
                     <h3 className="cert-diploma-title">OFFICIAL DIPLOMA OF ETERNAL EXCELLENCE</h3>
                     <span className="cert-edition">2026 ROYAL BIRTHDAY EDITION • DIPLOMA NO. LM-QUEEN-001</span>
                   </div>
@@ -5395,6 +5377,7 @@ export default function BirthdayPage() {
   }, []);
 
   const [isFireworksActive, setIsFireworksActive] = useState(false);
+  const [isAwardActive, setIsAwardActive] = useState(false);
   const age = getAge();
 
   return (
@@ -5402,7 +5385,7 @@ export default function BirthdayPage() {
       <StarField />
 
       {/* Upper Theme Switcher Pill (Original vs Light) */}
-      {!isFireworksActive && (
+      {!isFireworksActive && !isAwardActive && (
         <div className="top-theme-switcher" role="group" aria-label="Color Theme Switcher">
           <button
             type="button"
@@ -5422,7 +5405,7 @@ export default function BirthdayPage() {
       )}
 
       {/* Quick Floating Lock Button */}
-      {isFullyUnlocked && !isFireworksActive && (
+      {isFullyUnlocked && !isFireworksActive && !isAwardActive && (
         <button
           className="floating-lock-btn"
           onClick={handleRelock}
@@ -5529,7 +5512,7 @@ export default function BirthdayPage() {
             <Timeline />
 
             {/* ─── Best Wife of the Universe - Official Royal Award ─── */}
-            <BestWifeAwardSection />
+            <BestWifeAwardSection onModalChange={setIsAwardActive} />
 
             {/* ─── Live Love Clock (Since 04 April 2024) ─── */}
             <LoveClockSection />
