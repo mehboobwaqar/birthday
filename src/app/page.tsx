@@ -5427,37 +5427,39 @@ export default function BirthdayPage() {
     <>
       <StarField />
 
-      {/* Upper Theme Switcher Pill (Original vs Light) */}
+      {/* Upper Fixed Controls: Theme Switcher + Lock Button (Fixed Together at Top) */}
       {!isFireworksActive && !isAwardActive && (
-        <div className="top-theme-switcher" role="group" aria-label="Color Theme Switcher">
-          <button
-            type="button"
-            className={`theme-segment-btn ${theme === "original" ? "active" : ""}`}
-            onClick={() => selectTheme("original")}
-          >
-            Original
-          </button>
-          <button
-            type="button"
-            className={`theme-segment-btn ${theme === "light" ? "active" : ""}`}
-            onClick={() => selectTheme("light")}
-          >
-            Light
-          </button>
-        </div>
-      )}
+        <div className="top-fixed-bar">
+          <div className="top-theme-switcher" role="group" aria-label="Color Theme Switcher">
+            <button
+              type="button"
+              className={`theme-segment-btn ${theme === "original" ? "active" : ""}`}
+              onClick={() => selectTheme("original")}
+            >
+              Original
+            </button>
+            <button
+              type="button"
+              className={`theme-segment-btn ${theme === "light" ? "active" : ""}`}
+              onClick={() => selectTheme("light")}
+            >
+              Light
+            </button>
+          </div>
 
-      {/* Quick Floating Lock Button */}
-      {isFullyUnlocked && !isFireworksActive && !isAwardActive && (
-        <button
-          className="floating-lock-btn"
-          onClick={handleRelock}
-          title="Lock Website"
-          aria-label="Lock Website"
-        >
-          <span>🔒</span>
-          <span>Lock</span>
-        </button>
+          {/* Quick Floating Lock Button */}
+          {isFullyUnlocked && (
+            <button
+              className="floating-lock-btn"
+              onClick={handleRelock}
+              title="Lock Website"
+              aria-label="Lock Website"
+            >
+              <span>🔒</span>
+              <span>Lock</span>
+            </button>
+          )}
+        </div>
       )}
 
       {/* Step 1: Secret Password Gate (Password: Laila) */}

@@ -2344,6 +2344,7 @@ body {
 }
 
 /* ============ FULLSCREEN BLUE FIREWORKS SHOW MODAL ============ */
+body.fireworks-modal-active .top-fixed-bar,
 body.fireworks-modal-active .top-theme-switcher,
 body.fireworks-modal-active .floating-lock-btn,
 body.fireworks-modal-active .theme-segment-btn {
@@ -4001,36 +4002,56 @@ body.fireworks-modal-active .theme-segment-btn {
   box-shadow: 0 0 15px rgba(255, 0, 128, 0.4);
 }
 
+/* ============ TOP FIXED CONTROLS BAR (Theme Switcher + Lock Button Fixed at Top) ============ */
+.top-fixed-bar {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: none;
+  max-width: 96vw;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.top-fixed-bar > * {
+  pointer-events: auto;
+}
+
 /* Floating Lock Pill Button */
 .floating-lock-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 999;
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.45rem 1rem;
-  background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--card-border);
+  background: rgba(22, 5, 34, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 107, 157, 0.35);
   border-radius: 50px;
-  color: var(--pink);
-  font-size: 0.78rem;
+  color: #ff6b9d;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(0.74rem, 2.2vw, 0.84rem);
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), var(--gold-glow);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55), 0 0 15px rgba(255, 0, 128, 0.18);
+  user-select: none;
+  white-space: nowrap;
 }
 
 .floating-lock-btn:hover {
-  background: rgba(212, 175, 55, 0.2);
-  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(255, 0, 128, 0.35), rgba(156, 39, 176, 0.35));
+  border-color: #ff0080;
   color: #ffffff;
   transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), var(--gold-glow);
+  box-shadow: 0 8px 25px rgba(255, 0, 128, 0.45), var(--gold-glow);
 }
 
 .floating-lock-btn:active {
@@ -4039,14 +4060,10 @@ body.fireworks-modal-active .theme-segment-btn {
 
 /* ============ TOP THEME SWITCHER (Segmented Pill at Top) ============ */
 .top-theme-switcher {
-  position: fixed;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 999;
+  position: relative;
   display: inline-flex;
   align-items: center;
-  background: rgba(22, 5, 34, 0.78);
+  background: rgba(22, 5, 34, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1.5px solid rgba(255, 107, 157, 0.35);
@@ -4059,9 +4076,9 @@ body.fireworks-modal-active .theme-segment-btn {
 }
 
 [data-theme="light"] .top-theme-switcher {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.9);
   border-color: rgba(184, 67, 104, 0.35);
-  box-shadow: 0 8px 30px rgba(180, 100, 130, 0.18);
+  box-shadow: 0 8px 30px rgba(180, 100, 130, 0.2);
 }
 
 .theme-segment-btn {
@@ -4110,16 +4127,26 @@ body.fireworks-modal-active .theme-segment-btn {
 }
 
 @media (max-width: 600px) {
+  .top-fixed-bar {
+    top: 10px;
+    gap: 6px;
+  }
+
   .top-theme-switcher {
-    top: 12px;
     padding: 3px;
     gap: 2px;
   }
 
   .theme-segment-btn {
-    padding: 0.36rem 0.68rem;
+    padding: 0.36rem 0.65rem;
     font-size: 0.72rem;
-    gap: 0.3rem;
+    gap: 0.25rem;
+  }
+
+  .floating-lock-btn {
+    padding: 0.38rem 0.72rem;
+    font-size: 0.72rem;
+    gap: 0.25rem;
   }
 }
 
@@ -4698,24 +4725,6 @@ body.fireworks-modal-active .theme-segment-btn {
 
   .hint-text {
     font-size: 0.76rem;
-  }
-
-  .floating-lock-btn {
-    top: auto;
-    bottom: 22px;
-    right: 16px;
-    padding: 0.45rem 0.85rem;
-    font-size: 0.74rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75), var(--gold-glow);
-  }
-
-  .floating-theme-btn {
-    top: auto;
-    bottom: 22px;
-    left: 16px;
-    padding: 0.45rem 0.85rem;
-    font-size: 0.74rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75), var(--gold-glow);
   }
 
   /* Compact Envelope on Mobile */
@@ -7604,6 +7613,7 @@ body.fireworks-modal-active .theme-segment-btn {
 }
 
 /* Hide Theme Switcher & Floating Lock when Award Screen is open */
+body:has(.award-modal-overlay) .top-fixed-bar,
 body:has(.award-modal-overlay) .top-theme-switcher,
 body:has(.award-modal-overlay) .floating-lock-btn {
   display: none !important;
