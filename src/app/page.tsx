@@ -532,8 +532,11 @@ function getNextBirthday() {
 }
 
 function getMidnightTarget() {
-  // Target: September 10, BIRTHDAY_YEAR at 00:00:00 (Midnight)
-  return new Date(BIRTHDAY_YEAR, 8, 10, 0, 0, 0);
+  const now = new Date();
+  // Target: September 10 at 00:00:00 (Midnight tonight!)
+  // Uses active device year to guarantee 100% synchronization with phone clock
+  const year = now.getFullYear();
+  return new Date(year, 8, 10, 0, 0, 0);
 }
 
 function isMidnightPassed() {
@@ -635,7 +638,7 @@ function FloatingHearts() {
 function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isReady, setIsReady] = useState(false);
-  const [autoUnlocked, setAutoUnlocked] = useState(false);
+  const hasTriggeredRef = useRef(false);
 
   useEffect(() => {
     function calculate() {
@@ -646,8 +649,8 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
       if (diff <= 0) {
         setIsReady(true);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        if (!autoUnlocked) {
-          setAutoUnlocked(true);
+        if (!hasTriggeredRef.current) {
+          hasTriggeredRef.current = true;
           try {
             playAudioCue("success");
             import("canvas-confetti").then((m) => {
@@ -671,8 +674,30 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
 
     calculate();
     const interval = setInterval(calculate, 1000);
-    return () => clearInterval(interval);
-  }, [autoUnlocked, onUnlock]);
+
+    // If phone was asleep or tab was in background, recalculate immediately upon wake
+    const handleVisibility = () => {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        calculate();
+      }
+    };
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", handleVisibility);
+    }
+    if (typeof window !== "undefined") {
+      window.addEventListener("focus", calculate);
+    }
+
+    return () => {
+      clearInterval(interval);
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", handleVisibility);
+      }
+      if (typeof window !== "undefined") {
+        window.removeEventListener("focus", calculate);
+      }
+    };
+  }, [onUnlock]);
 
   const handleManualPreview = () => {
     playAudioCue("skipTimer");
