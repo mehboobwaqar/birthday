@@ -8,6 +8,7 @@ const BIRTHDAY_NAME = "Laiba Ahmad";
 const BIRTHDAY_DATE = new Date("2003-09-10");
 const BIRTHDAY_YEAR = 2026;
 const SECRET_PASSWORD = "Laila";
+const ADMIN_PASSWORDS = ["nono", "nonoa"];
 
 // ─── Audio Tone Effects (Web Audio API) ───
 type AudioCueType =
@@ -635,7 +636,7 @@ function FloatingHearts() {
 }
 
 // ─── Midnight Countdown Gate ───
-function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
+function MidnightCountdownGate({ onUnlock, isAdmin }: { onUnlock: () => void; isAdmin?: boolean }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isReady, setIsReady] = useState(false);
   const hasTriggeredRef = useRef(false);
@@ -711,7 +712,7 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
     <div className="midnight-gate-overlay">
       <div className="midnight-stars" />
       <div className="midnight-gate-card">
-        <div className="midnight-crown-icon" onDoubleClick={handleManualPreview} style={{ cursor: "default", userSelect: "none" }}>👑</div>
+        <div className="midnight-crown-icon" onDoubleClick={isAdmin ? handleManualPreview : undefined} style={{ cursor: "default", userSelect: "none" }}>👑</div>
         <span className="midnight-badge">🔐 BIRTHDAY SURPRISE VAULT</span>
 
         <h2 className="midnight-title">Shhh.... Sabar Meri Jaan! 🤫💖</h2>
@@ -752,7 +753,34 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
           </div>
         )}
 
-        {/* Countdown waiting screen - Auto-unlocks when timer hits 00:00:00 */}
+        {/* Safety Bypass Skip Button (Only visible if unlocked with safety password nono / nonoa) */}
+        {isAdmin && (
+          <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
+            <button
+              type="button"
+              onClick={handleManualPreview}
+              className="midnight-skip-btn"
+              style={{
+                background: "linear-gradient(135deg, #ff4081, #9c27b0)",
+                border: "none",
+                color: "#fff",
+                padding: "10px 24px",
+                borderRadius: "25px",
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 4px 20px rgba(255, 64, 129, 0.4)",
+                transition: "all 0.3s ease",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <span>⏩</span>
+              <span>Safety Bypass: Skip Timer ✨</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -4023,7 +4051,7 @@ const FUNNY_ERROR_LIST = [
 ];
 
 // ─── Secret Password Gate ───
-function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
+function PasswordGate({ onUnlock }: { onUnlock: (isAdmin?: boolean) => void }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorIndex, setErrorIndex] = useState<number | null>(null);
@@ -4051,7 +4079,10 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
       return;
     }
 
-    if (trimmed.toLowerCase() === SECRET_PASSWORD.toLowerCase()) {
+    const isMainPass = trimmed.toLowerCase() === SECRET_PASSWORD.toLowerCase();
+    const isAdminPass = ADMIN_PASSWORDS.some((p) => p.toLowerCase() === trimmed.toLowerCase());
+
+    if (isMainPass || isAdminPass) {
       // SUCCESS!
       setIsSuccess(true);
       setErrorIndex(null);
@@ -4088,6 +4119,11 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
 
       try {
         sessionStorage.setItem("miang_unlocked", "true");
+        if (isAdminPass) {
+          sessionStorage.setItem("miang_admin_safety", "true");
+        } else {
+          sessionStorage.removeItem("miang_admin_safety");
+        }
       } catch { }
 
       setTimeout(() => {
@@ -4095,7 +4131,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
       }, 1600);
 
       setTimeout(() => {
-        onUnlock();
+        onUnlock(isAdminPass);
       }, 2100);
     } else {
       // WRONG PASSWORD!
@@ -4211,12 +4247,10 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
               {showHint && (
                 <div className="hint-card">
                   <p className="hint-text">
-                    ✨ <strong>If you know, you know...</strong> 😉
+                    ✨ <strong>A little secret hint for you:</strong> 😉
                     <br />
-                    And if you really know, you don&apos;t need any hint! 💖
-                    <br />
-                    <span style={{ display: "inline-block", marginTop: "4px", color: "#ffd700" }}>
-                      <em>(Aapka aur mera pyara secret word... Starts with <strong>L</strong> 💕)</em>
+                    <span style={{ display: "inline-block", marginTop: "6px", color: "#ffd700", fontWeight: 500, fontSize: "0.95rem" }}>
+                      &ldquo;A sweet name I call you with love sometimes... 💕&rdquo;
                     </span>
                   </p>
                 </div>
@@ -5246,6 +5280,7 @@ function BestWifeAwardSection({ onModalChange }: { onModalChange?: (isOpen: bool
 export default function BirthdayPage() {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   const [isMidnightUnlocked, setIsMidnightUnlocked] = useState(false);
+  const [isAdminMode, setIsAdminMode] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
   const [theme, setTheme] = useState<"original" | "light">("original");
@@ -5265,6 +5300,9 @@ export default function BirthdayPage() {
         document.documentElement.removeAttribute("data-theme");
       }
 
+      if (sessionStorage.getItem("miang_admin_safety") === "true") {
+        setIsAdminMode(true);
+      }
       if (sessionStorage.getItem("miang_password_verified") === "true") {
         setIsPasswordVerified(true);
       }
@@ -5338,9 +5376,16 @@ export default function BirthdayPage() {
     setTimeout(() => fireConfetti(), 900);
   }, [fireConfetti]);
 
-  const handlePasswordVerified = useCallback(() => {
+  const handlePasswordVerified = useCallback((isAdmin?: boolean) => {
     try {
       sessionStorage.setItem("miang_password_verified", "true");
+      if (isAdmin) {
+        sessionStorage.setItem("miang_admin_safety", "true");
+        setIsAdminMode(true);
+      } else {
+        sessionStorage.removeItem("miang_admin_safety");
+        setIsAdminMode(false);
+      }
     } catch { }
     setIsPasswordVerified(true);
     if (sessionStorage.getItem("miang_midnight_bypassed") === "true" || isMidnightPassed()) {
@@ -5359,7 +5404,9 @@ export default function BirthdayPage() {
     try {
       sessionStorage.removeItem("miang_password_verified");
       sessionStorage.removeItem("miang_midnight_bypassed");
+      sessionStorage.removeItem("miang_admin_safety");
     } catch { }
+    setIsAdminMode(false);
     setIsPasswordVerified(false);
     setIsMidnightUnlocked(false);
     setEnvelopeOpened(false);
@@ -5425,6 +5472,7 @@ export default function BirthdayPage() {
       {isPasswordVerified && !isMidnightUnlocked && (
         <MidnightCountdownGate
           key={`midnight-${sessionKey}`}
+          isAdmin={isAdminMode}
           onUnlock={handleMidnightUnlock}
         />
       )}
