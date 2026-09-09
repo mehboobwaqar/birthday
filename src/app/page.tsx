@@ -4140,58 +4140,55 @@ function ScratchCardItem({
     const w = rect.width;
     const h = rect.height;
 
-    // High-End Metallic Foil Gradient
-    const grad = ctx.createLinearGradient(0, 0, w * 0.85, h * 1.15);
+    // Quiet Luxury Satin Champagne Pearl Gold Foil (Decent & Classy)
+    const grad = ctx.createLinearGradient(0, 0, w * 0.9, h * 1.1);
     if (voucher.isSpecialReverse) {
-      // Imperial Ruby & 24K Gold Foil (For Mehboob's Voucher)
-      grad.addColorStop(0.0, "#9c1438");
-      grad.addColorStop(0.2, "#ff597e");
-      grad.addColorStop(0.42, "#ffd700");
-      grad.addColorStop(0.68, "#ff3d6a");
-      grad.addColorStop(0.88, "#c2185b");
-      grad.addColorStop(1.0, "#540619");
+      // Warm Antique Bronze Gold (Classy & Rich)
+      grad.addColorStop(0.0, "#c59a3f");
+      grad.addColorStop(0.25, "#fcedc7");
+      grad.addColorStop(0.5, "#d6a853");
+      grad.addColorStop(0.75, "#fff7e6");
+      grad.addColorStop(1.0, "#a8782a");
     } else {
-      // Ultra-Luxe 24K Rose-Gold & Champagne Silk Foil
-      grad.addColorStop(0.0, "#b8526c");
-      grad.addColorStop(0.18, "#ffd7c2");
-      grad.addColorStop(0.38, "#d95f7c");
-      grad.addColorStop(0.58, "#fff2d1");
-      grad.addColorStop(0.78, "#c94d6e");
-      grad.addColorStop(0.92, "#a83552");
-      grad.addColorStop(1.0, "#73192f");
+      // Satin Champagne Pearl Gold (Soft, Elegant, Quiet Luxury)
+      grad.addColorStop(0.0, "#d5c2ad");
+      grad.addColorStop(0.25, "#fbf6f0");
+      grad.addColorStop(0.5, "#decbb7");
+      grad.addColorStop(0.75, "#fffdfa");
+      grad.addColorStop(1.0, "#c7b29b");
     }
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Diagonal Metallic Sheen Highlight
+    // Subtle Satin Sheen Highlight
     const sheen = ctx.createLinearGradient(0, 0, w, h);
     sheen.addColorStop(0.0, "rgba(255, 255, 255, 0.04)");
-    sheen.addColorStop(0.32, "rgba(255, 255, 255, 0.25)");
-    sheen.addColorStop(0.5, "rgba(255, 255, 255, 0.45)");
-    sheen.addColorStop(0.68, "rgba(255, 255, 255, 0.25)");
+    sheen.addColorStop(0.35, "rgba(255, 255, 255, 0.28)");
+    sheen.addColorStop(0.5, "rgba(255, 255, 255, 0.42)");
+    sheen.addColorStop(0.65, "rgba(255, 255, 255, 0.28)");
     sheen.addColorStop(1.0, "rgba(255, 255, 255, 0.04)");
     ctx.fillStyle = sheen;
     ctx.fillRect(0, 0, w, h);
 
-    // Sparkling Glitter Dust
+    // Soft Gold Sparkles
     ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 30; i++) {
       const sx = (Math.sin(i * 73) * 0.5 + 0.5) * w;
       const sy = (Math.cos(i * 41) * 0.5 + 0.5) * h;
-      const sr = (i % 3) * 0.8 + 1.2;
+      const sr = (i % 3) * 0.7 + 1.2;
       ctx.beginPath();
       ctx.arc(sx, sy, sr, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Luxury Center Emblem Frame
-    const badgeW = Math.min(w * 0.8, 250);
-    const badgeH = 72;
+    // Elegant Frosted Champagne Badge
+    const badgeW = Math.min(w * 0.78, 240);
+    const badgeH = 68;
     const badgeX = (w - badgeW) / 2;
     const badgeY = (h - badgeH) / 2;
 
     ctx.save();
-    ctx.fillStyle = "rgba(22, 4, 18, 0.52)";
+    ctx.fillStyle = "rgba(42, 28, 35, 0.45)";
     ctx.beginPath();
     if (typeof ctx.roundRect === "function") {
       ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 16);
@@ -4200,20 +4197,20 @@ function ScratchCardItem({
     }
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(255, 228, 140, 0.95)";
-    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+    ctx.lineWidth = 1.6;
     ctx.stroke();
 
     // Centered foil title & instructions
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "bold 13.5px 'Outfit', sans-serif";
-    ctx.fillText("✨ SCRATCH TO REVEAL ✨", w / 2, badgeY + 25);
+    ctx.font = "bold 13px 'Outfit', sans-serif";
+    ctx.fillText("✨ SCRATCH TO REVEAL ✨", w / 2, badgeY + 24);
 
-    ctx.fillStyle = "#ffe082";
+    ctx.fillStyle = "#fdfbf7";
     ctx.font = "600 11px sans-serif";
-    ctx.fillText("👆 Rub with finger or mouse", w / 2, badgeY + 47);
+    ctx.fillText("Swipe with finger or mouse", w / 2, badgeY + 45);
     ctx.restore();
   }, [voucher.isSpecialReverse]);
 
@@ -4542,6 +4539,399 @@ function VouchersSection() {
   );
 }
 
+// ─── Best Wife of the Universe - Official Royal Award Section ───
+function BestWifeAwardSection() {
+  const [isAwardOpen, setIsAwardOpen] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
+
+  const handleOpenAward = async () => {
+    playAudioCue("royalVictory");
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 70,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ["#ffd700", "#ff0080", "#ffffff", "#e0a96d"],
+      });
+    } catch { }
+    setIsAwardOpen(true);
+  };
+
+  const handleCloseAward = () => {
+    playAudioCue("cardFlip");
+    setIsAwardOpen(false);
+  };
+
+  const downloadAwardImage = async () => {
+    playAudioCue("success");
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 50,
+        spread: 90,
+        origin: { y: 0.55 },
+        colors: ["#ffd700", "#ff4081", "#ffffff"],
+      });
+    } catch { }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 1200;
+    canvas.height = 860;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Background: Warm ivory parchment
+    const bgGrad = ctx.createRadialGradient(600, 430, 80, 600, 430, 700);
+    bgGrad.addColorStop(0, "#fffef9");
+    bgGrad.addColorStop(0.7, "#fdf8ee");
+    bgGrad.addColorStop(1, "#f4ebd7");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1200, 860);
+
+    // Outer Gold Border
+    ctx.strokeStyle = "#b38222";
+    ctx.lineWidth = 6;
+    ctx.strokeRect(30, 30, 1140, 800);
+
+    // Inner Fine Gold Border
+    ctx.strokeStyle = "rgba(179, 130, 34, 0.45)";
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(42, 42, 1116, 776);
+
+    // Corner Ornaments
+    const drawCorner = (x: number, y: number, angle: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.strokeStyle = "#b38222";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, 24, 0, Math.PI * 0.5);
+      ctx.stroke();
+      ctx.fillStyle = "#b38222";
+      ctx.beginPath();
+      ctx.arc(10, 10, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+    drawCorner(55, 55, 0);
+    drawCorner(1145, 55, Math.PI * 0.5);
+    drawCorner(1145, 805, Math.PI);
+    drawCorner(55, 805, Math.PI * 1.5);
+
+    // Royal Header
+    ctx.fillStyle = "#801235";
+    ctx.font = "bold 15px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("👑 THE SUPREME ROYAL COUNCIL OF MEHBOOB'S HEART 👑", 600, 95);
+
+    ctx.fillStyle = "#b38222";
+    ctx.font = "bold 13px sans-serif";
+    ctx.fillText("OFFICIAL DIPLOMA OF ETERNAL EXCELLENCE • 2026 EDITION", 600, 125);
+
+    // Divider Line
+    ctx.strokeStyle = "rgba(179, 130, 34, 0.35)";
+    ctx.beginPath();
+    ctx.moveTo(250, 145);
+    ctx.lineTo(950, 145);
+    ctx.stroke();
+
+    // Presenting
+    ctx.fillStyle = "#3b1029";
+    ctx.font = "italic 18px Georgia, serif";
+    ctx.fillText("This prestigious royal honor is proudly conferred upon", 600, 190);
+
+    // Recipient Name
+    ctx.fillStyle = "#1c0819";
+    ctx.font = "bold 46px Georgia, serif";
+    ctx.fillText("LAIBA MEHBOOB", 600, 255);
+
+    // Underline
+    ctx.strokeStyle = "#b38222";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(380, 275);
+    ctx.lineTo(820, 275);
+    ctx.stroke();
+
+    // Subtitle
+    ctx.fillStyle = "#801235";
+    ctx.font = "bold 20px Georgia, serif";
+    ctx.fillText("THE BEST WIFE IN THE ENTIRE UNIVERSE 🌟", 600, 320);
+
+    // Citation Box
+    ctx.fillStyle = "rgba(184, 40, 88, 0.05)";
+    ctx.fillRect(160, 355, 880, 100);
+    ctx.strokeStyle = "rgba(184, 40, 88, 0.25)";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(160, 355, 880, 100);
+
+    // Exact Citation Requested
+    ctx.fillStyle = "#2b0e25";
+    ctx.font = "italic 21px Georgia, serif";
+    ctx.fillText(
+      "“Awarded to Laiba Mehboob for being 10/10 in beauty,",
+      600,
+      395
+    );
+    ctx.fillText(
+      "100/10 in drama, and the uncontested Queen of Mehboob's Life.”",
+      600,
+      430
+    );
+
+    // Rating Badges
+    const drawBadge = (text: string, x: number, y: number) => {
+      ctx.save();
+      ctx.fillStyle = "#fff0f5";
+      ctx.strokeStyle = "rgba(184, 40, 88, 0.35)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      if (typeof ctx.roundRect === "function") {
+        ctx.roundRect(x - 140, y - 20, 280, 40, 20);
+      } else {
+        ctx.rect(x - 140, y - 20, 280, 40);
+      }
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#801235";
+      ctx.font = "bold 13px sans-serif";
+      ctx.fillText(text, x, y + 5);
+      ctx.restore();
+    };
+    drawBadge("👑 10/10 IN BEAUTY", 310, 510);
+    drawBadge("🎭 100/10 IN DRAMA", 600, 510);
+    drawBadge("♾️ UNCONTESTED QUEEN", 890, 510);
+
+    // Description note
+    ctx.fillStyle = "#4a1432";
+    ctx.font = "15px Georgia, serif";
+    ctx.fillText(
+      "Certified with unconditional love, lifetime loyalty, and infinite affection.",
+      600,
+      585
+    );
+    ctx.fillText(
+      "Issued with royal authority on September 10, 2026 • 23rd Birthday Royal Proclamation",
+      600,
+      610
+    );
+
+    // Bottom Line
+    ctx.strokeStyle = "rgba(179, 130, 34, 0.35)";
+    ctx.beginPath();
+    ctx.moveTo(120, 645);
+    ctx.lineTo(1080, 645);
+    ctx.stroke();
+
+    // Signature Left (Mehboob)
+    ctx.fillStyle = "#801235";
+    ctx.font = "italic bold 26px 'Brush Script MT', 'Dancing Script', cursive, serif";
+    ctx.fillText("Mehboob Waqar", 300, 715);
+    ctx.strokeStyle = "rgba(0,0,0,0.3)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(200, 725);
+    ctx.lineTo(400, 725);
+    ctx.stroke();
+    ctx.fillStyle = "#3b1029";
+    ctx.font = "bold 12px sans-serif";
+    ctx.fillText("Groom & Devoted Admirer ✍️", 300, 745);
+
+    // Center Wax Seal
+    ctx.save();
+    ctx.fillStyle = "#801235";
+    ctx.beginPath();
+    ctx.arc(600, 710, 44, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#ffd700";
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    ctx.fillStyle = "#ffd700";
+    ctx.font = "bold 10px sans-serif";
+    ctx.fillText("OFFICIAL", 600, 695);
+    ctx.fillText("SEAL", 600, 712);
+    ctx.fillText("💍 2026", 600, 728);
+    ctx.restore();
+
+    // Signature Right (Royal Heart Council)
+    ctx.fillStyle = "#801235";
+    ctx.font = "italic bold 24px 'Brush Script MT', 'Dancing Script', cursive, serif";
+    ctx.fillText("The Royal Heart Council", 900, 715);
+    ctx.beginPath();
+    ctx.moveTo(800, 725);
+    ctx.lineTo(1000, 725);
+    ctx.stroke();
+    ctx.fillStyle = "#3b1029";
+    ctx.font = "bold 12px sans-serif";
+    ctx.fillText("Registered with Eternal Love ✍️", 900, 745);
+
+    // Export and download
+    const imageURI = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = imageURI;
+    link.download = "Best_Wife_Award_Laiba_Mehboob.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setDownloadSuccess(true);
+    setTimeout(() => setDownloadSuccess(false), 4000);
+  };
+
+  return (
+    <section className="award-section" id="royal-award">
+      <div className="award-container">
+        {/* Main Page Teaser Case (Hidden until clicked) */}
+        <div className="award-teaser-card">
+          <div className="award-crown-icon">👑</div>
+          <span className="award-confidential-badge">
+            ⚜️ CONFIDENTIAL ROYAL PROCLAMATION ⚜️
+          </span>
+          <h2 className="award-teaser-title">
+            The Official Royal Award for Laiba Mehboob
+          </h2>
+          <div className="section-divider" />
+          <p className="award-teaser-desc">
+            By supreme decree of the Royal Council of Mehboob&apos;s Heart, a formal lifetime honor has been officially ratified and sealed for you.
+          </p>
+
+          <button
+            type="button"
+            className="award-open-btn"
+            onClick={handleOpenAward}
+          >
+            🏆 Break Seal &amp; Open Official Award ✨
+          </button>
+        </div>
+
+        {/* Fullscreen Royal Award Presentation Modal */}
+        {isAwardOpen && (
+          <div className="award-modal-overlay" onClick={handleCloseAward}>
+            <div
+              className="award-modal-content"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                type="button"
+                className="award-close-btn"
+                onClick={handleCloseAward}
+                title="Close Award"
+                aria-label="Close Award"
+              >
+                ✕
+              </button>
+
+              {/* Royal Certificate Paper */}
+              <div className="award-certificate-frame">
+                <div className="certificate-inner">
+                  {/* Decorative Corner Ornaments */}
+                  <span className="cert-corner cert-corner-tl">⚜️</span>
+                  <span className="cert-corner cert-corner-tr">⚜️</span>
+                  <span className="cert-corner cert-corner-bl">⚜️</span>
+                  <span className="cert-corner cert-corner-br">⚜️</span>
+
+                  <div className="cert-header">
+                    <span className="cert-council">👑 THE SUPREME ROYAL COUNCIL OF MEHBOOB&apos;S HEART 👑</span>
+                    <h3 className="cert-diploma-title">OFFICIAL DIPLOMA OF ETERNAL EXCELLENCE</h3>
+                    <span className="cert-edition">2026 ROYAL BIRTHDAY EDITION • DIPLOMA NO. LM-QUEEN-001</span>
+                  </div>
+
+                  <div className="cert-divider-line" />
+
+                  <p className="cert-conferred">
+                    This highest royal honor in the cosmos is proudly conferred upon:
+                  </p>
+
+                  <h1 className="cert-recipient-name">LAIBA MEHBOOB</h1>
+                  <span className="cert-sub-title">THE BEST WIFE IN THE ENTIRE UNIVERSE 🌟</span>
+
+                  {/* Citation Box with exact user text */}
+                  <div className="cert-citation-box">
+                    <p className="cert-citation-text">
+                      &ldquo;Awarded to <strong>Laiba Mehboob</strong> for being <strong>10/10 in beauty</strong>, <strong>100/10 in drama</strong>, and the <strong>uncontested Queen of Mehboob&apos;s Life</strong>.&rdquo;
+                    </p>
+                  </div>
+
+                  {/* Official Score Badges */}
+                  <div className="cert-badges-grid">
+                    <div className="cert-score-pill">
+                      <span className="score-icon">👑</span>
+                      <span className="score-label">10/10 IN BEAUTY</span>
+                    </div>
+                    <div className="cert-score-pill">
+                      <span className="score-icon">🎭</span>
+                      <span className="score-label">100/10 IN DRAMA</span>
+                    </div>
+                    <div className="cert-score-pill highlight-pill">
+                      <span className="score-icon">💍</span>
+                      <span className="score-label">UNCONTESTED QUEEN</span>
+                    </div>
+                  </div>
+
+                  <p className="cert-legal-text">
+                    Ratified with infinite love, eternal adoration, and unconditional lifelong devotion on this 10th day of September, 2026.
+                  </p>
+
+                  {/* Signatures & Golden Wax Seal */}
+                  <div className="cert-signatures-row">
+                    <div className="cert-sig-box">
+                      <span className="cert-sig-script">Mehboob Waqar</span>
+                      <div className="cert-sig-line" />
+                      <span className="cert-sig-role">Groom &amp; Devoted Admirer ✍️</span>
+                    </div>
+
+                    <div className="cert-wax-seal">
+                      <div className="wax-seal-circle">
+                        <span className="wax-seal-top">OFFICIAL</span>
+                        <span className="wax-seal-heart">💍</span>
+                        <span className="wax-seal-bottom">SEAL</span>
+                      </div>
+                    </div>
+
+                    <div className="cert-sig-box">
+                      <span className="cert-sig-script">The Royal Heart Council</span>
+                      <div className="cert-sig-line" />
+                      <span className="cert-sig-role">Registered with Eternal Love ✍️</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons Below Certificate */}
+              <div className="award-actions-row">
+                <button
+                  type="button"
+                  className="award-download-btn"
+                  onClick={downloadAwardImage}
+                >
+                  📸 Save Image to Phone (Download)
+                </button>
+
+                <button
+                  type="button"
+                  className="award-modal-close-btn"
+                  onClick={handleCloseAward}
+                >
+                  Close Award
+                </button>
+              </div>
+
+              {downloadSuccess && (
+                <div className="award-toast-msg">
+                  🎉 Certificate saved to your device! Post it on your story/status! 💖
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 // ─── Main Page ───
 export default function BirthdayPage() {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
@@ -4805,6 +5195,9 @@ export default function BirthdayPage() {
 
             {/* ─── Timeline ─── */}
             <Timeline />
+
+            {/* ─── Best Wife of the Universe - Official Royal Award ─── */}
+            <BestWifeAwardSection />
 
             {/* ─── Live Love Clock (Since 04 April 2024) ─── */}
             <LoveClockSection />
