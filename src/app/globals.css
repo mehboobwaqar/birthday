@@ -11,8 +11,8 @@
   --purple-deep: #9c27b0;
   --magenta: #ff0080;
   --cyan: #00f5ff;
-  --bg-dark: #050010;
-  --bg-gradient: linear-gradient(135deg, #050010 0%, #0d0025 30%, #1a0040 60%, #0d0025 100%);
+  --bg-dark: #120324;
+  --bg-gradient: linear-gradient(135deg, #16042c 0%, #240842 35%, #300d54 65%, #1a0532 100%);
   --text-light: #fff;
   --text-glow: 0 0 20px rgba(255, 107, 157, 0.6), 0 0 40px rgba(255, 107, 157, 0.3);
   --gold-glow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3);
@@ -33,7 +33,8 @@ html {
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: var(--bg-dark);
+  background: radial-gradient(circle at 50% 0%, #2e0c50 0%, #1a0532 40%, #110222 100%);
+  background-attachment: fixed;
   color: var(--text-light);
   overflow-x: hidden;
   min-height: 100vh;
@@ -60,7 +61,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(ellipse at center, #0d0025 0%, #050010 100%);
+  background: radial-gradient(ellipse at center, #260946 0%, #120324 100%);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -665,14 +666,14 @@ body {
   transform: translate(-50%, -50%);
   color: var(--gold);
   font-size: 0.8rem;
-  background: var(--bg-dark);
+  background: #18052f;
   padding: 0 0.5rem;
 }
 
 /* ============ COUNTDOWN SECTION ============ */
 .countdown-section {
   padding: 6rem 2rem;
-  background: linear-gradient(180deg, var(--bg-dark) 0%, #0d0025 50%, var(--bg-dark) 100%);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #260946 50%, var(--bg-dark) 100%);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -685,7 +686,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(ellipse at center, rgba(255, 0, 128, 0.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(255, 0, 128, 0.08) 0%, transparent 70%);
 }
 
 .countdown-container {
@@ -698,15 +699,17 @@ body {
 }
 
 .countdown-item {
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.08) 0%, rgba(156, 39, 176, 0.08) 100%);
-  border: 1px solid rgba(255, 0, 128, 0.15);
+  background: linear-gradient(135deg, rgba(58, 15, 82, 0.88) 0%, rgba(32, 7, 50, 0.95) 100%);
+  border: 1.5px solid rgba(255, 107, 157, 0.4);
   border-radius: 24px;
   padding: clamp(1.2rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 3rem);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   min-width: clamp(85px, 18vw, 150px);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .countdown-item::before {
@@ -790,7 +793,7 @@ body {
 /* ============ CAKE SECTION ============ */
 .cake-section {
   padding: 6rem 2rem;
-  background: var(--bg-dark);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #22073d 50%, var(--bg-dark) 100%);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -1002,7 +1005,7 @@ body {
 /* ============ QUALITIES SECTION ============ */
 .qualities-section {
   padding: 6rem 2rem;
-  background: linear-gradient(180deg, var(--bg-dark) 0%, #0d0025 50%, var(--bg-dark) 100%);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #2a0b4d 50%, var(--bg-dark) 100%);
   position: relative;
   overflow: hidden;
 }
@@ -1041,14 +1044,14 @@ body {
 }
 
 .quality-card {
-  background: linear-gradient(145deg, rgba(255, 0, 128, 0.08) 0%, rgba(156, 39, 176, 0.12) 100%);
-  border: 1px solid rgba(255, 107, 157, 0.22);
+  background: linear-gradient(145deg, rgba(60, 16, 85, 0.85) 0%, rgba(34, 8, 52, 0.94) 100%);
+  border: 1.5px solid rgba(255, 107, 157, 0.4);
   border-radius: 22px;
   padding: 1.6rem 0.9rem;
   text-align: center;
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   cursor: pointer;
   user-select: none;
@@ -1218,7 +1221,7 @@ body {
 /* ============ CUTE INTERACTIVE LOVE LETTER SECTION ============ */
 .letter-section {
   padding: 6rem 1.5rem;
-  background: linear-gradient(180deg, var(--bg-dark) 0%, #12002b 50%, var(--bg-dark) 100%);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #280a48 50%, var(--bg-dark) 100%);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -1579,7 +1582,7 @@ body {
 /* ============ REASONS SECTION ============ */
 .reasons-section {
   padding: 6rem 2rem;
-  background: var(--bg-dark);
+  background: linear-gradient(180deg, #140428 0%, #2d0c52 50%, #140428 100%);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -1596,12 +1599,14 @@ body {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 1.2rem 1.5rem;
-  margin-bottom: 0.8rem;
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
-  border: 1px solid rgba(255, 0, 128, 0.08);
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
+  padding: 1.35rem 1.65rem;
+  margin-bottom: 1.1rem;
+  background: linear-gradient(135deg, rgba(62, 16, 88, 0.88) 0%, rgba(38, 9, 58, 0.95) 100%);
+  border: 1.5px solid rgba(255, 107, 157, 0.45);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 15px rgba(255, 0, 128, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition: all 0.3s ease;
   text-align: left;
   opacity: 0;
@@ -1658,30 +1663,33 @@ body {
 
 .reason-item:hover {
   transform: translateX(8px);
-  border-color: rgba(255, 0, 128, 0.3);
-  box-shadow: 0 5px 25px rgba(255, 0, 128, 0.1);
+  border-color: rgba(255, 0, 128, 0.75);
+  background: linear-gradient(135deg, rgba(80, 20, 112, 0.92) 0%, rgba(48, 12, 72, 0.97) 100%);
+  box-shadow: 0 12px 40px rgba(255, 0, 128, 0.35), 0 0 25px rgba(255, 215, 0, 0.2);
 }
 
 .reason-number {
   font-family: 'Playfair Display', serif;
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: var(--gold);
-  min-width: 30px;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  min-width: 34px;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.65);
 }
 
 .reason-text {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.65);
-  font-weight: 300;
-  line-height: 1.5;
+  font-size: 0.98rem;
+  color: #ffffff;
+  font-weight: 400;
+  line-height: 1.65;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .reason-emoji {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   margin-left: auto;
   transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
 }
 
 .reason-item:hover .reason-emoji {
@@ -1691,7 +1699,7 @@ body {
 /* ============ TIMELINE SECTION ============ */
 .timeline-section {
   padding: 6rem 1.5rem;
-  background: linear-gradient(180deg, var(--bg-dark) 0%, #0d0025 50%, var(--bg-dark) 100%);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #260946 50%, var(--bg-dark) 100%);
   position: relative;
 }
 
@@ -1753,12 +1761,12 @@ body {
 .timeline-content {
   width: 45%;
   padding: 1.2rem;
-  background: linear-gradient(145deg, rgba(35, 7, 50, 0.85), rgba(18, 3, 26, 0.95));
-  border: 1px solid rgba(255, 107, 157, 0.25);
+  background: linear-gradient(145deg, rgba(56, 14, 80, 0.9), rgba(30, 7, 46, 0.96));
+  border: 1.5px solid rgba(255, 107, 157, 0.42);
   border-radius: 20px;
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transition: all 0.35s ease;
   cursor: pointer;
   text-align: left !important;
@@ -2228,7 +2236,7 @@ body {
 /* ============ PHOTO MEMORIES SECTION ============ */
 .memories-section {
   padding: 6rem 2rem;
-  background: linear-gradient(180deg, var(--bg-dark) 0%, #0d0025 50%, var(--bg-dark) 100%);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #280a4a 50%, var(--bg-dark) 100%);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -2321,8 +2329,9 @@ body {
 
 /* Front - Mystery Cover */
 .memory-card-front {
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.12) 0%, rgba(156, 39, 176, 0.12) 100%);
-  border: 1px solid rgba(255, 0, 128, 0.15);
+  background: linear-gradient(135deg, rgba(56, 14, 80, 0.92) 0%, rgba(32, 7, 48, 0.97) 100%);
+  border: 1.5px solid rgba(255, 107, 157, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2619,7 +2628,7 @@ body {
 .footer {
   padding: 4rem 2rem;
   text-align: center;
-  background: var(--bg-dark);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #1e0535 100%);
   position: relative;
 }
 
@@ -2787,7 +2796,7 @@ body {
   .password-card {
     backdrop-filter: blur(6px) !important;
     -webkit-backdrop-filter: blur(6px) !important;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
   }
 
   /* Disable heavy infinite hover transforms on mobile touch */
