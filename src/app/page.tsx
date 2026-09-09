@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 const BIRTHDAY_NAME = "Laiba Ahmad";
 const BIRTHDAY_DATE = new Date("2003-09-10");
 const BIRTHDAY_YEAR = 2026;
-const SECRET_PASSWORD = "MianG";
+const SECRET_PASSWORD = "nono";
 
 // ─── Audio Tone Effects (Web Audio API) ───
 function playAudioCue(type: "success" | "wrong" | "kiss" | "twinkle") {
@@ -1732,7 +1732,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
                     And if you really know, you don&apos;t need any hint! 💖
                     <br />
                     <span style={{ display: "inline-block", marginTop: "4px", color: "#ffd700" }}>
-                      <em>(Jo aap mujhe pyaar se bulati ho... Starts with <strong>M</strong>)</em>
+                      <em>(Aapka aur mera pyara secret word... Starts with <strong>N</strong> 💕)</em>
                     </span>
                   </p>
                 </div>
@@ -1768,7 +1768,7 @@ function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
 
 // ─── Main Page ───
 export default function BirthdayPage() {
-  const [isPasswordVerified] = useState(true); // Password disabled/none for now
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   const [isMidnightUnlocked, setIsMidnightUnlocked] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
@@ -1776,13 +1776,16 @@ export default function BirthdayPage() {
 
   useEffect(() => {
     try {
+      if (sessionStorage.getItem("miang_password_verified") === "true") {
+        setIsPasswordVerified(true);
+      }
       if (sessionStorage.getItem("miang_midnight_bypassed") === "true" || isMidnightPassed()) {
         setIsMidnightUnlocked(true);
       }
     } catch { }
   }, []);
 
-  const isFullyUnlocked = isMidnightUnlocked;
+  const isFullyUnlocked = isPasswordVerified && isMidnightUnlocked;
 
   // Lock body scroll and keep viewport at top when website is not fully unlocked
   useEffect(() => {
@@ -1833,6 +1836,17 @@ export default function BirthdayPage() {
     setTimeout(() => fireConfetti(), 900);
   }, [fireConfetti]);
 
+  const handlePasswordVerified = useCallback(() => {
+    try {
+      sessionStorage.setItem("miang_password_verified", "true");
+    } catch { }
+    setIsPasswordVerified(true);
+    if (sessionStorage.getItem("miang_midnight_bypassed") === "true" || isMidnightPassed()) {
+      setIsMidnightUnlocked(true);
+    }
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   const handleMidnightUnlock = useCallback(() => {
     setIsMidnightUnlocked(true);
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -1840,8 +1854,10 @@ export default function BirthdayPage() {
 
   const handleRelock = useCallback(() => {
     try {
+      sessionStorage.removeItem("miang_password_verified");
       sessionStorage.removeItem("miang_midnight_bypassed");
     } catch { }
+    setIsPasswordVerified(false);
     setIsMidnightUnlocked(false);
     setEnvelopeOpened(false);
     confettiFired.current = false;
@@ -1872,8 +1888,16 @@ export default function BirthdayPage() {
         </button>
       )}
 
-      {/* Midnight Countdown Gate (with Skip Button for MianG) */}
-      {!isMidnightUnlocked && (
+      {/* Step 1: Secret Password Gate (Password: nono) */}
+      {!isPasswordVerified && (
+        <PasswordGate
+          key={`gate-${sessionKey}`}
+          onUnlock={handlePasswordVerified}
+        />
+      )}
+
+      {/* Step 2: Midnight Countdown Gate (with Skip Button for MianG) */}
+      {isPasswordVerified && !isMidnightUnlocked && (
         <MidnightCountdownGate
           key={`midnight-${sessionKey}`}
           onUnlock={handleMidnightUnlock}
