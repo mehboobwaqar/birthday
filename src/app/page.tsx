@@ -3266,10 +3266,19 @@ export default function BirthdayPage() {
   const [isMidnightUnlocked, setIsMidnightUnlocked] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
+  const [theme, setTheme] = useState<"classy" | "vibrant">("classy");
   const confettiFired = useRef(false);
 
   useEffect(() => {
     try {
+      const savedTheme = localStorage.getItem("birthday_theme");
+      if (savedTheme === "vibrant" || savedTheme === "classy") {
+        setTheme(savedTheme);
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      } else {
+        document.documentElement.setAttribute("data-theme", "classy");
+      }
+
       if (sessionStorage.getItem("miang_password_verified") === "true") {
         setIsPasswordVerified(true);
       }
@@ -3277,6 +3286,18 @@ export default function BirthdayPage() {
         setIsMidnightUnlocked(true);
       }
     } catch { }
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    playAudioCue("twinkle");
+    setTheme((prev) => {
+      const next = prev === "classy" ? "vibrant" : "classy";
+      try {
+        localStorage.setItem("birthday_theme", next);
+      } catch { }
+      document.documentElement.setAttribute("data-theme", next);
+      return next;
+    });
   }, []);
 
   const isFullyUnlocked = isPasswordVerified && isMidnightUnlocked;
@@ -3369,6 +3390,17 @@ export default function BirthdayPage() {
   return (
     <>
       <StarField />
+
+      {/* Quick Floating Theme Switcher Button */}
+      <button
+        className="floating-theme-btn"
+        onClick={toggleTheme}
+        title={theme === "classy" ? "Switch to Original Vibrant Pink Theme" : "Switch to Decent Classy Theme"}
+        aria-label="Toggle Color Theme"
+      >
+        <span>{theme === "classy" ? "✨" : "🌸"}</span>
+        <span>{theme === "classy" ? "Decent Classy" : "Vibrant Pink"}</span>
+      </button>
 
       {/* Quick Floating Lock Button */}
       {isFullyUnlocked && (
