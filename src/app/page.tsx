@@ -870,7 +870,7 @@ function ReasonsSection() {
 
   return (
     <section className="reasons-section" id="reasons">
-      <h2 className="section-title">💕 10 Reasons You&apos;re Amazing 💕</h2>
+      <h2 className="section-title">💕 10 Reasons To Fall In Love With You 💕</h2>
       <div className="section-divider" />
       <div className="reasons-container">
         {reasons.map((reason, i) => (
