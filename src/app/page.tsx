@@ -287,7 +287,32 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
           </div>
         )}
 
-        {/* MianG Preview Button hidden as requested so no one can bypass before 12:00 AM */}
+        {/* Skip Timer Button */}
+        <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
+          <button
+            type="button"
+            onClick={handleManualPreview}
+            className="midnight-skip-btn"
+            style={{
+              background: "linear-gradient(135deg, #ff4081, #9c27b0)",
+              border: "none",
+              color: "#fff",
+              padding: "10px 24px",
+              borderRadius: "25px",
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              boxShadow: "0 4px 20px rgba(255, 64, 129, 0.4)",
+              transition: "all 0.3s ease",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <span>⏩</span>
+            <span>Skip Timer &amp; Open Website ✨</span>
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1743,7 +1768,7 @@ function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
 
 // ─── Main Page ───
 export default function BirthdayPage() {
-  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+  const [isPasswordVerified] = useState(true); // Password disabled/none for now
   const [isMidnightUnlocked, setIsMidnightUnlocked] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
@@ -1751,16 +1776,13 @@ export default function BirthdayPage() {
 
   useEffect(() => {
     try {
-      if (sessionStorage.getItem("miang_password_verified") === "true") {
-        setIsPasswordVerified(true);
-      }
-      if (isMidnightPassed()) {
+      if (sessionStorage.getItem("miang_midnight_bypassed") === "true" || isMidnightPassed()) {
         setIsMidnightUnlocked(true);
       }
     } catch { }
   }, []);
 
-  const isFullyUnlocked = isPasswordVerified && isMidnightUnlocked;
+  const isFullyUnlocked = isMidnightUnlocked;
 
   // Lock body scroll and keep viewport at top when website is not fully unlocked
   useEffect(() => {
@@ -1811,17 +1833,6 @@ export default function BirthdayPage() {
     setTimeout(() => fireConfetti(), 900);
   }, [fireConfetti]);
 
-  const handlePasswordVerified = useCallback(() => {
-    try {
-      sessionStorage.setItem("miang_password_verified", "true");
-    } catch { }
-    setIsPasswordVerified(true);
-    if (isMidnightPassed()) {
-      setIsMidnightUnlocked(true);
-    }
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, []);
-
   const handleMidnightUnlock = useCallback(() => {
     setIsMidnightUnlocked(true);
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -1829,10 +1840,8 @@ export default function BirthdayPage() {
 
   const handleRelock = useCallback(() => {
     try {
-      sessionStorage.removeItem("miang_password_verified");
       sessionStorage.removeItem("miang_midnight_bypassed");
     } catch { }
-    setIsPasswordVerified(false);
     setIsMidnightUnlocked(false);
     setEnvelopeOpened(false);
     confettiFired.current = false;
@@ -1863,16 +1872,8 @@ export default function BirthdayPage() {
         </button>
       )}
 
-      {/* Step 1: Secret Password Gate (MUST ENTER PASSWORD) */}
-      {!isPasswordVerified && (
-        <PasswordGate
-          key={`gate-${sessionKey}`}
-          onUnlock={handlePasswordVerified}
-        />
-      )}
-
-      {/* Step 2: Midnight Countdown Gate (AFTER PASSWORD, UNTIL MIDNIGHT) */}
-      {isPasswordVerified && !isMidnightUnlocked && (
+      {/* Midnight Countdown Gate (with Skip Button for MianG) */}
+      {!isMidnightUnlocked && (
         <MidnightCountdownGate
           key={`midnight-${sessionKey}`}
           onUnlock={handleMidnightUnlock}
