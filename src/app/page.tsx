@@ -26,6 +26,8 @@ type AudioCueType =
   | "funnyBoing"
   | "quizYes";
 
+let sharedAudioCtx: AudioContext | null = null;
+
 function playAudioCue(type: AudioCueType) {
   if (typeof window === "undefined") return;
   try {
@@ -33,9 +35,12 @@ function playAudioCue(type: AudioCueType) {
       window.AudioContext ||
       (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
     if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    if (!sharedAudioCtx || sharedAudioCtx.state === "closed") {
+      sharedAudioCtx = new AudioCtx();
+    }
+    const ctx = sharedAudioCtx;
     if (ctx.state === "suspended") {
-      ctx.resume();
+      ctx.resume().catch(() => {});
     }
 
     if (type === "envelopeOpen") {
@@ -788,7 +793,10 @@ function CakeSection() {
   const age = getAge();
 
   const handleBlowCandles = useCallback(async () => {
-    if (candlesBlown) return;
+    if (candlesBlown) {
+      playAudioCue("twinkle");
+      return;
+    }
     playAudioCue("candleBlow");
     setCandlesBlown(true);
     try {
@@ -866,7 +874,13 @@ function ReasonsSection() {
       <div className="section-divider" />
       <div className="reasons-container">
         {reasons.map((reason, i) => (
-          <div className="reason-item" key={i}>
+          <div
+            className="reason-item"
+            key={i}
+            onClick={() => playAudioCue(i % 2 === 0 ? "heartPop" : "twinkle")}
+            style={{ cursor: "pointer" }}
+            title="Tap for love sparkle ✨"
+          >
             <span className="reason-number">{i + 1}.</span>
             <span className="reason-text">{reason.text}</span>
             <span className="reason-emoji">{reason.emoji}</span>
@@ -911,6 +925,7 @@ function LoveLetter() {
   }, [isOpen]);
 
   const handleClose = () => {
+    playAudioCue("cardFlip");
     setIsOpen(false);
   };
 
@@ -1383,22 +1398,31 @@ function Timeline() {
   const currentPhotos = currentMilestone ? currentMilestone.photos : [];
   const currentPhotoUrl = currentPhotos[activePhotoIdx] || "";
 
+  const closeTimelineModal = useCallback(() => {
+    playAudioCue("cameraShutter");
+    setTimelineModalIndex(null);
+  }, []);
+
   const goToPrevPhoto = useCallback(() => {
     if (!currentPhotos.length) return;
+    playAudioCue("cardFlip");
     setActivePhotoIdx((prev) => (prev > 0 ? prev - 1 : currentPhotos.length - 1));
   }, [currentPhotos.length]);
 
   const goToNextPhoto = useCallback(() => {
     if (!currentPhotos.length) return;
+    playAudioCue("cardFlip");
     setActivePhotoIdx((prev) => (prev < currentPhotos.length - 1 ? prev + 1 : 0));
   }, [currentPhotos.length]);
 
   const goToPrevChapter = useCallback(() => {
+    playAudioCue("cardFlip");
     setTimelineModalIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : milestones.length - 1));
     setActivePhotoIdx(0);
   }, [milestones.length]);
 
   const goToNextChapter = useCallback(() => {
+    playAudioCue("cardFlip");
     setTimelineModalIndex((prev) => (prev !== null && prev < milestones.length - 1 ? prev + 1 : 0));
     setActivePhotoIdx(0);
   }, [milestones.length]);
@@ -1478,14 +1502,14 @@ function Timeline() {
 
       {/* ─── Timeline Multi-Photo Lightbox Modal ─── */}
       {timelineModalIndex !== null && currentMilestone && (
-        <div className="lightbox-overlay" onClick={() => setTimelineModalIndex(null)}>
+        <div className="lightbox-overlay" onClick={closeTimelineModal}>
           <div
             className="lightbox-content timeline-lightbox-content"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               className="lightbox-close"
-              onClick={() => setTimelineModalIndex(null)}
+              onClick={closeTimelineModal}
               aria-label="Close"
             >
               ✕
@@ -1534,7 +1558,10 @@ function Timeline() {
                         key={url}
                         type="button"
                         className={`timeline-thumb-btn ${idx === activePhotoIdx ? "active" : ""}`}
-                        onClick={() => setActivePhotoIdx(idx)}
+                        onClick={() => {
+                          playAudioCue("cardFlip");
+                          setActivePhotoIdx(idx);
+                        }}
                         title={`View photo ${idx + 1}`}
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1585,7 +1612,10 @@ function GiftSection() {
   const [opened, setOpened] = useState(false);
 
   const handleOpen = useCallback(async () => {
-    if (opened) return;
+    if (opened) {
+      playAudioCue("heartPop");
+      return;
+    }
     playAudioCue("giftOpen");
     setOpened(true);
     try {
@@ -2173,8 +2203,14 @@ function PhotoMemories() {
   // Lightbox navigation (only among revealed cards)
   const revealedList = Array.from(revealedCards).sort((a, b) => a - b);
 
+  const closeLightbox = useCallback(() => {
+    playAudioCue("cameraShutter");
+    setLightboxIndex(null);
+  }, []);
+
   const goToNext = useCallback(() => {
     if (lightboxIndex === null) return;
+    playAudioCue("cardFlip");
     const curPos = revealedList.indexOf(lightboxIndex);
     if (curPos < revealedList.length - 1) setLightboxIndex(revealedList[curPos + 1]);
     else setLightboxIndex(revealedList[0]); // wrap
@@ -2182,6 +2218,7 @@ function PhotoMemories() {
 
   const goToPrev = useCallback(() => {
     if (lightboxIndex === null) return;
+    playAudioCue("cardFlip");
     const curPos = revealedList.indexOf(lightboxIndex);
     if (curPos > 0) setLightboxIndex(revealedList[curPos - 1]);
     else setLightboxIndex(revealedList[revealedList.length - 1]); // wrap
@@ -2258,9 +2295,9 @@ function PhotoMemories() {
 
       {/* ─── Lightbox Modal ─── */}
       {lightboxIndex !== null && (
-        <div className="lightbox-overlay" onClick={() => setLightboxIndex(null)}>
+        <div className="lightbox-overlay" onClick={closeLightbox}>
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <button className="lightbox-close" onClick={() => setLightboxIndex(null)}>✕</button>
+            <button className="lightbox-close" onClick={closeLightbox}>✕</button>
             {revealedList.length > 1 && (
               <button className="lightbox-nav prev" onClick={goToPrev}>‹</button>
             )}
@@ -2467,7 +2504,10 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
                 <button
                   type="button"
                   className="eye-toggle-btn"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => {
+                    playAudioCue("cardFlip");
+                    setShowPassword(!showPassword);
+                  }}
                   aria-label="Toggle password visibility"
                 >
                   {showPassword ? "🙈" : "👁️"}
@@ -2498,7 +2538,10 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
               <button
                 type="button"
                 className="hint-toggle-btn"
-                onClick={() => setShowHint(!showHint)}
+                onClick={() => {
+                  playAudioCue("twinkle");
+                  setShowHint(!showHint);
+                }}
               >
                 💡 {showHint ? "Hide Hint" : "Need a hint?"}
               </button>
@@ -2633,6 +2676,7 @@ export default function BirthdayPage() {
   }, []);
 
   const handleRelock = useCallback(() => {
+    playAudioCue("cameraShutter");
     try {
       sessionStorage.removeItem("miang_password_verified");
       sessionStorage.removeItem("miang_midnight_bypassed");
@@ -2716,14 +2760,20 @@ export default function BirthdayPage() {
                 </p>
                 <button
                   className="cta-button"
-                  onClick={() => document.getElementById("qualities")?.scrollIntoView({ behavior: "smooth" })}
+                  onClick={() => {
+                    playAudioCue("twinkle");
+                    document.getElementById("qualities")?.scrollIntoView({ behavior: "smooth" });
+                  }}
                 >
                   🌟 Explore Your Surprises 🌟
                 </button>
               </div>
               <div
                 className="scroll-indicator"
-                onClick={() => document.getElementById("qualities")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() => {
+                  playAudioCue("twinkle");
+                  document.getElementById("qualities")?.scrollIntoView({ behavior: "smooth" });
+                }}
               >
                 <span />
               </div>
