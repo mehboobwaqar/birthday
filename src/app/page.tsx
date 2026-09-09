@@ -3396,25 +3396,21 @@ export default function BirthdayPage() {
     <>
       <StarField />
 
-      {/* Upper Theme Switcher Pill (Original vs Light Decent) */}
+      {/* Upper Theme Switcher Pill (Original vs Light) */}
       <div className="top-theme-switcher" role="group" aria-label="Color Theme Switcher">
         <button
           type="button"
           className={`theme-segment-btn ${theme === "original" ? "active" : ""}`}
           onClick={() => selectTheme("original")}
-          title="Pehle Wala (Original Theme)"
         >
-          <span>🌙</span>
-          <span>Original Theme</span>
+          Original
         </button>
         <button
           type="button"
           className={`theme-segment-btn ${theme === "light" ? "active" : ""}`}
           onClick={() => selectTheme("light")}
-          title="Thora Light Decent Theme"
         >
-          <span>☀️</span>
-          <span>Light Decent</span>
+          Light
         </button>
       </div>
 

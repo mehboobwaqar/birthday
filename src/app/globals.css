@@ -34,36 +34,36 @@
 }
 
 /* ===================================================
-   ☀️ LIGHT DECENT THEME (Soft Pearl & Rose Cream)
-   Soft Blush Ivory, Champagne Gold & Deep Berry Text
+   ☀️ DECENT SOFT LIGHT THEME (Warm Cashmere & Muted Rose)
+   Not blinding white — Soft, Cozy, Velvety & Decent
    =================================================== */
 [data-theme="light"] {
   --theme-name: "light";
-  --pink-light: #fce8f0;
-  --pink: #b84368;
-  --pink-deep: #942b4d;
-  --rose: #c75677;
-  --gold: #b38222;
-  --gold-light: #fbecc4;
-  --purple-soft: #855480;
-  --purple-deep: #5c2457;
-  --magenta: #a82e56;
-  --cyan: #267975;
-  --bg-dark: #faf5f8;
-  --bg-dark-mid: #f5e8ee;
-  --bg-section-mid: #f3e2eb;
-  --body-bg: radial-gradient(circle at 50% 0%, #fff0f5 0%, #faf3f7 45%, #f4e8ef 100%);
-  --bg-gradient: linear-gradient(135deg, #fff5f8 0%, #faedf3 35%, #f5e2ec 65%, #fbf0f6 100%);
-  --text-light: #2d1326;
-  --text-glow: 0 0 15px rgba(184, 67, 104, 0.15);
-  --title-glow: rgba(179, 130, 34, 0.25);
-  --gold-glow: 0 4px 20px rgba(179, 130, 34, 0.25);
-  --neon-pink: 0 4px 18px rgba(184, 67, 104, 0.2);
-  --neon-gold: 0 4px 18px rgba(179, 130, 34, 0.25);
-  --card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.94) 0%, rgba(253, 245, 250, 0.98) 100%);
-  --card-border: rgba(184, 67, 104, 0.25);
-  --section-divider-color: linear-gradient(90deg, transparent, #b84368, #b38222, #b84368, transparent);
-  --badge-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 240, 246, 0.98) 100%);
+  --pink-light: #f5e7ec;
+  --pink: #b04667;
+  --pink-deep: #8a2a46;
+  --rose: #be5371;
+  --gold: #aa7a20;
+  --gold-light: #ebd6a8;
+  --purple-soft: #7c4f77;
+  --purple-deep: #52214d;
+  --magenta: #9c2b4e;
+  --cyan: #26716e;
+  --bg-dark: #eee0e6;
+  --bg-dark-mid: #e5d2db;
+  --bg-section-mid: #dfcbd4;
+  --body-bg: radial-gradient(circle at 50% 0%, #f6eaef 0%, #ede0e6 45%, #e1ced7 100%);
+  --bg-gradient: linear-gradient(135deg, #f7ecf1 0%, #ecdee5 35%, #dfcbd4 65%, #ebdce2 100%);
+  --text-light: #261121;
+  --text-glow: 0 0 12px rgba(176, 70, 103, 0.15);
+  --title-glow: rgba(170, 122, 32, 0.2);
+  --gold-glow: 0 4px 18px rgba(170, 122, 32, 0.2);
+  --neon-pink: 0 4px 16px rgba(176, 70, 103, 0.18);
+  --neon-gold: 0 4px 16px rgba(170, 122, 32, 0.2);
+  --card-bg: linear-gradient(145deg, rgba(253, 248, 250, 0.88) 0%, rgba(243, 232, 237, 0.94) 100%);
+  --card-border: rgba(176, 70, 103, 0.22);
+  --section-divider-color: linear-gradient(90deg, transparent, #b04667, #aa7a20, #b04667, transparent);
+  --badge-bg: linear-gradient(135deg, rgba(253, 248, 250, 0.92) 0%, rgba(243, 232, 237, 0.96) 100%);
 }
 
 * {
@@ -3713,34 +3713,34 @@ body {
 }
 
 [data-theme="light"] .password-gate-overlay {
-  background: radial-gradient(ellipse at 50% 30%, #fff0f5 0%, #f7edf2 60%, #eedbe5 100%);
+  background: radial-gradient(ellipse at 50% 30%, #f6eaef 0%, #ede0e6 60%, #dfcbd4 100%);
 }
 
 [data-theme="light"] .password-card {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 20px 50px rgba(180, 100, 130, 0.15);
-  border-color: rgba(184, 67, 104, 0.25);
+  background: rgba(253, 248, 250, 0.94);
+  box-shadow: 0 20px 50px rgba(140, 60, 90, 0.12);
+  border-color: rgba(176, 70, 103, 0.25);
 }
 
 [data-theme="light"] .gate-title {
-  color: #2d1326;
+  color: #261121;
 }
 
 [data-theme="light"] .gate-subtitle {
-  color: rgba(45, 19, 38, 0.75);
+  color: rgba(38, 17, 33, 0.75);
 }
 
 [data-theme="light"] .password-input {
-  background: rgba(255, 255, 255, 0.95);
-  color: #2d1326;
-  border-color: rgba(184, 67, 104, 0.35);
+  background: rgba(255, 255, 255, 0.9);
+  color: #261121;
+  border-color: rgba(176, 70, 103, 0.35);
 }
 
 [data-theme="light"] .floating-lock-btn {
-  background: rgba(255, 255, 255, 0.88);
-  border-color: rgba(184, 67, 104, 0.35);
+  background: rgba(253, 248, 250, 0.88);
+  border-color: rgba(176, 70, 103, 0.35);
   color: var(--pink-deep);
-  box-shadow: 0 6px 20px rgba(180, 100, 130, 0.18);
+  box-shadow: 0 6px 20px rgba(140, 60, 90, 0.15);
 }
 
 @keyframes pulseGlow {
