@@ -815,153 +815,454 @@ function QualitiesSection() {
   );
 }
 
-// ─── Cake Section with Interactive Candles & Cake Slicing ───
+// ─── Interactive 6-Slice Cake Constants ───
+const SLICE_TOPPINGS = ["🍓", "💖", "✨", "⭐", "🌸", "👑"];
+
+const SLICE_DEDICATIONS = [
+  {
+    num: 1,
+    title: "Slice 1: Pehla Piece Meri Sweet Wifey Ke Liye! 🥰",
+    text: "Pehla aur sab se meetha piece meri pyari Laiba ke liye! Aapki muskurahat meri sab se badi khushi hai.",
+    topping: "🍓",
+    tag: "For Wifey G 👑",
+  },
+  {
+    num: 2,
+    title: "Slice 2: Dusra Piece Mehboob (Mere) Ke Liye! 😋",
+    text: "Taake hum dono milkar cake share karein aur ek dusre ko apne haathon se khilayein!",
+    topping: "💖",
+    tag: "For Hubby 💍",
+  },
+  {
+    num: 3,
+    title: "Slice 3: Hamari Be-Inteha Mohabbat Ke Naam! 🌹",
+    text: "Start 'This way 😘' se le kar aaj tak hamare be-misaal pyaar, trust aur dosti ke naam!",
+    topping: "✨",
+    tag: "Endless Love 💖",
+  },
+  {
+    num: 4,
+    title: "Slice 4: Aapki Sehat, Lambi Umar & Barkat! 🤲",
+    text: "Allah meri Wifey ko hamesha sehat, lambi umar aur har khwahish me kamyabi ata farmaye. Aameen!",
+    topping: "⭐",
+    tag: "Dua & Blessings 🤲",
+  },
+  {
+    num: 5,
+    title: "Slice 5: Hamari Pyari Late-Night Memories! 🧸",
+    text: "Hamari hasi mazaaq, cute calls aur har pyari memory ke naam jo dil me basi hai!",
+    topping: "🌸",
+    tag: "Sweet Memories 🧸",
+  },
+  {
+    num: 6,
+    title: "Slice 6: Hamesha Ka Saath & Nikkah Ke Naam! 💍",
+    text: "Poora cake cut ho gaya! Ta-umr ka sath, be-shumar khushiyan aur hamara pak rishta mubarak ho!",
+    topping: "👑",
+    tag: "Forever & Always 💍",
+  },
+];
+
+// ─── Cake Section with Interactive Candles & 6-Slice Cake Slicing ───
 function CakeSection() {
   const [candlesBlown, setCandlesBlown] = useState(false);
-  const [cakeSliced, setCakeSliced] = useState(false);
+  const [slicesCut, setSlicesCut] = useState(0); // 0 to 6
+  const [activeSliceMsg, setActiveSliceMsg] = useState(0);
   const [isSlicing, setIsSlicing] = useState(false);
   const [bitesFed, setBitesFed] = useState(1);
   const age = getAge();
 
-  const handleBlowCandles = useCallback(async () => {
+  const handleBlowCandles = useCallback(() => {
     if (candlesBlown) {
       playAudioCue("twinkle");
       return;
     }
     playAudioCue("candleBlow");
     setCandlesBlown(true);
-    try {
-      const confetti = (await import("canvas-confetti")).default;
-      // Multi-burst celebration
-      for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
-          confetti({
-            particleCount: 80,
-            spread: 100 + i * 20,
-            origin: { y: 0.5, x: 0.3 + Math.random() * 0.4 },
-            colors: ["#ff0080", "#ffd700", "#ff6b9d", "#ce93d8", "#00f5ff"],
-          });
-        }, i * 300);
-      }
-    } catch (e) {
-      console.log("Confetti error:", e);
-    }
+
+    import("canvas-confetti")
+      .then((mod) => {
+        const confetti = mod.default;
+        for (let i = 0; i < 4; i++) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 75,
+              spread: 90 + i * 20,
+              origin: { y: 0.55, x: 0.3 + Math.random() * 0.4 },
+              colors: ["#ff0080", "#ffd700", "#ff6b9d", "#ce93d8", "#00f5ff"],
+            });
+          }, i * 250);
+        }
+      })
+      .catch(() => {});
   }, [candlesBlown]);
 
-  const handleSliceCake = useCallback(async () => {
-    if (isSlicing) return;
+  const handleSliceCake = useCallback(() => {
+    if (slicesCut >= 6 || isSlicing) return;
     setIsSlicing(true);
     playAudioCue("cakeSlice");
 
-    try {
-      const confetti = (await import("canvas-confetti")).default;
-      confetti({
-        particleCount: 70,
-        spread: 80,
-        origin: { y: 0.6, x: 0.5 },
-        colors: ["#ffd700", "#ff0080", "#ff4081", "#ffffff", "#ce93d8"],
-      });
-    } catch (e) {
-      console.log("Confetti error:", e);
-    }
+    import("canvas-confetti")
+      .then((mod) => {
+        mod.default({
+          particleCount: 50,
+          spread: 70,
+          origin: { y: 0.58, x: 0.5 },
+          colors: ["#ffd700", "#ff0080", "#ff4081", "#ffffff", "#ce93d8"],
+        });
+      })
+      .catch(() => {});
+
+    setSlicesCut((prev) => {
+      const next = Math.min(6, prev + 1);
+      setActiveSliceMsg(next - 1);
+      return next;
+    });
 
     setTimeout(() => {
-      setCakeSliced(true);
       setIsSlicing(false);
-    }, 650);
-  }, [isSlicing]);
+    }, 500);
+  }, [slicesCut, isSlicing]);
 
-  const handleFeedBite = useCallback(async () => {
+  const handleFeedBite = useCallback(() => {
     playAudioCue("heartPop");
     setBitesFed((prev) => prev + 1);
-    try {
-      const confetti = (await import("canvas-confetti")).default;
-      confetti({
-        particleCount: 35,
-        spread: 60,
-        origin: { y: 0.62, x: 0.5 },
-        colors: ["#ff0080", "#ff4081", "#ffd700"],
-      });
-    } catch (e) {
-      console.log("Confetti error:", e);
-    }
+
+    import("canvas-confetti")
+      .then((mod) => {
+        mod.default({
+          particleCount: 30,
+          spread: 55,
+          origin: { y: 0.62, x: 0.5 },
+          colors: ["#ff0080", "#ff4081", "#ffd700"],
+        });
+      })
+      .catch(() => {});
   }, []);
 
   const handleRelight = useCallback(() => {
     playAudioCue("twinkle");
     setCandlesBlown(false);
-    setCakeSliced(false);
+    setSlicesCut(0);
+    setActiveSliceMsg(0);
     setBitesFed(1);
   }, []);
 
+  const CX = 145;
+  const CY = 145;
+  const R = 115;
+
   return (
     <section className="cake-section" id="cake">
-      <h2 className="section-title">🎂 Make a Wish, Wifeyyy G! 🎂</h2>
+      <h2 className="section-title">🎂 Make a Wish & Slice the Cake! 🎂</h2>
       <div className="section-divider" />
 
-      {!candlesBlown && (
-        <div className="candles-row">
-          {Array.from({ length: 7 }, (_, i) => (
-            <div className="candle" key={i}>
-              <span className="candle-flame">🔥</span>
-              <div className="candle-stick" />
-            </div>
-          ))}
-        </div>
-      )}
-
+      {/* Interactive 6-Slice Round Cake (SVG) */}
       <div
-        className="cake-container"
-        onClick={candlesBlown && !cakeSliced ? handleSliceCake : handleBlowCandles}
+        className="interactive-cake-stage"
+        onClick={!candlesBlown ? handleBlowCandles : slicesCut < 6 ? handleSliceCake : handleFeedBite}
+        title={!candlesBlown ? "Click to Blow Candles!" : slicesCut < 6 ? "Click to Slice Cake!" : "Click to Feed Wifey!"}
       >
-        <span className="cake-emoji">{cakeSliced ? "🍰" : candlesBlown ? "🎂" : "🎂"}</span>
-        <div className="cake-glow" />
+        <svg className="interactive-cake-svg" viewBox="0 0 290 290">
+          <defs>
+            {/* Plate gradients */}
+            <radialGradient id="plateRimGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="70%" stopColor="#1e0428" />
+              <stop offset="95%" stopColor="#ffd700" />
+              <stop offset="100%" stopColor="#ffb300" />
+            </radialGradient>
+            {/* Cake slice gradients */}
+            <linearGradient id="cakeSliceGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ff2a85" />
+              <stop offset="60%" stopColor="#ff6097" />
+              <stop offset="100%" stopColor="#f48fb1" />
+            </linearGradient>
+            <linearGradient id="cakeSliceGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ff1493" />
+              <stop offset="60%" stopColor="#ff4081" />
+              <stop offset="100%" stopColor="#ff80ab" />
+            </linearGradient>
+            <linearGradient id="cutSliceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ff007f" />
+              <stop offset="50%" stopColor="#ff4081" />
+              <stop offset="100%" stopColor="#ffd700" />
+            </linearGradient>
+            <radialGradient id="centerRosetteGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffd700" />
+              <stop offset="70%" stopColor="#ff4081" />
+              <stop offset="100%" stopColor="#c2185b" />
+            </radialGradient>
+          </defs>
+
+          {/* Golden Plate Base */}
+          <circle cx={CX} cy={CY} r="140" fill="url(#plateRimGrad)" stroke="#ffd700" strokeWidth="3.5" />
+          <circle cx={CX} cy={CY} r="126" fill="#2d0537" stroke="rgba(255,215,0,0.35)" strokeWidth="1.5" strokeDasharray="4 4" />
+
+          {/* 6 Cake Slices */}
+          {Array.from({ length: 6 }, (_, i) => {
+            const isCut = i < slicesCut;
+            const isCurrent = i === activeSliceMsg && slicesCut > 0;
+            const a1 = ((-90 + i * 60) * Math.PI) / 180;
+            const a2 = ((-90 + (i + 1) * 60) * Math.PI) / 180;
+            const midA = ((-60 + i * 60) * Math.PI) / 180;
+            const x1 = (CX + R * Math.cos(a1)).toFixed(1);
+            const y1 = (CY + R * Math.sin(a1)).toFixed(1);
+            const x2 = (CX + R * Math.cos(a2)).toFixed(1);
+            const y2 = (CY + R * Math.sin(a2)).toFixed(1);
+            const d = `M ${CX} ${CY} L ${x1} ${y1} A ${R} ${R} 0 0 1 ${x2} ${y2} Z`;
+
+            const transX = isCut ? (16 * Math.cos(midA)).toFixed(1) : "0";
+            const transY = isCut ? (16 * Math.sin(midA)).toFixed(1) : "0";
+
+            const topX = CX + 65 * Math.cos(midA);
+            const topY = CY + 65 * Math.sin(midA);
+
+            return (
+              <g
+                key={i}
+                transform={`translate(${transX}, ${transY})`}
+                className={`cake-slice-svg-group ${isCut ? "is-cut" : ""} ${isCurrent ? "is-current" : ""}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (isCut) {
+                    setActiveSliceMsg(i);
+                    playAudioCue("heartPop");
+                  } else if (candlesBlown) {
+                    handleSliceCake();
+                  } else {
+                    handleBlowCandles();
+                  }
+                }}
+              >
+                {/* Slice Body */}
+                <path
+                  d={d}
+                  fill={isCut ? "url(#cutSliceGrad)" : i % 2 === 0 ? "url(#cakeSliceGrad1)" : "url(#cakeSliceGrad2)"}
+                  stroke={isCut ? "#ffd700" : "#ffb3d9"}
+                  strokeWidth={isCut ? "2.5" : "1.5"}
+                />
+
+                {/* Topping on Slice */}
+                <text
+                  x={topX}
+                  y={topY + 6}
+                  fontSize="17"
+                  textAnchor="middle"
+                  style={{ pointerEvents: "none", userSelect: "none" }}
+                >
+                  {SLICE_TOPPINGS[i]}
+                </text>
+
+                {/* Sliced Badge / Sparkle */}
+                {isCut && (
+                  <circle
+                    cx={topX}
+                    cy={topY}
+                    r="13"
+                    fill="rgba(255,215,0,0.25)"
+                    stroke="#ffd700"
+                    strokeWidth="1.2"
+                  />
+                )}
+              </g>
+            );
+          })}
+
+          {/* Center Rosette Cream */}
+          <circle cx={CX} cy={CY} r="20" fill="url(#centerRosetteGrad)" stroke="#ffd700" strokeWidth="2" />
+          <text
+            x={CX}
+            y={CY + 6}
+            fontSize="14"
+            textAnchor="middle"
+            style={{ pointerEvents: "none", userSelect: "none" }}
+          >
+            {candlesBlown ? (slicesCut === 6 ? "🎉" : "💖") : "✨"}
+          </text>
+
+          {/* 7 CANDLES: ONLY RENDERED WHEN NOT BLOWN */}
+          {!candlesBlown && (
+            <g className="candles-layer">
+              {/* 6 candles on the slices */}
+              {Array.from({ length: 6 }, (_, i) => {
+                const midA = ((-60 + i * 60) * Math.PI) / 180;
+                const candleX = CX + 62 * Math.cos(midA);
+                const candleY = CY + 62 * Math.sin(midA);
+                return (
+                  <g key={`candle-${i}`}>
+                    {/* Candle stick */}
+                    <rect
+                      x={candleX - 2.5}
+                      y={candleY - 14}
+                      width="5"
+                      height="15"
+                      rx="2"
+                      fill="#ffd700"
+                      stroke="#fff"
+                      strokeWidth="0.8"
+                    />
+                    {/* Flame glow */}
+                    <circle
+                      cx={candleX}
+                      cy={candleY - 18}
+                      r="7"
+                      fill="rgba(255, 215, 0, 0.45)"
+                      className="candle-svg-flame"
+                    />
+                    {/* Flame core */}
+                    <ellipse
+                      cx={candleX}
+                      cy={candleY - 18}
+                      rx="3"
+                      ry="5.5"
+                      fill="#ff5722"
+                      className="candle-svg-flame"
+                    />
+                    <ellipse cx={candleX} cy={candleY - 17} rx="1.8" ry="3" fill="#fffde7" />
+                  </g>
+                );
+              })}
+
+              {/* 1 center candle */}
+              <g key="candle-center">
+                <rect
+                  x={CX - 2.5}
+                  y={CY - 16}
+                  width="5"
+                  height="16"
+                  rx="2"
+                  fill="#ffffff"
+                  stroke="#ffd700"
+                  strokeWidth="1"
+                />
+                <circle
+                  cx={CX}
+                  cy={CY - 21}
+                  r="9"
+                  fill="rgba(255, 215, 0, 0.55)"
+                  className="candle-svg-flame"
+                />
+                <ellipse
+                  cx={CX}
+                  cy={CY - 21}
+                  rx="3.5"
+                  ry="6.5"
+                  fill="#ff5722"
+                  className="candle-svg-flame"
+                />
+                <ellipse cx={CX} cy={CY - 20} rx="2" ry="3.5" fill="#fffde7" />
+              </g>
+            </g>
+          )}
+        </svg>
+
+        {/* Animated Knife Slash across Cake when Slicing */}
         {isSlicing && <div className="knife-slicing-animation">🔪</div>}
       </div>
 
       <div className="age-badge">{age}</div>
 
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
-        <button
-          className={`blow-candles-btn ${candlesBlown ? "blown" : ""}`}
-          onClick={handleBlowCandles}
-        >
-          {candlesBlown ? "🎉 Candles Blown! Wish Made! 🎉" : "💨 Blow the Candles!"}
-        </button>
+      {/* ─── ACTION BUTTONS ─── */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.8rem", marginTop: "0.5rem" }}>
+        {/* BEFORE BLOW: ONLY Blow the Candles button */}
+        {!candlesBlown && (
+          <button className="blow-candles-btn" onClick={handleBlowCandles}>
+            💨 Blow the Candles!
+          </button>
+        )}
 
-        {/* Slice the Cake button appears after candles are blown */}
-        {candlesBlown && !cakeSliced && (
-          <div className="cake-actions-wrap" style={{ marginTop: "0.5rem" }}>
+        {/* AFTER BLOW & SLICING IN PROGRESS (1 to 6 slices): ONLY Slice the Cake button */}
+        {candlesBlown && slicesCut < 6 && (
+          <div className="cake-actions-wrap">
             <button
               className={`slice-cake-btn ${isSlicing ? "slicing" : ""}`}
               onClick={handleSliceCake}
               disabled={isSlicing}
             >
-              <span>{isSlicing ? "🔪 Slicing Cake..." : "Slice the Cake! 🔪🎂"}</span>
+              <span>
+                {slicesCut === 0
+                  ? "Slice the Cake! 🔪🎂 (Cut Slice 1/6)"
+                  : `Cut Next Slice! 🔪 (Slice ${slicesCut + 1} of 6)`}
+              </span>
+            </button>
+          </div>
+        )}
+
+        {/* ALL 6 SLICES CUT: Feed bite & Relight buttons */}
+        {candlesBlown && slicesCut === 6 && (
+          <div className="cake-actions-wrap">
+            <button className="feed-more-btn" onClick={handleFeedBite}>
+              Feed Another Bite! 🍓😋
+            </button>
+            <button className="cake-relight-btn" onClick={handleRelight}>
+              🔄 Relight Candles & Cut Again
             </button>
           </div>
         )}
       </div>
 
-      {/* Sliced Cake Serving Plate & Feeding card */}
-      {cakeSliced && (
+      {/* ─── 6-SLICES TRACKER ─── */}
+      {candlesBlown && (
+        <div className="slices-tracker">
+          <span className="slices-tracker-label">
+            Cake Slices Cut: <strong>{slicesCut} / 6</strong>
+          </span>
+          <div className="slices-tracker-pills">
+            {Array.from({ length: 6 }, (_, idx) => (
+              <div
+                key={idx}
+                className={`slice-pill ${idx < slicesCut ? "cut" : ""} ${idx === activeSliceMsg && slicesCut > 0 ? "active" : ""}`}
+                onClick={() => {
+                  if (idx < slicesCut) {
+                    setActiveSliceMsg(idx);
+                    playAudioCue("heartPop");
+                  }
+                }}
+                title={`Slice ${idx + 1}`}
+              >
+                <span>{idx < slicesCut ? "🍰" : "🎂"}</span>
+                <span className="pill-num">Slice #{idx + 1}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ─── SLICED CAKE SERVING CARD & DEDICATIONS ─── */}
+      {slicesCut > 0 && (
         <div className="cake-slice-card">
           <div className="slice-plate">
             <span className="slice-fork-emoji">🍴</span>
             <span className="slice-plate-emoji">🍰</span>
             <span className="slice-fork-emoji">✨</span>
           </div>
-          <h3 className="slice-title">Pehla Piece Meri Wifey Ke Liye! 🥰</h3>
+
+          <div className="slice-tag-badge">
+            {SLICE_DEDICATIONS[activeSliceMsg]?.tag || "Sweet Love"}
+          </div>
+
+          <h3 className="slice-title">
+            {SLICE_DEDICATIONS[activeSliceMsg]?.title}
+          </h3>
+
           <p className="slice-text">
-            Pehla aur sab se sweet piece meri pyari Laiba ke liye! Aapki zindagi me hamesha meetha ras, dher sari barkat aur hamara be-inteha pyaar bana rahe! 🎂💖
+            {SLICE_DEDICATIONS[activeSliceMsg]?.text}
           </p>
+
           <div className="slice-bites-count">
             <span className="bites-badge">Bites Fed with Love: {bitesFed} 🥄💕</span>
           </div>
+
           <div className="slice-action-buttons">
-            <button className="feed-more-btn" onClick={handleFeedBite}>
-              Feed Another Bite! 🍓😋
-            </button>
+            {slicesCut < 6 ? (
+              <button className="feed-more-btn" onClick={handleSliceCake}>
+                Cut Slice #{slicesCut + 1} 🔪
+              </button>
+            ) : (
+              <button className="feed-more-btn" onClick={handleFeedBite}>
+                Feed Another Bite! 🍓😋
+              </button>
+            )}
             <button className="cake-relight-btn" onClick={handleRelight}>
               🔄 Relight Candles
             </button>
@@ -970,10 +1271,12 @@ function CakeSection() {
       )}
 
       <p className="cake-message" style={{ marginTop: "1.5rem" }}>
-        {cakeSliced
-          ? `Mmm... The sweetest birthday cake for the sweetest girl in the entire universe! 🍰✨`
+        {slicesCut === 6
+          ? `All 6 slices have been cut with endless love! Happy ${age}th Birthday to my Queen Laiba! 👑💖`
+          : slicesCut > 0
+          ? `Slice ${slicesCut} of 6 cut! Click the slice button to cut all 6 pieces for Laiba! 🍰✨`
           : candlesBlown
-          ? `Every wish you make deserves to come true, Laiba! ✨ Here's to an incredible year of being ${age}! 🌟 Now slice the cake! 🔪`
+          ? `The candles are blown! Now click "Slice the Cake! 🔪🎂" to cut the first slice! 🌟`
           : `Close your eyes, make a wish, and blow out the candles! ✨ You deserve every dream come true! 💫`}
       </p>
     </section>
