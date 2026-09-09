@@ -1023,7 +1023,6 @@ function Timeline() {
       photos: [
         "/gallery/rc-boat.jpeg",
         "/gallery/rc-boat-ride.jpeg",
-        "/gallery/rc-park1.jpeg",
       ],
     },
     {
@@ -1035,11 +1034,27 @@ function Timeline() {
       text: "Darakhton ke saaye mein, Racecourse park ke raste par tumhara hath mere hath mein... bas yahi chaha ke yeh rasta kabhi khatam na ho.",
       photos: [
         "/gallery/rc-park2.jpeg",
-        "/gallery/wa-moment-2.jpeg",
+        "/gallery/rc-park1.jpeg",
       ],
     },
     {
       id: 7,
+      emoji: "🥰",
+      badge: "Pure Cuteness 💖",
+      title: "Cutiness of My Wifey 🥰👑",
+      date: "Sweetest Moments",
+      text: "Meri pyari, masoom aur sab se haseen Wifey — aap ki yeh adayein, yeh cuteness dekh kar har baar dil haar jata hoon! Duniya ki sab se cute Begum Jaan! 🥺💖",
+      photos: [
+        "/gallery/wa-moment-2.jpeg",
+        "/gallery/wifey-cuteness-1.jpeg",
+        "/gallery/wifey-cuteness-2.jpeg",
+        "/gallery/wifey-cuteness-3.jpeg",
+        "/gallery/wifey-cuteness-4.jpeg",
+        "/gallery/wifey-cuteness-5.jpeg",
+      ],
+    },
+    {
+      id: 8,
       emoji: "🌺",
       badge: "Shalamar Garden Park",
       title: "Shalamar Garden Park — Mughal Date",
@@ -1050,7 +1065,7 @@ function Timeline() {
       ],
     },
     {
-      id: 8,
+      id: 9,
       emoji: "🌸",
       badge: "3rd Meetup",
       title: "3rd Meetup — Shalamar Garden Park",
@@ -1062,7 +1077,7 @@ function Timeline() {
       ],
     },
     {
-      id: 9,
+      id: 10,
       emoji: "👪",
       badge: "Shalamar Garden Park",
       title: "Shalamar Garden Park — Shahzain Meetup",
@@ -1073,7 +1088,7 @@ function Timeline() {
       ],
     },
     {
-      id: 10,
+      id: 11,
       emoji: "🥰",
       badge: "RC Hotel",
       title: "RC 2nd Visit — Cuteness Overloaded",
@@ -1085,7 +1100,7 @@ function Timeline() {
       ],
     },
     {
-      id: 11,
+      id: 12,
       emoji: "😍",
       badge: "RC Hotel",
       title: "RC 3rd Visit — Ek Doosre Ki Aadat",
@@ -1097,7 +1112,7 @@ function Timeline() {
       ],
     },
     {
-      id: 12,
+      id: 13,
       emoji: "🛍️",
       badge: "Mall Date",
       title: "Emporium Mall — Outing & Cute Poses",
@@ -1110,7 +1125,7 @@ function Timeline() {
       ],
     },
     {
-      id: 13,
+      id: 14,
       emoji: "😎",
       badge: "Fun & Swag",
       title: "Gangster Look at Emporium Mall",
@@ -1122,7 +1137,7 @@ function Timeline() {
       ],
     },
     {
-      id: 14,
+      id: 15,
       emoji: "🍔",
       badge: "Food Date",
       title: "Burger O'Clock — Food & Love",
@@ -1135,7 +1150,7 @@ function Timeline() {
       ],
     },
     {
-      id: 15,
+      id: 16,
       emoji: "🤝",
       badge: "Cheezious Date",
       title: "Cheezious — Haath Tham Ke",
@@ -1147,7 +1162,7 @@ function Timeline() {
       ],
     },
     {
-      id: 16,
+      id: 17,
       emoji: "🛒",
       badge: "Packages Mall",
       title: "Packages Mall — Peaceful Walks",
@@ -1159,7 +1174,7 @@ function Timeline() {
       ],
     },
     {
-      id: 17,
+      id: 18,
       emoji: "🎂",
       badge: "RC Hotel Special",
       title: "Before Going to RC for Your Birthday",
@@ -1171,7 +1186,7 @@ function Timeline() {
       ],
     },
     {
-      id: 18,
+      id: 19,
       emoji: "🏡",
       badge: "RC Hotel",
       title: "RC 5th Visit — Hamara Apna Sukoon",
@@ -1183,7 +1198,7 @@ function Timeline() {
       ],
     },
     {
-      id: 19,
+      id: 20,
       emoji: "🕌",
       badge: "Old Lahore Heritage",
       title: "Badshahi Mosque, Shahi Qila & Delhi Darwaza",
@@ -1196,7 +1211,7 @@ function Timeline() {
       ],
     },
     {
-      id: 20,
+      id: 21,
       emoji: "🇵🇰",
       badge: "Lahore Landmark",
       title: "Minar-e-Pakistan Visit",
@@ -1208,7 +1223,7 @@ function Timeline() {
       ],
     },
     {
-      id: 21,
+      id: 22,
       emoji: "🍛",
       badge: "Desi Food Love",
       title: "Yaad Hai Daal Chawal? — Pure Simplicity",
@@ -1220,7 +1235,7 @@ function Timeline() {
       ],
     },
     {
-      id: 22,
+      id: 23,
       emoji: "🚌",
       badge: "Travel & Vacations",
       title: "Devour Drinks & Niazi Adda for Summer Vacation",
@@ -1233,7 +1248,7 @@ function Timeline() {
       ],
     },
     {
-      id: 23,
+      id: 24,
       emoji: "🌙",
       badge: "Night Glow",
       title: "Late Night Walks & Secret Smiles",
@@ -1246,7 +1261,7 @@ function Timeline() {
       ],
     },
     {
-      id: 24,
+      id: 25,
       emoji: "✨",
       badge: "Candid Joy",
       title: "Unforgettable Giggles & Candid Moments",
@@ -1259,7 +1274,7 @@ function Timeline() {
       ],
     },
     {
-      id: 25,
+      id: 26,
       emoji: "🌷",
       badge: "Cherished Times",
       title: "Together in Every Season",
@@ -1272,7 +1287,7 @@ function Timeline() {
       ],
     },
     {
-      id: 26,
+      id: 27,
       emoji: "💔",
       badge: "Emotional Goodbye",
       title: "Last Meetup — Gulberg (Wapsi Se Pehle)",
@@ -1283,7 +1298,7 @@ function Timeline() {
       ],
     },
     {
-      id: 27,
+      id: 28,
       emoji: "🎉",
       badge: "Happy 23rd Birthday Wifeyy! 🎂",
       title: `Turning ${age} — Cutie Puttiteeee & That Smile I Love!`,
