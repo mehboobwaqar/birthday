@@ -3266,17 +3266,21 @@ export default function BirthdayPage() {
   const [isMidnightUnlocked, setIsMidnightUnlocked] = useState(false);
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
   const [sessionKey, setSessionKey] = useState(0);
-  const [theme, setTheme] = useState<"classy" | "vibrant">("classy");
+  const [theme, setTheme] = useState<"original" | "light">("original");
   const confettiFired = useRef(false);
 
   useEffect(() => {
     try {
       const savedTheme = localStorage.getItem("birthday_theme");
-      if (savedTheme === "vibrant" || savedTheme === "classy") {
-        setTheme(savedTheme);
-        document.documentElement.setAttribute("data-theme", savedTheme);
+      if (savedTheme === "light" || savedTheme === "original") {
+        setTheme(savedTheme as "original" | "light");
+        if (savedTheme === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+        }
       } else {
-        document.documentElement.setAttribute("data-theme", "classy");
+        document.documentElement.removeAttribute("data-theme");
       }
 
       if (sessionStorage.getItem("miang_password_verified") === "true") {
@@ -3288,16 +3292,17 @@ export default function BirthdayPage() {
     } catch { }
   }, []);
 
-  const toggleTheme = useCallback(() => {
+  const selectTheme = useCallback((target: "original" | "light") => {
     playAudioCue("twinkle");
-    setTheme((prev) => {
-      const next = prev === "classy" ? "vibrant" : "classy";
-      try {
-        localStorage.setItem("birthday_theme", next);
-      } catch { }
-      document.documentElement.setAttribute("data-theme", next);
-      return next;
-    });
+    setTheme(target);
+    try {
+      localStorage.setItem("birthday_theme", target);
+    } catch { }
+    if (target === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
   }, []);
 
   const isFullyUnlocked = isPasswordVerified && isMidnightUnlocked;
@@ -3391,16 +3396,27 @@ export default function BirthdayPage() {
     <>
       <StarField />
 
-      {/* Quick Floating Theme Switcher Button */}
-      <button
-        className="floating-theme-btn"
-        onClick={toggleTheme}
-        title={theme === "classy" ? "Switch to Original Vibrant Pink Theme" : "Switch to Decent Classy Theme"}
-        aria-label="Toggle Color Theme"
-      >
-        <span>{theme === "classy" ? "✨" : "🌸"}</span>
-        <span>{theme === "classy" ? "Decent Classy" : "Vibrant Pink"}</span>
-      </button>
+      {/* Upper Theme Switcher Pill (Original vs Light Decent) */}
+      <div className="top-theme-switcher" role="group" aria-label="Color Theme Switcher">
+        <button
+          type="button"
+          className={`theme-segment-btn ${theme === "original" ? "active" : ""}`}
+          onClick={() => selectTheme("original")}
+          title="Pehle Wala (Original Theme)"
+        >
+          <span>🌙</span>
+          <span>Original Theme</span>
+        </button>
+        <button
+          type="button"
+          className={`theme-segment-btn ${theme === "light" ? "active" : ""}`}
+          onClick={() => selectTheme("light")}
+          title="Thora Light Decent Theme"
+        >
+          <span>☀️</span>
+          <span>Light Decent</span>
+        </button>
+      </div>
 
       {/* Quick Floating Lock Button */}
       {isFullyUnlocked && (
