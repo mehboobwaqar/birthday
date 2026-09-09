@@ -4050,9 +4050,7 @@ interface VoucherData {
   badgeEmoji: string;
   title: string;
   subtitle: string;
-  description: string;
-  perks: string[];
-  validity: string;
+  perkSummary: string;
   isSpecialReverse?: boolean;
 }
 
@@ -4060,50 +4058,29 @@ const VOUCHERS_LIST: VoucherData[] = [
   {
     id: 1,
     couponNo: "LM-ROYAL-001",
-    category: "ROYAL PRIVILEGE",
+    category: "24-HOUR PRIVILEGE",
     badgeEmoji: "👑",
     title: "24 Hours of Absolute Obedience",
-    subtitle: "Your Wish Is My Absolute Command",
-    description:
-      "For one full continuous 24-hour day, Mehboob will agree to everything you say and fulfill all your wishes with a bright smile. No arguments, zero counter-opinions—whatever you say goes!",
-    perks: [
-      "100% Guaranteed Agreement on Demand",
-      "Zero Arguments or Counter-Opinions Allowed",
-      "Full Royal Princess Treatment All Day",
-    ],
-    validity: "Valid for 24 Full Hours • Lifetime Redeemable",
+    subtitle: "Your wish is my command—whatever you say goes!",
+    perkSummary: "100% Agreement Guaranteed • Zero Arguments Allowed",
   },
   {
     id: 2,
     couponNo: "LM-LUXE-002",
-    category: "LUXURY WELLNESS",
+    category: "RC LUXURY SPA",
     badgeEmoji: "💆‍♀️",
     title: "VIP Relaxing Head & Shoulder Massage in RC",
-    subtitle: "5-Star Royal Pampering & Care",
-    description:
-      "An ultra-relaxing, uninterrupted 45-minute premium head, neck & shoulder massage in RC with peaceful aromatherapy, soothing background music, and ultimate serenity.",
-    perks: [
-      "Complete Tension & Stress Relief",
-      "Lavender Aromatherapy Included",
-      "Complimentary Warm Cup of Chai or Coffee",
-    ],
-    validity: "Redeemable Anytime on Demand • Unlimited Peace",
+    subtitle: "45 minutes of pure relaxation & luxury pampering.",
+    perkSummary: "Complete Tension Relief • Lavender Aromatherapy",
   },
   {
     id: 3,
     couponNo: "LM-CUDDLE-003",
-    category: "SWEET AFFECTION",
+    category: "ENDLESS AFFECTION",
     badgeEmoji: "🫂",
     title: "Unlimited Warm Hugs & Kisses Pass",
-    subtitle: "Endless Cuddles On Demand",
-    description:
-      "An all-access lifetime VIP pass granting you endless, tight warm hugs, gentle forehead kisses, and sweet comforting cuddles whenever your heart desires.",
-    perks: [
-      "Unlimited Supply of Tight Loving Hugs",
-      "Instant Forehead Kisses Anytime You Request",
-      "Available 24 Hours a Day, 365 Days a Year",
-    ],
-    validity: "Permanent & Unconditional • Never Expires",
+    subtitle: "Endless tight hugs & sweet forehead kisses anytime.",
+    perkSummary: "Permanent 24/7 Supply • Unlimited Cuddles",
   },
   {
     id: 4,
@@ -4111,31 +4088,17 @@ const VOUCHERS_LIST: VoucherData[] = [
     category: "ROMANTIC DINING",
     badgeEmoji: "🥂",
     title: "Fine Dining Date at Your Favorite Place",
-    subtitle: "Wherever You Point, We Dine",
-    description:
-      "A dreamy romantic dinner date at your absolute favorite restaurant of your choice. All your favorite dishes, dressed up nicely, candlelight setting, and dessert completely on Mehboob!",
-    perks: [
-      "Your Free Choice of Any Restaurant",
-      "Candlelight Ambience & Romantic Table",
-      "All Your Favorite Food & Dessert on Mehboob",
-    ],
-    validity: "Redeemable Whenever You Crave It • No Limits",
+    subtitle: "Candlelight dinner at your favorite place, treat on Mehboob.",
+    perkSummary: "Your Choice of Restaurant • Full Royal Treatment",
   },
   {
     id: 5,
     couponNo: "LM-MEHBOOB-777",
-    category: "SPECIAL REVERSAL PASS 💫",
+    category: "FOR MEHBOOB 💫",
     badgeEmoji: "💖",
     title: "The Golden Reversal Pass (Mehboob's Wish)",
-    subtitle: "Reserved Exclusively for Mehboob",
-    description:
-      "A special reverse pass! When you arrive and come here to be right by my side, you must grant Mehboob one heartfelt wish of his without saying no.",
-    perks: [
-      "Activated When You Arrive By My Side",
-      "Strictly Non-Negotiable • Must Say 'Yes' 🙈",
-      "Sealed with Eternal Love & Warmth",
-    ],
-    validity: "Redeemable Upon Your Arrival • Exclusive for Mehboob",
+    subtitle: "When you arrive, you have to say YES to 1 wish of mine!",
+    perkSummary: "Strictly Non-Negotiable • Must Say Yes 🙈",
     isSpecialReverse: true,
   },
 ];
@@ -4155,7 +4118,9 @@ function ScratchCardItem({
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const isScratchingRef = useRef(false);
-  const moveCounter = useRef(0);
+  const lastPosRef = useRef<{ x: number; y: number } | null>(null);
+  const checkTimerRef = useRef<number | null>(null);
+  const totalScratchedDistance = useRef(0);
 
   // Initialize Canvas with metallic foil texture
   const initFoil = useCallback(() => {
@@ -4164,7 +4129,7 @@ function ScratchCardItem({
     const rect = canvas.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
 
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.floor(rect.width * dpr);
     canvas.height = Math.floor(rect.height * dpr);
 
@@ -4178,24 +4143,24 @@ function ScratchCardItem({
     // Metallic foil gradient
     const grad = ctx.createLinearGradient(0, 0, w, h);
     if (voucher.isSpecialReverse) {
-      grad.addColorStop(0, "#e5a93c");
-      grad.addColorStop(0.3, "#fff2b2");
-      grad.addColorStop(0.6, "#d48b16");
-      grad.addColorStop(0.85, "#ffd97d");
-      grad.addColorStop(1, "#b36b00");
+      grad.addColorStop(0, "#d99726");
+      grad.addColorStop(0.25, "#fff3b8");
+      grad.addColorStop(0.55, "#c97f10");
+      grad.addColorStop(0.8, "#ffd875");
+      grad.addColorStop(1, "#a86400");
     } else {
-      grad.addColorStop(0, "#d88ba2");
-      grad.addColorStop(0.28, "#fbe2cf");
-      grad.addColorStop(0.55, "#e89cb2");
-      grad.addColorStop(0.82, "#fad4ba");
-      grad.addColorStop(1, "#be6d85");
+      grad.addColorStop(0, "#d4819a");
+      grad.addColorStop(0.28, "#fce5d4");
+      grad.addColorStop(0.52, "#e593aa");
+      grad.addColorStop(0.8, "#fbd7be");
+      grad.addColorStop(1, "#ba6680");
     }
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
     // Subtle shimmer speckles
     ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
-    for (let i = 0; i < 36; i++) {
+    for (let i = 0; i < 30; i++) {
       const sx = (Math.sin(i * 79) * 0.5 + 0.5) * w;
       const sy = (Math.cos(i * 43) * 0.5 + 0.5) * h;
       const sr = (i % 3) + 1.2;
@@ -4205,8 +4170,8 @@ function ScratchCardItem({
     }
 
     // Foil Badge Frame in center
-    const badgeW = Math.min(w * 0.78, 250);
-    const badgeH = 72;
+    const badgeW = Math.min(w * 0.76, 230);
+    const badgeH = 64;
     const badgeX = (w - badgeW) / 2;
     const badgeY = (h - badgeH) / 2;
 
@@ -4229,11 +4194,11 @@ function ScratchCardItem({
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = "bold 13px 'Outfit', sans-serif";
-    ctx.fillText("✨ SCRATCH TO REVEAL ✨", w / 2, badgeY + 25);
+    ctx.fillText("✨ SCRATCH TO REVEAL ✨", w / 2, badgeY + 23);
 
-    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
     ctx.font = "600 11px sans-serif";
-    ctx.fillText("Touch or Drag with Finger", w / 2, badgeY + 47);
+    ctx.fillText("Swipe with finger or mouse", w / 2, badgeY + 44);
     ctx.restore();
   }, [voucher.isSpecialReverse]);
 
@@ -4253,59 +4218,87 @@ function ScratchCardItem({
       const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imgData.data;
       let clearPixels = 0;
-      const step = 32;
+      const step = 48;
       const totalSampled = Math.floor(data.length / step);
       for (let i = 3; i < data.length; i += step) {
         if (data[i] === 0) {
           clearPixels++;
         }
       }
-      const pct = Math.min(100, Math.round((clearPixels / totalSampled) * 100));
+      const pct = (clearPixels / totalSampled) * 100;
 
-      if (pct >= 35) {
+      if (pct >= 26) {
         onScratchComplete(voucher.id);
       }
     } catch { }
   }, [isScratched, onScratchComplete, voucher.id]);
 
-  const scratchAt = (clientX: number, clientY: number) => {
+  const scheduleCheckPercent = () => {
+    if (checkTimerRef.current) return;
+    checkTimerRef.current = window.setTimeout(() => {
+      checkTimerRef.current = null;
+      checkPercent();
+    }, 120);
+  };
+
+  const scratchTo = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    const x = (clientX - rect.left) * dpr;
-    const y = (clientY - rect.top) * dpr;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const currX = (clientX - rect.left) * dpr;
+    const currY = (clientY - rect.top) * dpr;
 
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return;
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(x, y, 30 * dpr, 0, Math.PI * 2);
-    ctx.fill();
 
-    moveCounter.current++;
-    if (moveCounter.current % 10 === 0) {
-      checkPercent();
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    const brushRadius = 26 * dpr;
+    ctx.lineWidth = brushRadius * 2;
+
+    if (!lastPosRef.current) {
+      ctx.beginPath();
+      ctx.arc(currX, currY, brushRadius, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
+      ctx.lineTo(currX, currY);
+      ctx.stroke();
+
+      const dx = currX - lastPosRef.current.x;
+      const dy = currY - lastPosRef.current.y;
+      totalScratchedDistance.current += Math.hypot(dx, dy);
+    }
+
+    lastPosRef.current = { x: currX, y: currY };
+
+    if (totalScratchedDistance.current > 150 * dpr) {
+      scheduleCheckPercent();
     }
   };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (isScratched) return;
     isScratchingRef.current = true;
+    lastPosRef.current = null;
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
     } catch { }
-    scratchAt(e.clientX, e.clientY);
+    scratchTo(e.clientX, e.clientY);
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isScratchingRef.current || isScratched) return;
-    scratchAt(e.clientX, e.clientY);
+    scratchTo(e.clientX, e.clientY);
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isScratchingRef.current) return;
     isScratchingRef.current = false;
+    lastPosRef.current = null;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
     } catch { }
@@ -4339,22 +4332,11 @@ function ScratchCardItem({
 
         <div className="voucher-divider-dashed" />
 
-        {/* Voucher Body */}
+        {/* Voucher Body - Compact, main points only */}
         <div className="voucher-body">
-          <p className="voucher-desc">{voucher.description}</p>
-
-          <ul className="voucher-perks">
-            {voucher.perks.map((perk, i) => (
-              <li key={i} className="voucher-perk-item">
-                <span className="perk-bullet">✦</span>
-                <span>{perk}</span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="voucher-validity">
-            <span className="validity-icon">⏳</span>
-            <span>{voucher.validity}</span>
+          <div className="voucher-highlight-pill">
+            <span className="pill-bullet">✦</span>
+            <span>{voucher.perkSummary}</span>
           </div>
 
           {/* Verification Seal & Action */}
