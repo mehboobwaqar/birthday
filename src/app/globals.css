@@ -3781,3 +3781,334 @@ body {
     letter-spacing: 0.8px;
   }
 }
+
+/* ============ SPECIAL QUIZ FOR YOU SECTION ============ */
+.quiz-section {
+  padding: 6rem 1.5rem;
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #2a0b4d 50%, var(--bg-dark) 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-container {
+  max-width: 680px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.quiz-card {
+  background: linear-gradient(145deg, rgba(58, 14, 82, 0.92) 0%, rgba(32, 7, 50, 0.96) 100%);
+  border: 2px solid rgba(255, 107, 157, 0.45);
+  border-radius: 28px;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 35px rgba(255, 0, 128, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.quiz-card.stage-rose {
+  border-color: rgba(255, 64, 129, 0.7);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.65), 0 0 50px rgba(255, 64, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: linear-gradient(145deg, rgba(70, 14, 60, 0.94) 0%, rgba(38, 6, 36, 0.97) 100%);
+}
+
+.quiz-card.stage-royal {
+  border-color: rgba(255, 215, 0, 0.75);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.75), 0 0 55px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: linear-gradient(145deg, rgba(65, 20, 20, 0.94) 0%, rgba(35, 6, 50, 0.97) 100%);
+}
+
+.quiz-card.stage-congrats {
+  border: 2.5px solid #ffd700;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 70px rgba(255, 215, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: linear-gradient(145deg, rgba(56, 12, 78, 0.96) 0%, rgba(26, 4, 42, 0.98) 100%);
+  text-align: left;
+}
+
+.quiz-rose-garland,
+.quiz-crown-garland,
+.congrats-sparkles {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  letter-spacing: 6px;
+  animation: pulseGlow 2.5s infinite ease-in-out;
+  text-align: center;
+}
+
+.quiz-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  border-radius: 50px;
+  padding: 0.3rem 1rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.quiz-badge.rose-badge {
+  color: #ff80b3;
+  background: rgba(255, 64, 129, 0.15);
+  border-color: rgba(255, 64, 129, 0.4);
+}
+
+.quiz-badge.royal-badge {
+  color: #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 0, 128, 0.2));
+  border-color: #ffd700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.quiz-question-title {
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+  line-height: 1.35;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.quiz-question-title.rose-title {
+  background: linear-gradient(135deg, #ffffff 0%, #ff80b3 50%, #ff4081 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.quiz-question-title.royal-title {
+  background: linear-gradient(135deg, #ffffff 0%, #ffd700 60%, #ffb300 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.quiz-subtitle {
+  font-size: clamp(0.92rem, 2.5vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-btn-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  min-height: 120px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.quiz-yes-btn {
+  background: linear-gradient(135deg, #ff0080 0%, #e040fb 100%);
+  border: 2px solid #ffd700;
+  color: #ffffff;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-size: clamp(1rem, 2.8vw, 1.15rem);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(255, 0, 128, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2;
+}
+
+.quiz-yes-btn:hover {
+  transform: scale(1.08) translateY(-3px);
+  box-shadow: 0 14px 40px rgba(255, 0, 128, 0.7), 0 0 25px rgba(255, 215, 0, 0.5);
+  border-color: #ffffff;
+}
+
+.quiz-yes-btn:active {
+  transform: scale(0.96);
+}
+
+.quiz-yes-btn.rose-btn {
+  background: linear-gradient(135deg, #e91e63 0%, #ff4081 50%, #f50057 100%);
+  box-shadow: 0 10px 30px rgba(233, 30, 99, 0.55);
+}
+
+.quiz-yes-btn.royal {
+  background: linear-gradient(135deg, #ffd700 0%, #ff0080 50%, #9c27b0 100%);
+  border: 2.5px solid #ffffff;
+  padding: 16px 36px;
+  font-size: clamp(1.1rem, 3vw, 1.3rem);
+  box-shadow: 0 12px 40px rgba(255, 215, 0, 0.55), 0 0 30px rgba(255, 0, 128, 0.4);
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+.quiz-runaway-btn {
+  background: linear-gradient(135deg, rgba(90, 20, 60, 0.85) 0%, rgba(45, 10, 35, 0.95) 100%);
+  border: 1.5px solid rgba(255, 107, 157, 0.35);
+  color: rgba(255, 255, 255, 0.88);
+  padding: 12px 26px;
+  border-radius: 50px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+  z-index: 1;
+}
+
+.quiz-runaway-btn.royal-runaway {
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
+.quiz-toast-popup {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(45, 10, 65, 0.97) 0%, rgba(255, 0, 128, 0.45) 100%);
+  border: 2px solid #ffd700;
+  color: #ffffff;
+  padding: 0.9rem 2rem;
+  border-radius: 50px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 0, 128, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 100000;
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: clamp(0.92rem, 2.6vw, 1.1rem);
+  font-weight: 700;
+  text-align: center;
+  max-width: calc(100vw - 32px);
+  animation: kissToastPopup 2.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Congratulations Card Specific Styles */
+.congrats-header {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.4rem, 4.5vw, 2.4rem);
+  font-weight: 800;
+  text-align: center;
+  background: linear-gradient(135deg, #ffd700 0%, #ff80b3 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.8rem;
+  line-height: 1.3;
+}
+
+.congrats-letter {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.9;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 20px;
+  padding: clamp(1.2rem, 4vw, 2rem);
+}
+
+.congrats-letter p {
+  margin-bottom: 1.2rem;
+}
+
+.congrats-letter strong {
+  color: #ffd700;
+  font-weight: 700;
+}
+
+.congrats-letter em {
+  color: #ff80b3;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.congrats-salutation {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+  color: #ffd700;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.congrats-birthday-wish {
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(255, 215, 0, 0.2));
+  border-left: 3px solid #ffd700;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0 12px 12px 0;
+}
+
+.congrats-signature {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+  color: #ffd700;
+  text-align: right;
+  margin-top: 1.5rem;
+  margin-bottom: 0 !important;
+}
+
+.congrats-name {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  color: #ff80b3;
+  display: block;
+}
+
+.congrats-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.quiz-back-btn {
+  background: linear-gradient(135deg, #ffd700 0%, #ff80b3 100%);
+  border: none;
+  color: #120324;
+  padding: 14px 30px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.45);
+  transition: all 0.3s ease;
+}
+
+.quiz-back-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(255, 215, 0, 0.65);
+}
+
+.quiz-replay-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 107, 157, 0.4);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quiz-replay-btn:hover {
+  background: rgba(255, 0, 128, 0.25);
+  border-color: #ffd700;
+  transform: translateY(-2px);
+}
