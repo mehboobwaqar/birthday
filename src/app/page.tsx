@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import { createPortal } from "react-dom";
 
 // ─── Birthday Config ───
 const BIRTHDAY_NAME = "Laiba Ahmad";
@@ -2106,6 +2107,7 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(40);
   const [isFinished, setIsFinished] = useState(false);
+  const [showSkyText, setShowSkyText] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
   const lastLaunchSoundRef = useRef<number>(0);
@@ -2113,17 +2115,35 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
   const isMutedRef = useRef(false);
   isMutedRef.current = isMuted;
 
+  const textTriggeredRef = useRef(false);
+
+  // Prevent background interactions & hide theme switcher / floating lock
+  useEffect(() => {
+    document.body.classList.add("fireworks-modal-active");
+    return () => {
+      document.body.classList.remove("fireworks-modal-active");
+    };
+  }, []);
+
   // 40-Second Countdown Timer
   useEffect(() => {
     if (isFinished) return;
     const interval = setInterval(() => {
       setSecondsLeft((prev) => {
-        if (prev <= 1) {
+        const next = prev - 1;
+        // Show sky text for 7 seconds after 10 seconds into show (from 30s to 24s remaining)
+        if (next <= 30 && next >= 24) {
+          setShowSkyText(true);
+        } else {
+          setShowSkyText(false);
+        }
+
+        if (next <= 0) {
           clearInterval(interval);
           setIsFinished(true);
           return 0;
         }
-        return prev - 1;
+        return next;
       });
     }, 1000);
     return () => clearInterval(interval);
@@ -2142,14 +2162,14 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
           });
           confetti({
             shapes: [heart],
-            particleCount: 90,
-            spread: 120,
+            particleCount: 100,
+            spread: 130,
             origin: { y: 0.45 },
             colors: ["#ffd700", "#ff0080", "#00f5ff", "#ffffff", "#ffbe0b"],
           });
           setTimeout(() => {
             confetti({
-              particleCount: 120,
+              particleCount: 130,
               spread: 160,
               origin: { y: 0.55 },
               colors: ["#ffd700", "#ff007f", "#38bdf8", "#a855f7", "#ffffff"],
@@ -2208,6 +2228,21 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
       history: { x: number; y: number }[];
     }
 
+    interface TextParticle {
+      x: number;
+      y: number;
+      targetX: number;
+      targetY: number;
+      vx: number;
+      vy: number;
+      color: string;
+      size: number;
+      alpha: number;
+      dispersing: boolean;
+      sparkleSpeed: number;
+      sparkleOffset: number;
+    }
+
     interface Rocket {
       x: number;
       y: number;
@@ -2216,24 +2251,25 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
       vy: number;
       color: string;
       palette: string[];
-      burstType: "peony" | "willow" | "heart" | "ring";
+      burstType: "peony" | "willow" | "heart" | "ring" | "textRocket";
       trail: { x: number; y: number }[];
     }
 
     const rockets: Rocket[] = [];
     const particles: Particle[] = [];
-    let nextLaunchTime = Date.now() + 100;
+    const textParticles: TextParticle[] = [];
+    let nextLaunchTime = Date.now() + 50;
 
     const spawnRocket = (
       customX?: number,
       customTargetY?: number,
-      forceBurstType?: "peony" | "willow" | "heart" | "ring"
+      forceBurstType?: "peony" | "willow" | "heart" | "ring" | "textRocket"
     ) => {
       const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
-      const startX = customX ?? width * 0.12 + Math.random() * width * 0.76;
-      const targetY = customTargetY ?? height * 0.14 + Math.random() * height * 0.44;
-      const speed = -(13 + Math.random() * 4.5);
-      const dx = customX ? (customX - startX) * 0.05 : (Math.random() - 0.5) * 2;
+      const startX = customX ?? width * 0.08 + Math.random() * width * 0.84;
+      const targetY = customTargetY ?? height * 0.12 + Math.random() * height * 0.46;
+      const speed = -(14 + Math.random() * 4);
+      const dx = customX ? (customX - startX) * 0.04 : (Math.random() - 0.5) * 2;
 
       const burstTypes: ("peony" | "willow" | "heart" | "ring")[] = [
         "peony",
@@ -2259,9 +2295,65 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
 
       // Launch sound effect
       const now = Date.now();
-      if (!isMutedRef.current && now - lastLaunchSoundRef.current > 130) {
+      if (!isMutedRef.current && now - lastLaunchSoundRef.current > 100) {
         lastLaunchSoundRef.current = now;
         playAudioCue("fireworkLaunch");
+      }
+    };
+
+    const spawnTextExplosion = (cx: number, cy: number) => {
+      const offscreen = document.createElement("canvas");
+      offscreen.width = width;
+      offscreen.height = height;
+      const octx = offscreen.getContext("2d");
+      if (!octx) return;
+
+      const isMobile = width < 640;
+      const l1Size = isMobile ? Math.floor(width * 0.13) : Math.floor(Math.min(width * 0.08, 62));
+      const l2Size = isMobile ? Math.floor(width * 0.085) : Math.floor(Math.min(width * 0.055, 48));
+
+      octx.fillStyle = "#ffffff";
+      octx.textAlign = "center";
+      octx.textBaseline = "middle";
+
+      const textCenterY = height * 0.36;
+
+      // Line 1: HBD ✨
+      octx.font = `900 ${l1Size}px "Cinzel", "Outfit", "Segoe UI", sans-serif`;
+      octx.fillText("HBD ✨", width / 2, textCenterY - l2Size * 0.85);
+
+      // Line 2: Laiba Mehboob
+      octx.font = `800 ${l2Size}px "Cinzel", "Outfit", "Segoe UI", sans-serif`;
+      octx.fillText("Laiba Mehboob", width / 2, textCenterY + l1Size * 0.65);
+
+      const imgData = octx.getImageData(0, 0, width, height);
+      const d = imgData.data;
+      const step = isMobile ? 3 : 4;
+
+      for (let py = 0; py < height; py += step) {
+        for (let px = 0; px < width; px += step) {
+          const idx = (py * width + px) * 4;
+          if (d[idx + 3] > 140) {
+            const rand = Math.random();
+            const color = rand > 0.45 ? "#ffd700" : rand > 0.2 ? "#ff69b4" : "#ffffff";
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 8 + 2;
+            textParticles.push({
+              x: cx,
+              y: cy,
+              targetX: px,
+              targetY: py,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed,
+              color,
+              size: Math.random() * 2 + 1.8,
+              alpha: 1,
+              dispersing: false,
+              sparkleSpeed: 0.005 + Math.random() * 0.005,
+              sparkleOffset: Math.random() * 10,
+            });
+          }
+        }
       }
     };
 
@@ -2270,19 +2362,42 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
 
       // Burst sound effect
       const now = Date.now();
-      if (!isMutedRef.current && now - lastBurstSoundRef.current > 110) {
+      if (!isMutedRef.current && now - lastBurstSoundRef.current > 90) {
         lastBurstSoundRef.current = now;
         playAudioCue("fireworkBurst");
       }
 
+      if (burstType === "textRocket") {
+        spawnTextExplosion(x, y);
+        // Also spawn gold ring around text explosion
+        for (let i = 0; i < 50; i++) {
+          const angle = (i / 50) * Math.PI * 2;
+          const speed = 5.5 + Math.random() * 2;
+          particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            color: "#ffd700",
+            alpha: 1,
+            decay: 0.012,
+            size: 2.5,
+            friction: 0.96,
+            gravity: 0.05,
+            history: [],
+          });
+        }
+        return;
+      }
+
       if (burstType === "heart") {
         // Parametric Heart Equation
-        const total = 65;
+        const total = 70;
         for (let i = 0; i < total; i++) {
           const t = (i / total) * Math.PI * 2;
           const hx = 16 * Math.pow(Math.sin(t), 3);
           const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-          const scale = 0.28 + Math.random() * 0.05;
+          const scale = 0.3 + Math.random() * 0.06;
           const color = palette[Math.floor(Math.random() * palette.length)];
           particles.push({
             x,
@@ -2291,19 +2406,19 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
             vy: hy * scale + (Math.random() - 0.5) * 0.8,
             color,
             alpha: 1,
-            decay: 0.012 + Math.random() * 0.008,
-            size: 2.6 + Math.random() * 1.6,
-            friction: 0.965,
+            decay: 0.011 + Math.random() * 0.007,
+            size: 2.8 + Math.random() * 1.6,
+            friction: 0.968,
             gravity: 0.04,
             history: [],
           });
         }
       } else if (burstType === "willow") {
         // Golden willow glittering streamers
-        const count = 85;
+        const count = 95;
         for (let i = 0; i < count; i++) {
           const angle = Math.random() * Math.PI * 2;
-          const speed = Math.random() * 5.8 + 1.2;
+          const speed = Math.random() * 6.5 + 1.2;
           particles.push({
             x,
             y,
@@ -2311,18 +2426,18 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
             vy: Math.sin(angle) * speed,
             color: Math.random() > 0.3 ? "#ffd700" : "#fff8db",
             alpha: 1,
-            decay: 0.008 + Math.random() * 0.006,
-            size: 2.2 + Math.random() * 1.5,
-            friction: 0.94,
-            gravity: 0.08,
+            decay: 0.007 + Math.random() * 0.005,
+            size: 2.4 + Math.random() * 1.5,
+            friction: 0.945,
+            gravity: 0.075,
             isGlitter: true,
             history: [],
           });
         }
       } else if (burstType === "ring") {
         // Uniform Ring
-        const count = 55;
-        const ringSpeed = 4.8 + Math.random() * 1.8;
+        const count = 60;
+        const ringSpeed = 5.2 + Math.random() * 1.6;
         for (let i = 0; i < count; i++) {
           const angle = (i / count) * Math.PI * 2;
           const color = palette[i % palette.length];
@@ -2333,19 +2448,19 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
             vy: Math.sin(angle) * ringSpeed,
             color,
             alpha: 1,
-            decay: 0.015 + Math.random() * 0.008,
+            decay: 0.013 + Math.random() * 0.007,
             size: 2.8,
-            friction: 0.96,
-            gravity: 0.05,
+            friction: 0.962,
+            gravity: 0.048,
             history: [],
           });
         }
       } else {
         // Classic Peony spherical burst
-        const count = 75 + Math.floor(Math.random() * 30);
+        const count = 85 + Math.floor(Math.random() * 35);
         for (let i = 0; i < count; i++) {
           const angle = Math.random() * Math.PI * 2;
-          const speed = Math.random() * 6.5 + 1.5;
+          const speed = Math.random() * 7 + 1.5;
           const color = palette[Math.floor(Math.random() * palette.length)];
           particles.push({
             x,
@@ -2354,21 +2469,24 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
             vy: Math.sin(angle) * speed,
             color,
             alpha: 1,
-            decay: 0.014 + Math.random() * 0.01,
-            size: 2.5 + Math.random() * 1.8,
-            friction: 0.958,
-            gravity: 0.055,
+            decay: 0.012 + Math.random() * 0.008,
+            size: 2.6 + Math.random() * 1.8,
+            friction: 0.96,
+            gravity: 0.052,
             history: [],
           });
         }
       }
     };
 
-    // Initial celebratory salvo
-    spawnRocket(width * 0.35, height * 0.3);
+    // Immediate Grand Opening Barrage (4 simultaneous rockets across width!)
+    spawnRocket(width * 0.2, height * 0.25);
+    spawnRocket(width * 0.45, height * 0.2);
+    spawnRocket(width * 0.75, height * 0.26);
     setTimeout(() => {
-      spawnRocket(width * 0.65, height * 0.28);
-    }, 250);
+      spawnRocket(width * 0.35, height * 0.35);
+      spawnRocket(width * 0.65, height * 0.32);
+    }, 220);
 
     const render = () => {
       // 1. Clear with transparent deep blue for glowing light trails
@@ -2381,30 +2499,60 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
 
       const now = Date.now();
 
-      // Rocket Spawning Logic based on duration stage
+      // Check 10-second mark: Trigger mega rocket for "HBD Laiba Mehboob"
+      if (secondsLeft <= 30 && !textTriggeredRef.current) {
+        textTriggeredRef.current = true;
+        rockets.push({
+          x: width / 2,
+          y: height + 10,
+          targetY: height * 0.36,
+          vx: 0,
+          vy: -15,
+          color: "#ffd700",
+          palette: ["#ffd700", "#fff3bf", "#ff69b4"],
+          burstType: "textRocket",
+          trail: [],
+        });
+        if (!isMutedRef.current) {
+          playAudioCue("fireworkLaunch");
+        }
+      }
+
+      // Check if text particles should disperse after 7 seconds (when secondsLeft < 24)
+      if (secondsLeft < 24 && textParticles.length > 0) {
+        for (let i = 0; i < textParticles.length; i++) {
+          textParticles[i].dispersing = true;
+        }
+      }
+
+      // Rocket Spawning Logic: continuous, rich, frequent!
       if (now > nextLaunchTime) {
         if (!isFinished) {
           if (secondsLeft <= 6) {
             // Finale Mode: rapid multi-rocket barrages!
-            spawnRocket(width * (0.2 + Math.random() * 0.6));
-            if (Math.random() > 0.35) {
-              spawnRocket(width * (0.15 + Math.random() * 0.7));
-            }
-            nextLaunchTime = now + (200 + Math.random() * 220);
+            spawnRocket(width * (0.15 + Math.random() * 0.7));
+            spawnRocket(width * (0.1 + Math.random() * 0.8));
+            nextLaunchTime = now + (160 + Math.random() * 160);
+          } else if (secondsLeft <= 30 && secondsLeft >= 24) {
+            // While "HBD Laiba Mehboob" is on screen, shoot fireworks around the sides!
+            const sideX =
+              Math.random() > 0.5
+                ? width * (0.06 + Math.random() * 0.22)
+                : width * (0.72 + Math.random() * 0.22);
+            spawnRocket(sideX, height * (0.15 + Math.random() * 0.45));
+            nextLaunchTime = now + (280 + Math.random() * 240);
           } else {
-            // Regular celebratory flow
+            // Regular rich celebration: launch 1 to 2 rockets every 220-380ms
             spawnRocket();
-            if (Math.random() > 0.65) {
-              setTimeout(() => {
-                spawnRocket();
-              }, 120);
+            if (Math.random() > 0.45) {
+              spawnRocket();
             }
-            nextLaunchTime = now + (480 + Math.random() * 420);
+            nextLaunchTime = now + (220 + Math.random() * 220);
           }
         } else {
           // Ambient romantic sparkles after 40s show finishes
           spawnRocket();
-          nextLaunchTime = now + (2800 + Math.random() * 1800);
+          nextLaunchTime = now + (2600 + Math.random() * 1600);
         }
       }
 
@@ -2412,7 +2560,7 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
       for (let i = rockets.length - 1; i >= 0; i--) {
         const r = rockets[i];
         r.trail.push({ x: r.x, y: r.y });
-        if (r.trail.length > 7) r.trail.shift();
+        if (r.trail.length > 8) r.trail.shift();
 
         r.x += r.vx;
         r.y += r.vy;
@@ -2420,7 +2568,7 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
 
         // Draw rocket streak
         ctx.strokeStyle = r.color;
-        ctx.lineWidth = 2.2;
+        ctx.lineWidth = 2.4;
         ctx.beginPath();
         for (let j = 0; j < r.trail.length; j++) {
           const pt = r.trail[j];
@@ -2432,7 +2580,7 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
         // Draw rocket tip
         ctx.fillStyle = "#ffffff";
         ctx.beginPath();
-        ctx.arc(r.x, r.y, 2.8, 0, Math.PI * 2);
+        ctx.arc(r.x, r.y, 3, 0, Math.PI * 2);
         ctx.fill();
 
         // Explode condition
@@ -2442,11 +2590,49 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
         }
       }
 
-      // 4. Update & Draw Particles
+      // 4. Update & Draw Text Particles ("HBD Laiba Mehboob")
+      for (let i = textParticles.length - 1; i >= 0; i--) {
+        const tp = textParticles[i];
+        if (!tp.dispersing) {
+          // Easing spring to target coordinates
+          const dx = tp.targetX - tp.x;
+          const dy = tp.targetY - tp.y;
+          tp.vx = tp.vx * 0.84 + dx * 0.09;
+          tp.vy = tp.vy * 0.84 + dy * 0.09;
+          tp.x += tp.vx;
+          tp.y += tp.vy;
+
+          // Twinkle shimmer
+          const flicker = Math.sin(now * tp.sparkleSpeed + tp.sparkleOffset);
+          ctx.fillStyle = tp.color;
+          ctx.globalAlpha = Math.max(0.4, 0.8 + flicker * 0.2);
+          ctx.beginPath();
+          ctx.arc(tp.x, tp.y, tp.size * (1 + flicker * 0.22), 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Dispersing stardust cascade
+          tp.vy += 0.12;
+          tp.vx += (Math.random() - 0.5) * 0.3;
+          tp.x += tp.vx;
+          tp.y += tp.vy;
+          tp.alpha -= 0.014;
+          if (tp.alpha <= 0) {
+            textParticles.splice(i, 1);
+            continue;
+          }
+          ctx.fillStyle = tp.color;
+          ctx.globalAlpha = Math.max(0, tp.alpha);
+          ctx.beginPath();
+          ctx.arc(tp.x, tp.y, tp.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 5. Update & Draw Regular Particles
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.history.push({ x: p.x, y: p.y });
-        if (p.history.length > 4) p.history.shift();
+        if (p.history.length > 5) p.history.shift();
 
         p.vx *= p.friction;
         p.vy = p.vy * p.friction + p.gravity;
@@ -2472,10 +2658,10 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
         ctx.stroke();
 
         // Glitter sparkle effect
-        if (p.isGlitter && Math.random() > 0.4) {
+        if (p.isGlitter && Math.random() > 0.35) {
           ctx.fillStyle = "#ffffff";
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 1.4, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.size * 1.5, 0, Math.PI * 2);
           ctx.fill();
         }
 
@@ -2555,7 +2741,7 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
                 setIsFinished(true);
               }}
             >
-              Skip to Surprise ⏩
+              Skip ⏩
             </button>
           )}
           <button className="fireworks-close-btn" onClick={onClose} title="Close">
@@ -2564,8 +2750,15 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
         </div>
       </div>
 
+      {/* Sky Fireworks Text Banner: Appears after 10s for 6/7s */}
+      <div className={`fireworks-sky-text-banner ${showSkyText ? "visible" : ""}`}>
+        <div className="sky-text-line-1">✨ HBD ✨</div>
+        <div className="sky-text-line-2">Laiba Mehboob 💖</div>
+        <div className="sky-text-sub">My Forever Wifeyyy G 🌹</div>
+      </div>
+
       {/* Interactive Tap Hint during fireworks */}
-      {!isFinished && (
+      {!isFinished && !showSkyText && (
         <div className="fireworks-tap-hint">
           ✨ Tap anywhere on screen to launch custom fireworks! ✨
         </div>
@@ -2587,6 +2780,7 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
               <button
                 className="fireworks-btn-primary"
                 onClick={() => {
+                  textTriggeredRef.current = false;
                   setIsFinished(false);
                   setSecondsLeft(40);
                 }}
@@ -2605,13 +2799,18 @@ function FireworksShowModal({ onClose }: { onClose: () => void }) {
 }
 
 // ─── Surprise Gift Section ───
-function GiftSection() {
+function GiftSection({
+  onFireworksChange,
+}: {
+  onFireworksChange?: (active: boolean) => void;
+}) {
   const [opened, setOpened] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
 
   const handleOpen = useCallback(async () => {
     setOpened(true);
     setShowFireworks(true);
+    onFireworksChange?.(true);
     playAudioCue("giftOpen");
     try {
       const confetti = (await import("canvas-confetti")).default;
@@ -2629,7 +2828,17 @@ function GiftSection() {
     } catch (e) {
       console.log("Confetti error:", e);
     }
-  }, []);
+  }, [onFireworksChange]);
+
+  const handleCloseFireworks = useCallback(() => {
+    setShowFireworks(false);
+    onFireworksChange?.(false);
+  }, [onFireworksChange]);
+
+  const handleReplayFireworks = useCallback(() => {
+    setShowFireworks(true);
+    onFireworksChange?.(true);
+  }, [onFireworksChange]);
 
   return (
     <section className="gift-section" id="gift">
@@ -2656,15 +2865,16 @@ function GiftSection() {
           </p>
           <button
             className="gift-replay-btn"
-            onClick={() => setShowFireworks(true)}
+            onClick={handleReplayFireworks}
           >
             🎆 Watch 40s Fireworks Show Again 🎆
           </button>
         </div>
       )}
 
-      {showFireworks && (
-        <FireworksShowModal onClose={() => setShowFireworks(false)} />
+      {showFireworks && typeof document !== "undefined" && createPortal(
+        <FireworksShowModal onClose={handleCloseFireworks} />,
+        document.body
       )}
     </section>
   );
@@ -3962,6 +4172,7 @@ export default function BirthdayPage() {
     }
   }, []);
 
+  const [isFireworksActive, setIsFireworksActive] = useState(false);
   const age = getAge();
 
   return (
@@ -3969,25 +4180,27 @@ export default function BirthdayPage() {
       <StarField />
 
       {/* Upper Theme Switcher Pill (Original vs Light) */}
-      <div className="top-theme-switcher" role="group" aria-label="Color Theme Switcher">
-        <button
-          type="button"
-          className={`theme-segment-btn ${theme === "original" ? "active" : ""}`}
-          onClick={() => selectTheme("original")}
-        >
-          Original
-        </button>
-        <button
-          type="button"
-          className={`theme-segment-btn ${theme === "light" ? "active" : ""}`}
-          onClick={() => selectTheme("light")}
-        >
-          Light
-        </button>
-      </div>
+      {!isFireworksActive && (
+        <div className="top-theme-switcher" role="group" aria-label="Color Theme Switcher">
+          <button
+            type="button"
+            className={`theme-segment-btn ${theme === "original" ? "active" : ""}`}
+            onClick={() => selectTheme("original")}
+          >
+            Original
+          </button>
+          <button
+            type="button"
+            className={`theme-segment-btn ${theme === "light" ? "active" : ""}`}
+            onClick={() => selectTheme("light")}
+          >
+            Light
+          </button>
+        </div>
+      )}
 
       {/* Quick Floating Lock Button */}
-      {isFullyUnlocked && (
+      {isFullyUnlocked && !isFireworksActive && (
         <button
           className="floating-lock-btn"
           onClick={handleRelock}
@@ -4082,7 +4295,7 @@ export default function BirthdayPage() {
             <PhotoMemories />
 
             {/* ─── Surprise Gift ─── */}
-            <GiftSection />
+            <GiftSection onFireworksChange={setIsFireworksActive} />
 
             {/* ─── Special Quiz for You ─── */}
             <SpecialQuizSection />
