@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 const BIRTHDAY_NAME = "Laiba Ahmad";
 const BIRTHDAY_DATE = new Date("2003-09-10");
 const BIRTHDAY_YEAR = 2026;
-const SECRET_PASSWORD = "nono";
+const SECRET_PASSWORD = "Laila";
 
 // ─── Audio Tone Effects (Web Audio API) ───
 type AudioCueType =
@@ -727,32 +727,7 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
           </div>
         )}
 
-        {/* Skip Timer Button */}
-        <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
-          <button
-            type="button"
-            onClick={handleManualPreview}
-            className="midnight-skip-btn"
-            style={{
-              background: "linear-gradient(135deg, #ff4081, #9c27b0)",
-              border: "none",
-              color: "#fff",
-              padding: "10px 24px",
-              borderRadius: "25px",
-              fontSize: "0.95rem",
-              fontWeight: 600,
-              cursor: "pointer",
-              boxShadow: "0 4px 20px rgba(255, 64, 129, 0.4)",
-              transition: "all 0.3s ease",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <span>⏩</span>
-            <span>Skip Timer &amp; Open Website ✨</span>
-          </button>
-        </div>
+        {/* Countdown waiting screen - Auto-unlocks when timer hits 00:00:00 */}
       </div>
     </div>
   );
@@ -4216,7 +4191,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
                     And if you really know, you don&apos;t need any hint! 💖
                     <br />
                     <span style={{ display: "inline-block", marginTop: "4px", color: "#ffd700" }}>
-                      <em>(Aapka aur mera pyara secret word... Starts with <strong>N</strong> 💕)</em>
+                      <em>(Aapka aur mera pyara secret word... Starts with <strong>L</strong> 💕)</em>
                     </span>
                   </p>
                 </div>
@@ -5413,7 +5388,7 @@ export default function BirthdayPage() {
         </button>
       )}
 
-      {/* Step 1: Secret Password Gate (Password: nono) */}
+      {/* Step 1: Secret Password Gate (Password: Laila) */}
       {!isPasswordVerified && (
         <PasswordGate
           key={`gate-${sessionKey}`}
@@ -5421,7 +5396,7 @@ export default function BirthdayPage() {
         />
       )}
 
-      {/* Step 2: Midnight Countdown Gate (with Skip Button for MianG) */}
+      {/* Step 2: Midnight Countdown Gate */}
       {isPasswordVerified && !isMidnightUnlocked && (
         <MidnightCountdownGate
           key={`midnight-${sessionKey}`}
