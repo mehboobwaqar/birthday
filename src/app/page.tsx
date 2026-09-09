@@ -27,6 +27,7 @@ type AudioCueType =
   | "wrong"
   | "funnyBoing"
   | "quizYes"
+  | "thumbprintStamp"
   | "fireworkLaunch"
   | "fireworkBurst"
   | "royalVictory";
@@ -406,6 +407,49 @@ function playAudioCue(type: AudioCueType) {
       bGain.connect(ctx.destination);
       bell.start(ctx.currentTime + 0.25);
       bell.stop(ctx.currentTime + 0.95);
+    } else if (type === "thumbprintStamp") {
+      // 📜 Realistic Thumbprint Stamp Thud + Shimmering Golden Royal Chime
+      const now = ctx.currentTime;
+      // 1. Deep realistic mechanical ink stamp thud
+      const thud = ctx.createOscillator();
+      const thudGain = ctx.createGain();
+      thud.type = "sine";
+      thud.frequency.setValueAtTime(160, now);
+      thud.frequency.exponentialRampToValueAtTime(38, now + 0.18);
+      thudGain.gain.setValueAtTime(0.48, now);
+      thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      thud.connect(thudGain);
+      thudGain.connect(ctx.destination);
+      thud.start(now);
+      thud.stop(now + 0.22);
+
+      // 2. Paper seal contact snap
+      const snap = ctx.createOscillator();
+      const snapGain = ctx.createGain();
+      snap.type = "triangle";
+      snap.frequency.setValueAtTime(520, now);
+      snap.frequency.exponentialRampToValueAtTime(90, now + 0.08);
+      snapGain.gain.setValueAtTime(0.32, now);
+      snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+      snap.connect(snapGain);
+      snapGain.connect(ctx.destination);
+      snap.start(now);
+      snap.stop(now + 0.09);
+
+      // 3. Magical royal wedding chime flourish
+      [783.99, 1046.5, 1318.51, 1567.98, 2093.0].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        const start = now + 0.08 + idx * 0.065;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.22, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.8);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.8);
+      });
     } else if (type === "fireworkLaunch") {
       // 🚀 Rocket Launch: Upward sweeping whistling whoosh
       const now = ctx.currentTime;
@@ -2880,6 +2924,74 @@ function GiftSection({
   );
 }
 
+// ─── Biometric Thumbprint Graphic Component with Heart Swirl ───
+function ThumbprintGraphic({
+  isStamped,
+  isBride,
+  isGlowing,
+}: {
+  isStamped: boolean;
+  isBride?: boolean;
+  isGlowing?: boolean;
+}) {
+  return (
+    <div
+      className={`thumbprint-graphic-wrap ${isStamped ? "stamped" : "unplaced"} ${
+        isGlowing ? "glowing-active" : ""
+      } ${isBride ? "bride-thumb" : "groom-thumb"}`}
+    >
+      <svg
+        viewBox="0 0 100 135"
+        className={`thumbprint-svg ${isStamped ? "ink-stamped" : "pad-outline"}`}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={isStamped ? "2.6" : "2"}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* Outer concentric loops */}
+        <path d="M50 14 C32 14 20 28 20 48 C20 82 34 112 36 126" />
+        <path d="M50 14 C68 14 80 28 80 48 C80 82 66 112 64 126" />
+        <path d="M50 22 C36 22 28 34 28 50 C28 80 40 108 42 122" />
+        <path d="M50 22 C64 22 72 34 72 50 C72 80 60 108 58 122" />
+
+        {/* Mid loops */}
+        <path d="M50 30 C40 30 35 40 35 54 C35 78 46 102 48 116" />
+        <path d="M50 30 C60 30 65 40 65 54 C65 78 54 102 52 116" />
+
+        <path d="M50 38 C44 38 41 46 41 58 C41 76 50 96 50 110" />
+        <path d="M50 38 C56 38 59 46 59 58 C59 76 50 96 50 110" />
+
+        {/* Romantic Core Heart at Fingerprint Center */}
+        <path
+          d="M50 48 C48 45 44 45 43 49 C41 55 50 63 50 66 C50 63 59 55 57 49 C56 45 52 45 50 48 Z"
+          fill={isStamped ? "currentColor" : "none"}
+          strokeWidth="1.6"
+        />
+
+        {/* Inner Arch Lines */}
+        <path d="M46 68 C46 78 52 92 52 104" />
+        <path d="M54 68 C54 78 48 92 48 104" />
+        <path d="M30 75 C32 88 36 104 38 115" />
+        <path d="M70 75 C68 88 64 104 62 115" />
+        <path d="M24 60 C24 72 26 84 28 95" />
+        <path d="M76 60 C76 72 74 84 72 95" />
+      </svg>
+
+      {/* If glowing scanner for bride */}
+      {isGlowing && !isStamped && (
+        <>
+          <div className="thumbprint-scan-beam" />
+          <div className="thumbprint-pulse-rings">
+            <span className="pulse-ring ring-1" />
+            <span className="pulse-ring ring-2" />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── Special Quiz for You Section ───
 function SpecialQuizSection() {
   // Modal visibility state
@@ -2890,8 +3002,11 @@ function SpecialQuizSection() {
   // 1: Q2 (1st time) - Will you marry Mehboob Waqar?
   // 2: Q2 (2nd time) - Will you marry Mehboob Waqar forever?
   // 3: Q2 (3rd time) - Will you marry Mehboob Waqar? (Final Promise)
-  // 4: Official Nikkah Declaration Card!
+  // 4: Royal Cute Nikkahnama (Mehboob's thumbprint already stamped, Laiba's glowing scanner pad)
+  // 5: Official Nikkah Declaration & Grand Celebration Screen!
   const [quizStage, setQuizStage] = useState(0);
+  const [isBrideStamped, setIsBrideStamped] = useState(false);
+  const [isStampingBride, setIsStampingBride] = useState(false);
   const [runawayPos, setRunawayPos] = useState<{ x: number; y: number; isFixed: boolean }>({
     x: 0,
     y: 0,
@@ -3090,6 +3205,8 @@ function SpecialQuizSection() {
   const handleOpenQuiz = () => {
     playAudioCue("cardFlip");
     setQuizStage(0);
+    setIsBrideStamped(false);
+    setIsStampingBride(false);
     resetRunaway("No 😜");
     setCelebrationToast(null);
     setIsQuizOpen(true);
@@ -3153,17 +3270,43 @@ function SpecialQuizSection() {
   const handleQaboolRound3 = async () => {
     playAudioCue("quizYes");
     playAudioCue("success");
-    triggerConfetti("grand");
-    setCelebrationToast("🎉 CONGRATULATIONS! 3 TIMES QABOOL HAI! You are officially mine forever! 💍👰‍♀️");
+    triggerConfetti("mini");
+    setCelebrationToast("🎉 3 TIMES QABOOL HAI! Presenting your Sacred Nikkahnama for signing... 📜💍");
     setTimeout(() => {
       setCelebrationToast(null);
       setQuizStage(4);
-    }, 2000);
+    }, 1800);
+  };
+
+  const handleBrideThumbprint = () => {
+    if (isBrideStamped || isStampingBride) return;
+    setIsStampingBride(true);
+    playAudioCue("thumbprintStamp");
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      try {
+        navigator.vibrate([40, 60, 40]);
+      } catch {}
+    }
+    setIsBrideStamped(true);
+    triggerConfetti("mini");
+    setCelebrationToast("✨ NIKKAH MUBARAK! Officially Accepted & Sealed Forever! 💍👰‍♀️");
+
+    setTimeout(() => {
+      setIsStampingBride(false);
+      playAudioCue("royalVictory");
+      triggerConfetti("grand");
+      setTimeout(() => {
+        setCelebrationToast(null);
+        setQuizStage(5);
+      }, 1500);
+    }, 1200);
   };
 
   const handleRestartQuiz = () => {
     playAudioCue("cardFlip");
     setQuizStage(0);
+    setIsBrideStamped(false);
+    setIsStampingBride(false);
     resetRunaway("No 😜");
     setCelebrationToast(null);
   };
@@ -3384,16 +3527,192 @@ function SpecialQuizSection() {
             </div>
           )}
 
-          {/* Stage 4: Luxury Nikkah / Wedding Declaration Card */}
+          {/* Stage 4: Royal Cute Nikkahnama Signing Stage */}
           {quizStage === 4 && (
+            <div className="nikkah-card nikkahnama-parchment-card">
+              <div className="nikkah-inner-frame nikkahnama-inner-frame">
+                {/* Islamic Bismillah Calligraphy */}
+                <div className="nikkah-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+
+                {/* Quranic Sacred Verse (Surah Ar-Rum: 21) */}
+                <div className="nikkahnama-verse-card">
+                  <p className="nikkahnama-arabic-verse">
+                    وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
+                  </p>
+                  <p className="nikkahnama-verse-translation">
+                    &ldquo;And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them; and He placed between your hearts affection and mercy.&rdquo;{" "}
+                    <span className="verse-ref">— [Surah Ar-Rum: 21]</span>
+                  </p>
+                </div>
+
+                <div className="nikkah-badge">📜 OFFICIAL ISLAMIC NIKKAHNAMA • نکاح نامہ 💍</div>
+
+                <h3 className="nikkah-title">The Sacred Marriage Covenant</h3>
+                <p className="nikkah-subtitle">United in Love, Faith, Soul &amp; Eternity</p>
+
+                {/* Key Details of the Nikkah */}
+                <div className="nikkahnama-terms-grid">
+                  <div className="nikkahnama-term-box">
+                    <span className="term-icon">📅</span>
+                    <div className="term-content">
+                      <span className="term-label">Date of Nikkah</span>
+                      <span className="term-value">September 9, 2026 (Her 23rd Birthday 🎂)</span>
+                    </div>
+                  </div>
+                  <div className="nikkahnama-term-box">
+                    <span className="term-icon">💎</span>
+                    <div className="term-content">
+                      <span className="term-label">Mahr (حق مہر)</span>
+                      <span className="term-value">Infinite Love, Lifelong Care &amp; 100% Loyalty ❤️</span>
+                    </div>
+                  </div>
+                  <div className="nikkahnama-term-box">
+                    <span className="term-icon">💍</span>
+                    <div className="term-content">
+                      <span className="term-label">Consent (ایجاب و قبول)</span>
+                      <span className="term-value">3x &ldquo;Qabool Hai&rdquo; Declared with Full Heart 💖</span>
+                    </div>
+                  </div>
+                  <div className="nikkahnama-term-box">
+                    <span className="term-icon">🌟</span>
+                    <div className="term-content">
+                      <span className="term-label">Witnesses (گواہ)</span>
+                      <span className="term-value">Allah SWT, The Angels &amp; Endless Love ✨</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="nikkah-divider" />
+
+                {/* Side-by-Side Thumbprint & Signature Arena */}
+                <div className="nikkahnama-signatures-arena">
+                  {/* GROOM: Mehboob Waqar (Thumbprint Already Stamped!) */}
+                  <div className="nikkahnama-party-card groom-party">
+                    <div className="party-badge groom-badge">🤵‍♂️ The Groom • دولہا</div>
+                    <h4 className="party-name">Mehboob Waqar</h4>
+                    <span className="party-sig-script">Mehboob Waqar</span>
+
+                    {/* Stamped Thumbprint Box */}
+                    <div className="party-thumbprint-container">
+                      <span className="thumbprint-label">Groom&apos;s Thumbprint</span>
+                      <div className="thumbprint-box groom-stamped-box" title="Mehboob Waqar's Official Stamped Thumbprint">
+                        <ThumbprintGraphic isStamped={true} />
+                        <div className="thumbprint-stamp-overlay">
+                          <span className="stamp-seal-icon">✓</span>
+                          <span className="stamp-seal-text">STAMPED</span>
+                        </div>
+                      </div>
+                      <div className="party-status-tag verified">
+                        <span>✓ ALREADY SIGNED &amp; SEALED</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sacred Rings & Seal in Middle */}
+                  <div className="nikkahnama-center-crests">
+                    <div className="nikkah-rings-sparkle">💍 💖 💍</div>
+                    <div className="nikkah-sacred-seal">
+                      <span>عقد نکاح</span>
+                      <span className="sacred-seal-sub">ETERNAL</span>
+                    </div>
+                  </div>
+
+                  {/* BRIDE: Laiba Mehboob (Interactive Glowing Thumbprint Scanner!) */}
+                  <div className={`nikkahnama-party-card bride-party ${isBrideStamped ? "stamped-complete" : "pending-stamp"}`}>
+                    <div className="party-badge bride-badge">👰‍♀️ The Beautiful Bride • دلہن</div>
+                    <h4 className="party-name bride-color">Laiba Mehboob</h4>
+                    <span className="party-sig-script bride-script">Laiba Mehboob</span>
+
+                    {/* Interactive Glowing / Stamped Thumbprint Box */}
+                    <div className="party-thumbprint-container">
+                      <span className="thumbprint-label">
+                        {isBrideStamped ? "Bride's Thumbprint" : "Place Fingerprint to Sign"}
+                      </span>
+
+                      {!isBrideStamped ? (
+                        <button
+                          type="button"
+                          className="thumbprint-box bride-scanner-box glowing-interactive"
+                          onClick={handleBrideThumbprint}
+                          onPointerDown={handleBrideThumbprint}
+                          aria-label="Place Laiba Mehboob Fingerprint Here"
+                          title="Touch or Click to Stamp your Fingerprint, Laiba!"
+                        >
+                          <ThumbprintGraphic isStamped={false} isGlowing={true} isBride={true} />
+                          <div className="scanner-glowing-indicator">
+                            <span className="scanner-hand-icon">👆</span>
+                            <span className="scanner-text-main">Touch &amp; Hold Here</span>
+                            <span className="scanner-text-sub">Place Finger to Sign 💖</span>
+                          </div>
+                        </button>
+                      ) : (
+                        <div className="thumbprint-box bride-stamped-box stamp-impact-animate" title="Laiba Mehboob's Blessed Thumbprint">
+                          <ThumbprintGraphic isStamped={true} isBride={true} />
+                          <div className="thumbprint-stamp-overlay bride-overlay">
+                            <span className="stamp-seal-icon">💖</span>
+                            <span className="stamp-seal-text">ACCEPTED</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className={`party-status-tag ${isBrideStamped ? "verified bride-verified" : "awaiting"}`}>
+                        {isBrideStamped ? (
+                          <span>✓ OFFICIALLY ACCEPTED &amp; SEALED 👰‍♀️💖</span>
+                        ) : (
+                          <span className="pulse-text">✨ WAITING FOR LAIBA&apos;S TOUCH...</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Guidance & Actions */}
+                <div className="nikkahnama-bottom-controls">
+                  {!isBrideStamped ? (
+                    <div className="nikkahnama-prompt-banner">
+                      <span className="prompt-sparkle">✨</span>
+                      <p>
+                        <strong>Laiba, touch the glowing pink fingerprint box above</strong> to stamp your consent and seal our sacred Nikkah! 💍❤️
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="nikkahnama-completed-actions">
+                      <p className="nikkahnama-success-message">
+                        💍 <strong>Alhamdulillah! Both Thumbprints are Sealed!</strong> You are officially Mehboob&apos;s Queen for all eternity! 👑❤️
+                      </p>
+                      <button
+                        type="button"
+                        className="nikkahnama-advance-btn"
+                        onClick={() => {
+                          playAudioCue("cardFlip");
+                          setQuizStage(5);
+                        }}
+                      >
+                        🎉 Continue to Grand Celebration &amp; Vows ➡️
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="congrats-actions" style={{ marginTop: "1.2rem" }}>
+                    <button type="button" className="quiz-back-btn" onClick={handleCloseQuiz}>
+                      🏠 Go to Main Screen
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Stage 5: Grand Wedding Celebration & Congratulations Screen */}
+          {quizStage === 5 && (
             <div className="nikkah-card">
               <div className="nikkah-inner-frame">
                 <div className="nikkah-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
                 
-                <div className="nikkah-badge">💍 OFFICIAL NIKKAH DECLARATION 💍</div>
+                <div className="nikkah-badge celebration-badge">💍 NIKKAH MUBARAK • OFFICIAL MARRIAGE 💍</div>
                 
                 <h3 className="nikkah-title">Certificate of Eternal Love</h3>
-                <p className="nikkah-subtitle">United in Heart, Soul &amp; Destiny</p>
+                <p className="nikkah-subtitle">United in Heart, Soul &amp; Destiny • Signed &amp; Sealed Forever</p>
 
                 <div className="nikkah-divider" />
 
@@ -3403,17 +3722,20 @@ function SpecialQuizSection() {
                     <span className="nikkah-role">The Groom</span>
                     <span className="nikkah-name">Mehboob Waqar</span>
                     <span className="nikkah-tag">Forever Yours 🤵‍♂️❤️</span>
+                    <div className="mini-thumb-status">✓ Thumbprint Sealed</div>
                   </div>
 
                   <div className="nikkah-heart-badge">
                     <span className="nikkah-rings">💍 💕 💍</span>
                     <span className="nikkah-qabool-stamp">3x QABOOL HAI</span>
+                    <span className="nikkah-signed-seal">OFFICIALLY MARRIED</span>
                   </div>
 
                   <div className="nikkah-person bride">
                     <span className="nikkah-role">The Beautiful Bride</span>
                     <span className="nikkah-name">Laiba Mehboob</span>
                     <span className="nikkah-tag">My Queen 👰‍♀️💖</span>
+                    <div className="mini-thumb-status bride-status">✓ Thumbprint Stamped</div>
                   </div>
                 </div>
 
@@ -3421,8 +3743,8 @@ function SpecialQuizSection() {
 
                 {/* Short, Sweet & Elegant Vow Text */}
                 <p className="nikkah-short-vow">
-                  With <strong>three sacred declarations of &quot;Qabool Hai&quot;</strong>, our hearts are eternally entwined. 
-                  In this life, in every prayer, and across every lifetime, you are my forever soulmate, my peace, and my greatest blessing.
+                  With <strong>three sacred declarations of &quot;Qabool Hai&quot;</strong> and both blessed thumbprints sealed on the Nikkahnama, our hearts and souls are eternally entwined. 
+                  In this life, in every prayer, and across every lifetime, you are my forever queen, my peace, and my greatest blessing from Allah.
                 </p>
 
                 <div className="nikkah-birthday-tag">
@@ -3452,6 +3774,16 @@ function SpecialQuizSection() {
 
                 {/* Actions */}
                 <div className="congrats-actions" style={{ marginTop: "2rem" }}>
+                  <button
+                    type="button"
+                    className="nikkah-view-cert-btn"
+                    onClick={() => {
+                      playAudioCue("cardFlip");
+                      setQuizStage(4);
+                    }}
+                  >
+                    📜 View Signed Nikkahnama
+                  </button>
                   <button type="button" className="quiz-back-btn" onClick={handleCloseQuiz}>
                     🏠 Go to Main Screen
                   </button>
