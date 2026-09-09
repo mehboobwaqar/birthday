@@ -9,7 +9,22 @@ const BIRTHDAY_YEAR = 2026;
 const SECRET_PASSWORD = "nono";
 
 // ─── Audio Tone Effects (Web Audio API) ───
-function playAudioCue(type: "success" | "wrong" | "kiss" | "twinkle") {
+type AudioCueType =
+  | "envelopeOpen"
+  | "candleBlow"
+  | "giftOpen"
+  | "letterOpen"
+  | "cardFlip"
+  | "revealAll"
+  | "cameraShutter"
+  | "skipTimer"
+  | "kiss"
+  | "twinkle"
+  | "heartPop"
+  | "success"
+  | "wrong";
+
+function playAudioCue(type: AudioCueType) {
   if (typeof window === "undefined") return;
   try {
     const AudioCtx =
@@ -17,21 +32,241 @@ function playAudioCue(type: "success" | "wrong" | "kiss" | "twinkle") {
       (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
-    if (type === "wrong") {
-      // Funny buzzer / boing sound
+    if (ctx.state === "suspended") {
+      ctx.resume();
+    }
+
+    if (type === "envelopeOpen") {
+      // 🌟 Grand Entrance / Envelope Reveal: Ascending harp arpeggio + triumphant sparkle chord
+      const harp = [523.25, 659.25, 783.99, 987.77, 1046.5, 1318.51, 1567.98];
+      harp.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        const start = ctx.currentTime + idx * 0.08;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.25, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.9);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.9);
+      });
+      // Golden sparkle flourish
+      [2093.0, 2637.02, 3135.96].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        const start = ctx.currentTime + 0.55 + idx * 0.09;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.14, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.6);
+      });
+    } else if (type === "candleBlow") {
+      // 💨 Candle Blow: Realistic whoosh of breath blowing out candles + magical wish granted bell chimes
+      const bufferSize = Math.floor(ctx.sampleRate * 0.45);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.8;
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(800, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(160, ctx.currentTime + 0.45);
+      filter.Q.setValueAtTime(2.0, ctx.currentTime);
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.35, ctx.currentTime);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      noise.start();
+      noise.stop(ctx.currentTime + 0.45);
+
+      // Magical wish chime bells right after blow
+      const wishChimes = [880, 1174.66, 1479.98, 1760];
+      wishChimes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        const start = ctx.currentTime + 0.35 + idx * 0.08;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.18, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.85);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.85);
+      });
+    } else if (type === "giftOpen") {
+      // 🎁 Surprise Gift Open: Cheerful box pop + joyful ascending fanfare
+      const oscPop = ctx.createOscillator();
+      const gainPop = ctx.createGain();
+      oscPop.type = "sine";
+      oscPop.frequency.setValueAtTime(220, ctx.currentTime);
+      oscPop.frequency.exponentialRampToValueAtTime(650, ctx.currentTime + 0.08);
+      gainPop.gain.setValueAtTime(0.28, ctx.currentTime);
+      gainPop.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
+      oscPop.connect(gainPop);
+      gainPop.connect(ctx.destination);
+      oscPop.start();
+      oscPop.stop(ctx.currentTime + 0.09);
+
+      // Joyful gift bells
+      [587.33, 739.99, 880, 1174.66].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        const start = ctx.currentTime + 0.08 + idx * 0.07;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.22, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.7);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.7);
+      });
+    } else if (type === "letterOpen") {
+      // 💌 Love Letter Seal Break & Unfold: Romantic acoustic harmonic chime chord
+      const popOsc = ctx.createOscillator();
+      const popGain = ctx.createGain();
+      popOsc.type = "sine";
+      popOsc.frequency.setValueAtTime(480, ctx.currentTime);
+      popOsc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.12);
+      popGain.gain.setValueAtTime(0.2, ctx.currentTime);
+      popGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      popOsc.connect(popGain);
+      popGain.connect(ctx.destination);
+      popOsc.start();
+      popOsc.stop(ctx.currentTime + 0.12);
+
+      // Romantic chord
+      [523.25, 659.25, 783.99, 987.77, 1046.5].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        const start = ctx.currentTime + 0.09 + idx * 0.06;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.18, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 1.1);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 1.1);
+      });
+    } else if (type === "cardFlip") {
+      // 📸 Card Flip: Cute crisp sparkle flip
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(280, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(75, ctx.currentTime + 0.35);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(450, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(980, ctx.currentTime + 0.07);
+      gain.gain.setValueAtTime(0.24, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      osc.stop(ctx.currentTime + 0.35);
+      osc.stop(ctx.currentTime + 0.18);
+
+      const bell = ctx.createOscillator();
+      const bellGain = ctx.createGain();
+      bell.type = "triangle";
+      bell.frequency.setValueAtTime(1567.98, ctx.currentTime + 0.05);
+      bellGain.gain.setValueAtTime(0.16, ctx.currentTime + 0.05);
+      bellGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      bell.connect(bellGain);
+      bellGain.connect(ctx.destination);
+      bell.start(ctx.currentTime + 0.05);
+      bell.stop(ctx.currentTime + 0.35);
+    } else if (type === "revealAll") {
+      // ✨ Reveal All: Grand cascading multi-tone ripple of stars
+      [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98, 2093].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        const start = ctx.currentTime + idx * 0.05;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.2, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.6);
+      });
+    } else if (type === "cameraShutter") {
+      // 📷 Camera click / Memory chapter open
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.setValueAtTime(420, ctx.currentTime + 0.025);
+      gain.gain.setValueAtTime(0.14, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.07);
+
+      // Subtle chime note
+      const chime = ctx.createOscillator();
+      const cGain = ctx.createGain();
+      chime.type = "sine";
+      chime.frequency.setValueAtTime(1318.51, ctx.currentTime + 0.04);
+      cGain.gain.setValueAtTime(0.15, ctx.currentTime + 0.04);
+      cGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      chime.connect(cGain);
+      cGain.connect(ctx.destination);
+      chime.start(ctx.currentTime + 0.04);
+      chime.stop(ctx.currentTime + 0.3);
+    } else if (type === "skipTimer") {
+      // ⏩ Skip Countdown: Warp-in swoosh + bright rising chime
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(240, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1280, ctx.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.26, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.36);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.36);
+
+      [1318.51, 1760].forEach((freq, idx) => {
+        const sOsc = ctx.createOscillator();
+        const sGain = ctx.createGain();
+        sOsc.type = "triangle";
+        const start = ctx.currentTime + 0.2 + idx * 0.08;
+        sOsc.frequency.setValueAtTime(freq, start);
+        sGain.gain.setValueAtTime(0.18, start);
+        sGain.gain.exponentialRampToValueAtTime(0.001, start + 0.55);
+        sOsc.connect(sGain);
+        sGain.connect(ctx.destination);
+        sOsc.start(start);
+        sOsc.stop(start + 0.55);
+      });
+    } else if (type === "heartPop") {
+      // 💖 Cute Heart Pop
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(280, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(720, ctx.currentTime + 0.07);
+      gain.gain.setValueAtTime(0.26, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.22);
     } else if (type === "kiss") {
-      // Sweet kiss "mwah" smack pop sound
+      // 💋 Sweet kiss "mwah" smack pop sound
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "sine";
@@ -45,7 +280,7 @@ function playAudioCue(type: "success" | "wrong" | "kiss" | "twinkle") {
       osc.start();
       osc.stop(ctx.currentTime + 0.22);
     } else if (type === "twinkle") {
-      // Gentle sparkling fairy chime
+      // 🌸 Gentle sparkling fairy chime
       const notes = [1318.51, 1567.98];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -60,8 +295,21 @@ function playAudioCue(type: "success" | "wrong" | "kiss" | "twinkle") {
         osc.start(startTime);
         osc.stop(startTime + 0.32);
       });
+    } else if (type === "wrong") {
+      // 🚫 Funny buzzer / boing sound
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(280, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(75, ctx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
     } else {
-      // Royal sweet victory chord (C5, E5, G5, C6)
+      // 👑 Royal victory chord (C5, E5, G5, C6)
       const notes = [523.25, 659.25, 783.99, 1046.5];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -236,6 +484,7 @@ function MidnightCountdownGate({ onUnlock }: { onUnlock: () => void }) {
   }, [autoUnlocked, onUnlock]);
 
   const handleManualPreview = () => {
+    playAudioCue("skipTimer");
     try {
       sessionStorage.setItem("miang_midnight_bypassed", "true");
     } catch { }
@@ -361,8 +610,8 @@ function QualitiesSection() {
     const themes = [
       { emoji: "🌸", subEmoji: "✨", sound: "twinkle" as const },
       { emoji: "😘", subEmoji: "💖", sound: "kiss" as const },
-      { emoji: "🥰", subEmoji: "💕", sound: "twinkle" as const },
-      { emoji: "💖", subEmoji: "✨", sound: "twinkle" as const },
+      { emoji: "🥰", subEmoji: "💕", sound: "heartPop" as const },
+      { emoji: "💖", subEmoji: "✨", sound: "heartPop" as const },
     ];
     const chosen = themes[Math.floor(Math.random() * themes.length)];
 
@@ -479,6 +728,7 @@ function CakeSection() {
 
   const handleBlowCandles = useCallback(async () => {
     if (candlesBlown) return;
+    playAudioCue("candleBlow");
     setCandlesBlown(true);
     try {
       const confetti = (await import("canvas-confetti")).default;
@@ -575,7 +825,7 @@ function LoveLetter() {
   const handleOpen = useCallback(async () => {
     if (isOpen) return;
     setIsOpening(true);
-    playAudioCue("success");
+    playAudioCue("letterOpen");
 
     // Burst of heart & golden confetti
     try {
@@ -1048,6 +1298,7 @@ function Timeline() {
   ];
 
   const openModal = (index: number) => {
+    playAudioCue("cameraShutter");
     setTimelineModalIndex(index);
     setActivePhotoIdx(0);
   };
@@ -1259,6 +1510,7 @@ function GiftSection() {
 
   const handleOpen = useCallback(async () => {
     if (opened) return;
+    playAudioCue("giftOpen");
     setOpened(true);
     try {
       const confetti = (await import("canvas-confetti")).default;
@@ -1342,9 +1594,11 @@ function PhotoMemories() {
   const handleReveal = useCallback(async (index: number) => {
     if (revealedCards.has(index)) {
       // Already revealed — open lightbox
+      playAudioCue("cameraShutter");
       setLightboxIndex(index);
       return;
     }
+    playAudioCue("cardFlip");
     setJustRevealed(index);
     setRevealedCards(prev => new Set([...Array.from(prev), index]));
 
@@ -1364,6 +1618,7 @@ function PhotoMemories() {
   }, [revealedCards]);
 
   const handleRevealAll = useCallback(async () => {
+    playAudioCue("revealAll");
     const allCards = new Set(Array.from({ length: TOTAL_PHOTOS }, (_, i) => i));
     setRevealedCards(allCards);
     try {
@@ -1750,6 +2005,8 @@ function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
   const [opened, setOpened] = useState(false);
 
   const handleClick = () => {
+    if (opened) return;
+    playAudioCue("envelopeOpen");
     setOpened(true);
     onOpen();
   };
