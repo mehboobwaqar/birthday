@@ -1632,16 +1632,6 @@ function PhotoMemories() {
     setTimeout(() => setJustRevealed(null), 900);
   }, [revealedCards]);
 
-  const handleRevealAll = useCallback(async () => {
-    playAudioCue("revealAll");
-    const allCards = new Set(Array.from({ length: TOTAL_PHOTOS }, (_, i) => i));
-    setRevealedCards(allCards);
-    try {
-      const confetti = (await import("canvas-confetti")).default;
-      confetti({ particleCount: 100, spread: 120, origin: { y: 0.5 }, colors: ["#ff0080", "#ffd700", "#ce93d8", "#00f5ff"] });
-    } catch (_) { }
-  }, [TOTAL_PHOTOS]);
-
   // Lightbox navigation (only among revealed cards)
   const revealedList = Array.from(revealedCards).sort((a, b) => a - b);
 
@@ -1684,26 +1674,6 @@ function PhotoMemories() {
           <span className="memories-counter">
             💖 Revealed: <span className="count-num">{revealedCards.size}</span> / {TOTAL_PHOTOS}
           </span>
-          {revealedCards.size < TOTAL_PHOTOS && (
-            <button
-              onClick={handleRevealAll}
-              type="button"
-              style={{
-                background: "linear-gradient(135deg, #ff4081, #e040fb)",
-                border: "none",
-                color: "#fff",
-                padding: "8px 18px",
-                borderRadius: "20px",
-                fontSize: "0.85rem",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 4px 15px rgba(255, 64, 129, 0.35)",
-                transition: "all 0.3s ease",
-              }}
-            >
-              ✨ Reveal All 30 Photos
-            </button>
-          )}
         </div>
 
         <div className="memories-grid">
