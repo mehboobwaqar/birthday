@@ -848,8 +848,12 @@ function CakeSection() {
   }, [candlesBlown]);
 
   const handleSliceCake = useCallback(() => {
-    if (slicesCut >= 4 || isSlicing) return;
+    setSlicesCut((prev) => (prev >= 4 ? 4 : prev + 1));
     setIsSlicing(true);
+    setTimeout(() => {
+      setIsSlicing(false);
+    }, 600);
+
     playAudioCue("cakeSlice");
 
     import("canvas-confetti")
@@ -857,19 +861,13 @@ function CakeSection() {
         const confetti = mod.default;
         confetti({
           particleCount: 65,
-          spread: 75,
+          spread: 80,
           origin: { y: 0.58, x: 0.5 },
           colors: ["#ffd700", "#ff0080", "#ff4081", "#ffffff", "#ce93d8"],
         });
       })
       .catch(() => {});
-
-    setSlicesCut((prev) => Math.min(4, prev + 1));
-
-    setTimeout(() => {
-      setIsSlicing(false);
-    }, 450);
-  }, [slicesCut, isSlicing]);
+  }, []);
 
   const handleRelight = useCallback(() => {
     playAudioCue("twinkle");
@@ -970,10 +968,10 @@ function CakeSection() {
           <g className="cake-slices-4-wrapper">
             {/* ─── SLICE 4: BACK-LEFT QUADRANT (Cuts on Click 4) ─── */}
             <g
-              className="cake-slice-quadrant"
+              className={`cake-slice-quadrant ${slicesCut >= 4 ? "cut-slice-4" : ""}`}
+              transform={slicesCut >= 4 ? "translate(-26, -18)" : "translate(0, 0)"}
               style={{
-                transform: slicesCut >= 4 ? "translate(-20px, -14px)" : "translate(0, 0)",
-                transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                transform: slicesCut >= 4 ? "translate(-26px, -18px)" : "translate(0px, 0px)",
               }}
             >
               {/* Back wall of Back-Left Slice */}
@@ -1010,10 +1008,10 @@ function CakeSection() {
 
             {/* ─── SLICE 3: BACK-RIGHT QUADRANT (Cuts on Click 3) ─── */}
             <g
-              className="cake-slice-quadrant"
+              className={`cake-slice-quadrant ${slicesCut >= 3 ? "cut-slice-3" : ""}`}
+              transform={slicesCut >= 3 ? "translate(26, -18)" : "translate(0, 0)"}
               style={{
-                transform: slicesCut >= 3 ? "translate(20px, -14px)" : "translate(0, 0)",
-                transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                transform: slicesCut >= 3 ? "translate(26px, -18px)" : "translate(0px, 0px)",
               }}
             >
               {/* Back wall of Back-Right Slice */}
@@ -1050,10 +1048,10 @@ function CakeSection() {
 
             {/* ─── SLICE 2: FRONT-LEFT QUADRANT (Cuts on Click 2) ─── */}
             <g
-              className="cake-slice-quadrant"
+              className={`cake-slice-quadrant ${slicesCut >= 2 ? "cut-slice-2" : ""}`}
+              transform={slicesCut >= 2 ? "translate(-32, 22)" : "translate(0, 0)"}
               style={{
-                transform: slicesCut >= 2 ? "translate(-22px, 16px)" : "translate(0, 0)",
-                transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                transform: slicesCut >= 2 ? "translate(-32px, 22px)" : "translate(0px, 0px)",
               }}
             >
               {/* Front curved wall */}
@@ -1101,10 +1099,10 @@ function CakeSection() {
 
             {/* ─── SLICE 1: FRONT-RIGHT QUADRANT (Cuts FIRST on Click 1) ─── */}
             <g
-              className="cake-slice-quadrant"
+              className={`cake-slice-quadrant ${slicesCut >= 1 ? "cut-slice-1" : ""}`}
+              transform={slicesCut >= 1 ? "translate(32, 22)" : "translate(0, 0)"}
               style={{
-                transform: slicesCut >= 1 ? "translate(22px, 16px)" : "translate(0, 0)",
-                transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                transform: slicesCut >= 1 ? "translate(32px, 22px)" : "translate(0px, 0px)",
               }}
             >
               {/* Front curved wall */}
@@ -1229,7 +1227,7 @@ function CakeSection() {
         </svg>
 
         {/* Animated Knife Slash across Cake when Slicing */}
-        {isSlicing && <div className="knife-slicing-animation">🔪</div>}
+        {isSlicing && <div key={`knife-${slicesCut}`} className="knife-slicing-animation">🔪</div>}
       </div>
 
       <div className="age-badge">{age}</div>
@@ -1249,17 +1247,8 @@ function CakeSection() {
             <button
               className={`slice-cake-btn ${isSlicing ? "slicing" : ""}`}
               onClick={handleSliceCake}
-              disabled={isSlicing}
             >
-              <span>
-                {slicesCut === 0
-                  ? "Slice the Cake! 🔪 (1/4)"
-                  : slicesCut === 1
-                  ? "Cut Next Slice! 🔪 (2/4)"
-                  : slicesCut === 2
-                  ? "Cut Next Slice! 🔪 (3/4)"
-                  : "Cut Final Slice! 🔪 (4/4)"}
-              </span>
+              <span>Slice the Cake! 🔪🎂</span>
             </button>
           </div>
         )}
@@ -1278,9 +1267,9 @@ function CakeSection() {
         {slicesCut === 4
           ? `Happy Birthday, my sweet potato Wifey! 🎂💖 All 4 slices are cut for you!`
           : slicesCut > 0
-          ? `Slice ${slicesCut} of 4 cut! Click the button to cut the next slice! 🍰✨`
+          ? `Slice cut with love! Click again to cut the next slice! 🍰✨`
           : candlesBlown
-          ? `Candles are blown! Now click "Slice the Cake! 🔪 (1/4)" below to cut the cake! 🌟`
+          ? `Candles are blown! Now click "Slice the Cake! 🔪🎂" below to cut the cake! 🌟`
           : `Close your eyes, make a wish, and blow out the candles! ✨ You deserve every dream come true! 💫`}
       </p>
     </section>
