@@ -1668,27 +1668,18 @@ function SpecialQuizSection() {
   // 3: Q2 (3rd time) - Will you marry Mehboob Waqar? (Final Promise)
   // 4: Official Nikkah Declaration Card!
   const [quizStage, setQuizStage] = useState(0);
-  const [runawayOffset, setRunawayOffset] = useState({ x: 0, y: 0 });
+  const [runawayPos, setRunawayPos] = useState<{ x: number; y: number; isFixed: boolean }>({
+    x: 0,
+    y: 0,
+    isFixed: false,
+  });
   const [dodgeCount, setDodgeCount] = useState(0);
   const [fleeText, setFleeText] = useState("No 😜");
   const [celebrationToast, setCelebrationToast] = useState<string | null>(null);
 
-  // Safe dodging targets that NEVER overlap or hide under the Yes button!
-  const dodgeZoneIndexRef = useRef(0);
-  const safeDodgeTargets = useMemo(
-    () => [
-      { x: 0, y: -120 },     // 1. Straight up high above
-      { x: 90, y: -85 },     // 2. Up & to the Right
-      { x: 105, y: 35 },     // 3. Far to the Right
-      { x: -120, y: -125 },  // 4. High UP to the Left (Safely above the Yes button!)
-      { x: 85, y: 95 },      // 5. Down & to the Right
-      { x: 25, y: -135 },    // 6. Very high above
-      { x: -210, y: 0 },     // 7. Far Left beyond Yes button
-      { x: 95, y: -120 },    // 8. Top-right corner
-      { x: -145, y: -120 },  // 9. High above Yes button
-    ],
-    []
-  );
+  const yesBtnRef = useRef<HTMLButtonElement | null>(null);
+  const runawayBtnRef = useRef<HTMLButtonElement | null>(null);
+  const lastZoneRef = useRef<"top" | "bottom">("bottom");
 
   const fleePhrasesQ1 = useMemo(
     () => [
@@ -1719,7 +1710,7 @@ function SpecialQuizSection() {
     () => [
       "Not Qabool 🙈",
       "Still running! 🏃‍♀️",
-      "Mehboob is yours forever! ❤️",
+      "Mehboob is yours! ❤️",
       "Nice try! 😜",
       "You have to say Qabool! 💍",
       "Can't touch this! 💨",
@@ -1747,15 +1738,78 @@ function SpecialQuizSection() {
       }
       playAudioCue("funnyBoing"); // 🤪 Funny cartoon boing + squeak!
 
-      // Pick next safe zone from curated non-overlapping list
-      dodgeZoneIndexRef.current = (dodgeZoneIndexRef.current + 1) % safeDodgeTargets.length;
-      const target = safeDodgeTargets[dodgeZoneIndexRef.current];
+      const vw = typeof window !== "undefined" ? window.innerWidth : 380;
+      const vh = typeof window !== "undefined" ? window.innerHeight : 700;
 
-      // Add small dynamic organic jitter (±12px)
-      const jitterX = Math.floor((Math.random() * 2 - 1) * 12);
-      const jitterY = Math.floor((Math.random() * 2 - 1) * 10);
+      const rRect = runawayBtnRef.current?.getBoundingClientRect();
+      const btnW = rRect?.width && rRect.width > 40 ? rRect.width : 145;
+      const btnH = rRect?.height && rRect.height > 25 ? rRect.height : 46;
 
-      setRunawayOffset({ x: target.x + jitterX, y: target.y + jitterY });
+      const paddingX = 16;
+      const minX = paddingX;
+      const maxX = Math.max(minX, vw - btnW - paddingX);
+
+      const minY = 85; // safely below close X button (top: 25px, size: 44px)
+      const maxY = Math.max(minY + 60, vh - btnH - 35); // safely above mobile bottom bar
+
+      const yRect = yesBtnRef.current?.getBoundingClientRect();
+
+      let targetX = minX;
+      let targetY = minY;
+
+      if (yRect) {
+        // Forbidden zone around Yes button to ensure ZERO overlap (at least 24px vertical margin!)
+        const forbiddenTop = Math.max(minY, yRect.top - btnH - 24);
+        const forbiddenBottom = Math.min(maxY, yRect.bottom + 24);
+
+        const canGoTop = forbiddenTop > minY + 20;
+        const canGoBottom = maxY > forbiddenBottom + 20;
+
+        // Alternate zones (top <-> bottom) so it runs away to the opposite side of Yes button!
+        let nextZone: "top" | "bottom" = "top";
+        if (lastZoneRef.current === "top" && canGoBottom) {
+          nextZone = "bottom";
+        } else if (lastZoneRef.current === "bottom" && canGoTop) {
+          nextZone = "top";
+        } else if (canGoBottom) {
+          nextZone = "bottom";
+        } else if (canGoTop) {
+          nextZone = "top";
+        }
+
+        lastZoneRef.current = nextZone;
+
+        if (nextZone === "top") {
+          const topRange = Math.max(0, forbiddenTop - minY);
+          const ratio = ((dodgeCount + 1) % 3) * 0.4;
+          targetY = minY + Math.min(topRange, ratio * topRange);
+        } else {
+          const bottomRange = Math.max(0, maxY - forbiddenBottom);
+          const ratio = ((dodgeCount + 1) % 3) * 0.4;
+          targetY = forbiddenBottom + Math.min(bottomRange, ratio * bottomRange);
+        }
+
+        // Horizontal slots across left, center, right of screen (always strictly clamped!)
+        const xSlots = [
+          minX + 6,
+          Math.floor((minX + maxX) / 2),
+          maxX - 6,
+          minX + Math.floor((maxX - minX) * 0.25),
+          minX + Math.floor((maxX - minX) * 0.75),
+        ];
+        const slotIdx = (dodgeCount + 1) % xSlots.length;
+        targetX = Math.max(minX, Math.min(maxX, xSlots[slotIdx]));
+      } else {
+        targetX = Math.floor(minX + Math.random() * (maxX - minX));
+        targetY = Math.floor(minY + Math.random() * (maxY - minY));
+      }
+
+      setRunawayPos({
+        x: Math.round(targetX),
+        y: Math.round(targetY),
+        isFixed: true,
+      });
+
       setDodgeCount((prev) => prev + 1);
 
       let list = fleePhrasesQ1;
@@ -1765,13 +1819,14 @@ function SpecialQuizSection() {
 
       setFleeText(list[(dodgeCount + 1) % list.length]);
     },
-    [dodgeCount, quizStage, safeDodgeTargets, fleePhrasesQ1, fleePhrasesQ2Round1, fleePhrasesQ2Round2, fleePhrasesQ2Round3]
+    [dodgeCount, quizStage, fleePhrasesQ1, fleePhrasesQ2Round1, fleePhrasesQ2Round2, fleePhrasesQ2Round3]
   );
 
   const resetRunaway = (defaultText: string) => {
-    setRunawayOffset({ x: 0, y: 0 });
+    setRunawayPos({ x: 0, y: 0, isFixed: false });
     setDodgeCount(0);
     setFleeText(defaultText);
+    lastZoneRef.current = "bottom";
   };
 
   const triggerConfetti = async (type: "mini" | "grand") => {
@@ -1940,19 +1995,33 @@ function SpecialQuizSection() {
               <p className="quiz-screen-subtitle">Be completely honest... No takebacks allowed! 🙈✨</p>
 
               <div className="quiz-screen-btn-arena">
-                <button type="button" className="quiz-screen-yes-btn" onClick={handleAnswerYesQ1}>
+                <button
+                  type="button"
+                  ref={yesBtnRef}
+                  className="quiz-screen-yes-btn"
+                  onClick={handleAnswerYesQ1}
+                >
                   Yes, I Love You! 🥰❤️
                 </button>
 
                 <button
                   type="button"
+                  ref={runawayBtnRef}
                   className="quiz-screen-runaway-btn"
-                  style={{
-                    transform: `translate3d(${runawayOffset.x}px, ${runawayOffset.y}px, 0)`,
-                  }}
+                  style={
+                    runawayPos.isFixed
+                      ? {
+                          position: "fixed",
+                          left: `${runawayPos.x}px`,
+                          top: `${runawayPos.y}px`,
+                          margin: 0,
+                        }
+                      : undefined
+                  }
                   onPointerDown={moveRunaway}
                   onMouseEnter={moveRunaway}
                   onTouchStart={moveRunaway}
+                  onTouchMove={moveRunaway}
                   onClick={moveRunaway}
                 >
                   {fleeText}
@@ -1969,19 +2038,33 @@ function SpecialQuizSection() {
               <p className="quiz-screen-subtitle">Asking for the first time... Answer straight from your heart! 🌹</p>
 
               <div className="quiz-screen-btn-arena">
-                <button type="button" className="quiz-screen-yes-btn" onClick={handleQaboolRound1}>
+                <button
+                  type="button"
+                  ref={yesBtnRef}
+                  className="quiz-screen-yes-btn"
+                  onClick={handleQaboolRound1}
+                >
                   Qabool Hai! 💖 (I Do!)
                 </button>
 
                 <button
                   type="button"
+                  ref={runawayBtnRef}
                   className="quiz-screen-runaway-btn"
-                  style={{
-                    transform: `translate3d(${runawayOffset.x}px, ${runawayOffset.y}px, 0)`,
-                  }}
+                  style={
+                    runawayPos.isFixed
+                      ? {
+                          position: "fixed",
+                          left: `${runawayPos.x}px`,
+                          top: `${runawayPos.y}px`,
+                          margin: 0,
+                        }
+                      : undefined
+                  }
                   onPointerDown={moveRunaway}
                   onMouseEnter={moveRunaway}
                   onTouchStart={moveRunaway}
+                  onTouchMove={moveRunaway}
                   onClick={moveRunaway}
                 >
                   {fleeText}
@@ -1999,19 +2082,33 @@ function SpecialQuizSection() {
               <p className="quiz-screen-subtitle">Asking for the second time... Say it louder with all your love! 🙈❤️</p>
 
               <div className="quiz-screen-btn-arena">
-                <button type="button" className="quiz-screen-yes-btn rose-btn" onClick={handleQaboolRound2}>
+                <button
+                  type="button"
+                  ref={yesBtnRef}
+                  className="quiz-screen-yes-btn rose-btn"
+                  onClick={handleQaboolRound2}
+                >
                   With All My Heart, Qabool Hai! 💕🌹
                 </button>
 
                 <button
                   type="button"
+                  ref={runawayBtnRef}
                   className="quiz-screen-runaway-btn"
-                  style={{
-                    transform: `translate3d(${runawayOffset.x}px, ${runawayOffset.y}px, 0)`,
-                  }}
+                  style={
+                    runawayPos.isFixed
+                      ? {
+                          position: "fixed",
+                          left: `${runawayPos.x}px`,
+                          top: `${runawayPos.y}px`,
+                          margin: 0,
+                        }
+                      : undefined
+                  }
                   onPointerDown={moveRunaway}
                   onMouseEnter={moveRunaway}
                   onTouchStart={moveRunaway}
+                  onTouchMove={moveRunaway}
                   onClick={moveRunaway}
                 >
                   {fleeText}
@@ -2028,19 +2125,33 @@ function SpecialQuizSection() {
               <p className="quiz-screen-subtitle">The 3rd and final vow... Forever and for all eternity! 🥺✨</p>
 
               <div className="quiz-screen-btn-arena">
-                <button type="button" className="quiz-screen-yes-btn" onClick={handleQaboolRound3}>
+                <button
+                  type="button"
+                  ref={yesBtnRef}
+                  className="quiz-screen-yes-btn"
+                  onClick={handleQaboolRound3}
+                >
                   Forever &amp; Always, Qabool Hai! 💍💖
                 </button>
 
                 <button
                   type="button"
+                  ref={runawayBtnRef}
                   className="quiz-screen-runaway-btn"
-                  style={{
-                    transform: `translate3d(${runawayOffset.x}px, ${runawayOffset.y}px, 0)`,
-                  }}
+                  style={
+                    runawayPos.isFixed
+                      ? {
+                          position: "fixed",
+                          left: `${runawayPos.x}px`,
+                          top: `${runawayPos.y}px`,
+                          margin: 0,
+                        }
+                      : undefined
+                  }
                   onPointerDown={moveRunaway}
                   onMouseEnter={moveRunaway}
                   onTouchStart={moveRunaway}
+                  onTouchMove={moveRunaway}
                   onClick={moveRunaway}
                 >
                   {fleeText}

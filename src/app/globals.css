@@ -3985,11 +3985,11 @@ body {
 .quiz-screen-btn-arena {
   position: relative;
   width: 100%;
-  min-height: 160px;
+  min-height: 140px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(1.2rem, 4vw, 2.5rem);
+  gap: clamp(1rem, 3.5vw, 2rem);
   flex-wrap: wrap;
   margin-top: 1rem;
 }
@@ -3998,19 +3998,21 @@ body {
   background: linear-gradient(135deg, #ff0080 0%, #ff4081 50%, #e040fb 100%);
   border: 2.5px solid #ffd700;
   color: #ffffff;
-  padding: clamp(15px, 3.5vw, 18px) clamp(30px, 6vw, 44px);
+  padding: clamp(13px, 3.2vw, 17px) clamp(22px, 5.5vw, 38px);
   border-radius: 50px;
-  font-size: clamp(1.08rem, 3.2vw, 1.3rem);
+  font-size: clamp(1.02rem, 3.2vw, 1.28rem);
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 12px 35px rgba(255, 0, 128, 0.65), 0 0 25px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 5;
+  z-index: 10;
   animation: pulseGlow 2.4s infinite ease-in-out;
+  max-width: calc(100vw - 36px);
+  box-sizing: border-box;
 }
 
 .quiz-screen-yes-btn:hover {
-  transform: scale(1.08) translateY(-4px);
+  transform: scale(1.06) translateY(-3px);
   box-shadow: 0 18px 45px rgba(255, 0, 128, 0.85), 0 0 35px rgba(255, 215, 0, 0.6);
   border-color: #ffffff;
 }
@@ -4025,12 +4027,12 @@ body {
 }
 
 .quiz-screen-runaway-btn {
-  background: linear-gradient(135deg, rgba(85, 15, 55, 0.92) 0%, rgba(45, 8, 35, 0.96) 100%);
-  border: 1.8px solid rgba(255, 107, 157, 0.5);
-  color: rgba(255, 255, 255, 0.95);
-  padding: clamp(14px, 3.2vw, 17px) clamp(26px, 5.5vw, 38px);
+  background: linear-gradient(135deg, rgba(85, 15, 55, 0.95) 0%, rgba(45, 8, 35, 0.98) 100%);
+  border: 2px solid rgba(255, 107, 157, 0.7);
+  color: #ffffff;
+  padding: clamp(12px, 3vw, 16px) clamp(20px, 5vw, 32px);
   border-radius: 50px;
-  font-size: clamp(1rem, 3vw, 1.2rem);
+  font-size: clamp(0.95rem, 2.8vw, 1.15rem);
   font-weight: 700;
   cursor: pointer;
   user-select: none;
@@ -4038,10 +4040,17 @@ body {
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.55);
-  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform;
-  z-index: 4;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 0 16px rgba(255, 64, 129, 0.35);
+  transition: left 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275), top 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: left, top;
+  z-index: 100030;
+  max-width: calc(100vw - 36px);
+  box-sizing: border-box;
+}
+
+.quiz-screen-runaway-btn:hover {
+  border-color: #ffd700;
+  box-shadow: 0 12px 35px rgba(255, 0, 128, 0.6), 0 0 22px rgba(255, 215, 0, 0.4);
 }
 
 .quiz-toast-popup {
