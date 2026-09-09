@@ -5402,9 +5402,7 @@ export default function BirthdayPage() {
   const handleRelock = useCallback(() => {
     playAudioCue("cameraShutter");
     try {
-      sessionStorage.removeItem("miang_password_verified");
-      sessionStorage.removeItem("miang_midnight_bypassed");
-      sessionStorage.removeItem("miang_admin_safety");
+      sessionStorage.clear();
     } catch { }
     setIsAdminMode(false);
     setIsPasswordVerified(false);
