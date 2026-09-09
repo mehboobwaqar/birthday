@@ -4140,65 +4140,80 @@ function ScratchCardItem({
     const w = rect.width;
     const h = rect.height;
 
-    // Metallic foil gradient
-    const grad = ctx.createLinearGradient(0, 0, w, h);
+    // High-End Metallic Foil Gradient
+    const grad = ctx.createLinearGradient(0, 0, w * 0.85, h * 1.15);
     if (voucher.isSpecialReverse) {
-      grad.addColorStop(0, "#d99726");
-      grad.addColorStop(0.25, "#fff3b8");
-      grad.addColorStop(0.55, "#c97f10");
-      grad.addColorStop(0.8, "#ffd875");
-      grad.addColorStop(1, "#a86400");
+      // Imperial Ruby & 24K Gold Foil (For Mehboob's Voucher)
+      grad.addColorStop(0.0, "#9c1438");
+      grad.addColorStop(0.2, "#ff597e");
+      grad.addColorStop(0.42, "#ffd700");
+      grad.addColorStop(0.68, "#ff3d6a");
+      grad.addColorStop(0.88, "#c2185b");
+      grad.addColorStop(1.0, "#540619");
     } else {
-      grad.addColorStop(0, "#d4819a");
-      grad.addColorStop(0.28, "#fce5d4");
-      grad.addColorStop(0.52, "#e593aa");
-      grad.addColorStop(0.8, "#fbd7be");
-      grad.addColorStop(1, "#ba6680");
+      // Ultra-Luxe 24K Rose-Gold & Champagne Silk Foil
+      grad.addColorStop(0.0, "#b8526c");
+      grad.addColorStop(0.18, "#ffd7c2");
+      grad.addColorStop(0.38, "#d95f7c");
+      grad.addColorStop(0.58, "#fff2d1");
+      grad.addColorStop(0.78, "#c94d6e");
+      grad.addColorStop(0.92, "#a83552");
+      grad.addColorStop(1.0, "#73192f");
     }
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Subtle shimmer speckles
-    ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
-    for (let i = 0; i < 30; i++) {
-      const sx = (Math.sin(i * 79) * 0.5 + 0.5) * w;
-      const sy = (Math.cos(i * 43) * 0.5 + 0.5) * h;
-      const sr = (i % 3) + 1.2;
+    // Diagonal Metallic Sheen Highlight
+    const sheen = ctx.createLinearGradient(0, 0, w, h);
+    sheen.addColorStop(0.0, "rgba(255, 255, 255, 0.04)");
+    sheen.addColorStop(0.32, "rgba(255, 255, 255, 0.25)");
+    sheen.addColorStop(0.5, "rgba(255, 255, 255, 0.45)");
+    sheen.addColorStop(0.68, "rgba(255, 255, 255, 0.25)");
+    sheen.addColorStop(1.0, "rgba(255, 255, 255, 0.04)");
+    ctx.fillStyle = sheen;
+    ctx.fillRect(0, 0, w, h);
+
+    // Sparkling Glitter Dust
+    ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+    for (let i = 0; i < 40; i++) {
+      const sx = (Math.sin(i * 73) * 0.5 + 0.5) * w;
+      const sy = (Math.cos(i * 41) * 0.5 + 0.5) * h;
+      const sr = (i % 3) * 0.8 + 1.2;
       ctx.beginPath();
       ctx.arc(sx, sy, sr, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Foil Badge Frame in center
-    const badgeW = Math.min(w * 0.76, 230);
-    const badgeH = 64;
+    // Luxury Center Emblem Frame
+    const badgeW = Math.min(w * 0.8, 250);
+    const badgeH = 72;
     const badgeX = (w - badgeW) / 2;
     const badgeY = (h - badgeH) / 2;
 
     ctx.save();
-    ctx.fillStyle = "rgba(0, 0, 0, 0.32)";
+    ctx.fillStyle = "rgba(22, 4, 18, 0.52)";
     ctx.beginPath();
     if (typeof ctx.roundRect === "function") {
-      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 14);
+      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 16);
     } else {
       ctx.rect(badgeX, badgeY, badgeW, badgeH);
     }
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "rgba(255, 228, 140, 0.95)";
+    ctx.lineWidth = 1.8;
     ctx.stroke();
 
-    // Centered foil text
+    // Centered foil title & instructions
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "bold 13px 'Outfit', sans-serif";
-    ctx.fillText("✨ SCRATCH TO REVEAL ✨", w / 2, badgeY + 23);
+    ctx.font = "bold 13.5px 'Outfit', sans-serif";
+    ctx.fillText("✨ SCRATCH TO REVEAL ✨", w / 2, badgeY + 25);
 
-    ctx.fillStyle = "rgba(255, 255, 255, 0.92)";
+    ctx.fillStyle = "#ffe082";
     ctx.font = "600 11px sans-serif";
-    ctx.fillText("Swipe with finger or mouse", w / 2, badgeY + 44);
+    ctx.fillText("👆 Rub with finger or mouse", w / 2, badgeY + 47);
     ctx.restore();
   }, [voucher.isSpecialReverse]);
 
@@ -4376,16 +4391,6 @@ function ScratchCardItem({
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
           />
-          <div className="voucher-foil-controls">
-            <button
-              type="button"
-              className="voucher-quick-scratch-btn"
-              onClick={() => onScratchComplete(voucher.id)}
-              title="Click to instantly reveal this voucher"
-            >
-              ✨ Quick Reveal
-            </button>
-          </div>
         </div>
       )}
     </div>
