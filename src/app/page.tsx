@@ -2924,7 +2924,7 @@ function GiftSection({
   );
 }
 
-// ─── Biometric Thumbprint Graphic Component with Heart Swirl ───
+// ─── Authentic Biometric Thumbprint Graphic Component ───
 function ThumbprintGraphic({
   isStamped,
   isBride,
@@ -2934,60 +2934,77 @@ function ThumbprintGraphic({
   isBride?: boolean;
   isGlowing?: boolean;
 }) {
+  if (!isStamped) {
+    // Before stamping: EMPTY BOX inside! (Matching reference photo)
+    return (
+      <div className="empty-thumbprint-box-content">
+        <div className="empty-touch-target">
+          <span className="empty-target-icon">👆</span>
+          <span className="empty-target-text">Touch to Stamp</span>
+        </div>
+        {isGlowing && <div className="thumbprint-scan-beam" />}
+      </div>
+    );
+  }
+
+  // When stamped: Proper realistic biometric red-ink thumbprint!
   return (
     <div
-      className={`thumbprint-graphic-wrap ${isStamped ? "stamped" : "unplaced"} ${
-        isGlowing ? "glowing-active" : ""
-      } ${isBride ? "bride-thumb" : "groom-thumb"}`}
+      className={`thumbprint-graphic-wrap stamped ${
+        isBride ? "bride-thumb" : "groom-thumb"
+      }`}
     >
       <svg
         viewBox="0 0 100 135"
-        className={`thumbprint-svg ${isStamped ? "ink-stamped" : "pad-outline"}`}
+        className="thumbprint-svg ink-stamped"
         fill="none"
         stroke="currentColor"
-        strokeWidth={isStamped ? "2.6" : "2"}
+        strokeWidth="2.1"
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        {/* Outer concentric loops */}
-        <path d="M50 14 C32 14 20 28 20 48 C20 82 34 112 36 126" />
-        <path d="M50 14 C68 14 80 28 80 48 C80 82 66 112 64 126" />
-        <path d="M50 22 C36 22 28 34 28 50 C28 80 40 108 42 122" />
-        <path d="M50 22 C64 22 72 34 72 50 C72 80 60 108 58 122" />
+        {/* Distal Apex Arches */}
+        <path d="M38 14 C46 11 54 11 62 14" />
+        <path d="M30 20 C42 14 58 14 70 20" />
+        <path d="M23 28 C38 18 62 18 77 28" />
+        <path d="M18 38 C34 25 66 25 82 38" />
 
-        {/* Mid loops */}
-        <path d="M50 30 C40 30 35 40 35 54 C35 78 46 102 48 116" />
-        <path d="M50 30 C60 30 65 40 65 54 C65 78 54 102 52 116" />
+        {/* Sweeping Outer Friction Ridges */}
+        <path d="M15 50 C14 68 16 86 21 102 C24 110 27 118 30 124" />
+        <path d="M85 50 C86 68 84 86 79 102 C76 110 73 118 70 124" />
+        <path d="M15 50 C15 35 30 25 50 25 C70 25 85 35 85 50" />
 
-        <path d="M50 38 C44 38 41 46 41 58 C41 76 50 96 50 110" />
-        <path d="M50 38 C56 38 59 46 59 58 C59 76 50 96 50 110" />
+        <path d="M20 57 C20 41 31 32 50 32 C69 32 80 41 80 57 C80 73 78 90 74 105 C72 112 70 119 67 125" />
+        <path d="M20 57 C20 73 22 90 26 105 C28 112 30 119 33 125" />
 
-        {/* Romantic Core Heart at Fingerprint Center */}
+        <path d="M25 63 C25 47 34 39 50 39 C66 39 75 47 75 63 C75 79 73 94 69 108 C67 115 65 120 63 126" />
+        <path d="M25 63 C25 79 27 94 31 108 C33 115 35 120 37 126" />
+
+        <path d="M30 69 C30 54 38 46 50 46 C62 46 70 54 70 69 C70 84 68 98 64 111 C62 117 60 122 58 127" />
+        <path d="M30 69 C30 84 32 98 36 111 C38 117 40 122 42 127" />
+
+        {/* Mid-Whorl Loops */}
+        <path d="M35 75 C35 61 41 53 50 53 C59 53 65 61 65 75 C65 89 63 102 59 114" />
+        <path d="M35 75 C35 89 37 102 41 114" />
+
+        <path d="M40 81 C40 69 44 61 50 61 C56 61 60 69 60 81 C60 93 58 105 55 116" />
+        <path d="M40 81 C40 93 42 105 45 116" />
+
+        {/* Central Romantic Core Swirl & Heart Accent */}
         <path
-          d="M50 48 C48 45 44 45 43 49 C41 55 50 63 50 66 C50 63 59 55 57 49 C56 45 52 45 50 48 Z"
-          fill={isStamped ? "currentColor" : "none"}
+          d="M50 67 C48 64 44 64 43 68 C41 74 50 82 50 85 C50 82 59 74 57 68 C56 64 52 64 50 67 Z"
+          fill="currentColor"
           strokeWidth="1.6"
         />
+        <path d="M46 89 C46 95 48 103 48 111" />
+        <path d="M54 89 C54 95 52 103 52 111" />
 
-        {/* Inner Arch Lines */}
-        <path d="M46 68 C46 78 52 92 52 104" />
-        <path d="M54 68 C54 78 48 92 48 104" />
-        <path d="M30 75 C32 88 36 104 38 115" />
-        <path d="M70 75 C68 88 64 104 62 115" />
-        <path d="M24 60 C24 72 26 84 28 95" />
-        <path d="M76 60 C76 72 74 84 72 95" />
+        {/* Lateral Delta Divergence & Basal Arches */}
+        <path d="M11 68 C11 83 14 98 18 112 C20 118 22 124 24 128" />
+        <path d="M89 68 C89 83 86 98 82 112 C80 118 78 124 76 128" />
+        <path d="M30 128 C42 132 58 132 70 128" />
+        <path d="M36 132 C44 135 56 135 64 132" />
       </svg>
-
-      {/* If glowing scanner for bride */}
-      {isGlowing && !isStamped && (
-        <>
-          <div className="thumbprint-scan-beam" />
-          <div className="thumbprint-pulse-rings">
-            <span className="pulse-ring ring-1" />
-            <span className="pulse-ring ring-2" />
-          </div>
-        </>
-      )}
     </div>
   );
 }
@@ -3617,16 +3634,12 @@ function SpecialQuizSection() {
                         aria-label="Stamp Laiba Mehboob Fingerprint"
                       >
                         <ThumbprintGraphic isStamped={false} isGlowing={true} isBride={true} />
-                        <div className="equation-scanner-indicator">
-                          <span className="scanner-pointer-icon">👆</span>
-                          <span className="scanner-pointer-text">Touch to Sign</span>
-                        </div>
                       </button>
                     ) : (
                       <div className="equation-thumbprint-box bride-stamped-box stamp-impact-animate" title="Laiba Mehboob's Thumbprint">
                         <ThumbprintGraphic isStamped={true} isBride={true} />
                         <div className="equation-stamp-tag bride-stamp">
-                          <span>💖 ACCEPTED</span>
+                          <span>✓ STAMPED</span>
                         </div>
                       </div>
                     )}
