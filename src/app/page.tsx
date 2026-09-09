@@ -1305,36 +1305,36 @@ function PhotoMemories() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const memoriesList = [
-    { src: "/gallery/first-love.jpeg", caption: "The Pic That Made Me Fall In Love 💘", emoji: "💘" },
-    { src: "/gallery/baby-laiba-1.jpeg", caption: "Baby Laiba — Cutest Since Day 1 👶", emoji: "👶" },
-    { src: "/gallery/baby-laiba-2.jpeg", caption: "Childhood Cuteness Overloaded 🎀", emoji: "🎀" },
     { src: "/gallery/first-meetup.jpeg", caption: "Pehli Mulaqat — 'This Way' 😘", emoji: "🥺" },
-    { src: "/gallery/first-rc.jpeg", caption: "First Time Going to RC 🏨✨", emoji: "🏨" },
-    { src: "/gallery/rc-boat.jpeg", caption: "Racecourse Park Boat Ride 🚤", emoji: "⛵" },
-    { src: "/gallery/rc-boat-ride.jpeg", caption: "Racecourse Park Vibes 🌳🌸", emoji: "🌳" },
-    { src: "/gallery/rc-park1.jpeg", caption: "Racecourse Park Walk Together 🚶‍♂️💕", emoji: "🍃" },
-    { src: "/gallery/rc-park2.jpeg", caption: "Racecourse Park Sweet Memories 💖", emoji: "🌸" },
-    { src: "/gallery/rc-cuteness.jpeg", caption: "RC Cuteness 🥰🏨", emoji: "🥰" },
-    { src: "/gallery/rc-2nd.jpeg", caption: "RC 2nd Time — Missing You Already 💖", emoji: "💕" },
-    { src: "/gallery/rc-3rd.jpeg", caption: "RC 3rd Time — Adat Ho Gayi 😍", emoji: "😍" },
+    { src: "/gallery/first-rc.jpeg", caption: "First Time Going to RC Together 🏨✨", emoji: "🏨" },
+    { src: "/gallery/rc-boat.jpeg", caption: "Racecourse Park Boat Ride Together 🚤", emoji: "⛵" },
+    { src: "/gallery/rc-boat-ride.jpeg", caption: "Racecourse Park Vibes & Peace 🌳🌸", emoji: "🌳" },
+    { src: "/gallery/rc-park1.jpeg", caption: "Racecourse Park Walk — Haath Tham Ke 🚶‍♂️💕", emoji: "🍃" },
+    { src: "/gallery/rc-park2.jpeg", caption: "Racecourse Park Sweet Moments 💖", emoji: "🌸" },
+    { src: "/gallery/rc-cuteness.jpeg", caption: "RC Hotel Cuteness & Smiles Together 🥰🏨", emoji: "🥰" },
+    { src: "/gallery/rc-2nd.jpeg", caption: "RC 2nd Visit — Missing You Already 💖", emoji: "💕" },
+    { src: "/gallery/rc-3rd.jpeg", caption: "RC 3rd Time — Ek Doosre Ki Aadat 😍", emoji: "😍" },
     { src: "/gallery/rc-3rd-1.jpeg", caption: "RC 3rd Visit — Us Being Us ✨", emoji: "✨" },
-    { src: "/gallery/rc-5th.jpeg", caption: "RC 5th Time — Our Favorite Hotel 🏡", emoji: "🏡" },
-    { src: "/gallery/rc-5th-1.jpeg", caption: "RC 5th Visit Memories 🌟", emoji: "🌟" },
+    { src: "/gallery/rc-5th.jpeg", caption: "RC 5th Time — Hamara Favorite Hotel 🏡", emoji: "🏡" },
+    { src: "/gallery/rc-5th-1.jpeg", caption: "RC 5th Visit — Golden Memories 🌟", emoji: "🌟" },
     { src: "/gallery/rc-birthday.jpeg", caption: "Before Going to RC for Your Birthday 🎂", emoji: "🎂" },
     { src: "/gallery/shalimar-garden.jpeg", caption: "Shalamar Garden Park Date 🌺", emoji: "🌺" },
     { src: "/gallery/shalimar-3rd.jpeg", caption: "3rd Meetup — Shalamar Garden Park 🌸", emoji: "🌸" },
     { src: "/gallery/shalimar-shahzain.jpeg", caption: "Shalamar Garden with Shahzain 👪", emoji: "👪" },
-    { src: "/gallery/emporium-mall.jpeg", caption: "Emporium Mall Outing 🛍️", emoji: "🛍️" },
-    { src: "/gallery/emporium-cute.jpeg", caption: "Emporium Mall — Cute Pose 📸", emoji: "📸" },
-    { src: "/gallery/emporium-gangster.jpeg", caption: "Gangster Look — Emporium Mall 😎", emoji: "😎" },
-    { src: "/gallery/cutie-puttitee.jpeg", caption: "Cutie Puttitieee 🥺💖", emoji: "🥺" },
-    { src: "/gallery/cutiness.jpeg", caption: "Pure Cuteness 💗", emoji: "💗" },
-    { src: "/gallery/that-smile.jpeg", caption: "That Smile I Love Forever 😊", emoji: "😊" },
+    { src: "/gallery/emporium-mall.jpeg", caption: "Emporium Mall Outing Together 🛍️", emoji: "🛍️" },
+    { src: "/gallery/emporium-cute.jpeg", caption: "Emporium Mall — Cute Pose Together 📸", emoji: "📸" },
+    { src: "/gallery/emporium-gangster.jpeg", caption: "Gangster Look at Emporium Mall 😎", emoji: "😎" },
     { src: "/gallery/cheezious-hands.jpeg", caption: "Cheezious — Haath Tham Ke 🤝💖", emoji: "🤝" },
-    { src: "/gallery/burger-oclock.jpeg", caption: "Burger O'Clock Date 🍔", emoji: "🍔" },
-    { src: "/gallery/daal-chawal.jpeg", caption: "Yaad Hai Daal Chawal? 🍛", emoji: "🍛" },
-    { src: "/gallery/badshahi-mosque.jpeg", caption: "Badshahi Mosque Visit 🕌", emoji: "🕌" },
-    { src: "/gallery/last-meetup.jpeg", caption: "Last Meetup — Gulberg 💔", emoji: "💔" },
+    { src: "/gallery/burger-oclock.jpeg", caption: "Burger O'Clock Date Together 🍔", emoji: "🍔" },
+    { src: "/gallery/burger-oclock-1.jpeg", caption: "Burger O'Clock — Sharing Bites & Smiles 🍟💖", emoji: "😋" },
+    { src: "/gallery/burger-oclock-2.jpeg", caption: "Burger O'Clock Sweet Moments Together 🥤🥪", emoji: "🥪" },
+    { src: "/gallery/daal-chawal.jpeg", caption: "Yaad Hai Daal Chawal? Simple & Sweet 🍛", emoji: "🍛" },
+    { src: "/gallery/packages-mall.jpeg", caption: "Packages Mall — Peaceful Walks Together 🛒✨", emoji: "🛒" },
+    { src: "/gallery/badshahi-mosque.jpeg", caption: "Badshahi Mosque Visit Together 🕌", emoji: "🕌" },
+    { src: "/gallery/shahi-killa.jpeg", caption: "Shahi Qila — Hamari Yaadgaar Mulakat 🏰❤️", emoji: "🏰" },
+    { src: "/gallery/delhi-darwaza.jpeg", caption: "Delhi Darwaza Historical Walk Together 🚪🌸", emoji: "🚶‍♀️" },
+    { src: "/gallery/minar-pakistan.jpeg", caption: "Minar-e-Pakistan Date Together 🇵🇰✨", emoji: "🇵🇰" },
+    { src: "/gallery/last-meetup.jpeg", caption: "Last Meetup — Gulberg Wapsi Se Pehle 💔", emoji: "💔" },
   ];
 
   const TOTAL_PHOTOS = memoriesList.length;
@@ -1404,9 +1404,9 @@ function PhotoMemories() {
   return (
     <>
       <section className="memories-section" id="memories">
-        <h2 className="section-title">📸 Our Beautiful Memories 📸</h2>
+        <h2 className="section-title">📸 Our Beautiful Memories (Us Together) 📸</h2>
         <p className="timeline-hint" style={{ textAlign: "center", marginBottom: "1rem" }}>
-          Tap cards to reveal secret photos &amp; memories ✨
+          Tap cards to reveal our favorite moments together ✨
         </p>
         <div className="section-divider" />
 
