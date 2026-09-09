@@ -403,16 +403,25 @@ body {
 }
 
 @keyframes badgeShimmer {
-  0% { left: -120%; }
-  35%, 100% { left: 160%; }
+  0% {
+    left: -120%;
+  }
+
+  35%,
+  100% {
+    left: 160%;
+  }
 }
 
 @keyframes badgeFloatingGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.55), var(--gold-glow);
     border-color: var(--gold);
   }
+
   50% {
     transform: translateY(-4px);
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), var(--gold-glow);
@@ -442,7 +451,9 @@ body {
 }
 
 @keyframes badgeTextShine {
-  to { background-position: 200% center; }
+  to {
+    background-position: 200% center;
+  }
 }
 
 .birthday-badge .badge-emoji {
@@ -458,8 +469,13 @@ body {
 }
 
 @keyframes badgeCakeBounce {
-  0% { transform: translateY(0) scale(1) rotate(0deg); }
-  100% { transform: translateY(-3px) scale(1.15) rotate(6deg); }
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+
+  100% {
+    transform: translateY(-3px) scale(1.15) rotate(6deg);
+  }
 }
 
 .birthday-badge .badge-sparkle {
@@ -476,8 +492,15 @@ body {
 }
 
 @keyframes badgeSparkleTwinkle {
-  0% { transform: scale(0.7) rotate(0deg); opacity: 0.4; }
-  100% { transform: scale(1.3) rotate(30deg); opacity: 1; }
+  0% {
+    transform: scale(0.7) rotate(0deg);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: scale(1.3) rotate(30deg);
+    opacity: 1;
+  }
 }
 
 /* Typewriter effect */
@@ -1080,9 +1103,17 @@ body {
 }
 
 @keyframes kissWiggle {
-  0% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.25) rotate(-12deg); }
-  100% { transform: scale(1.15) rotate(12deg); }
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    transform: scale(1.25) rotate(-12deg);
+  }
+
+  100% {
+    transform: scale(1.15) rotate(12deg);
+  }
 }
 
 .qualities-grid {
@@ -1131,10 +1162,21 @@ body {
 }
 
 @keyframes cardKissBounce {
-  0% { transform: scale(1); }
-  35% { transform: scale(0.92) rotate(-3deg); }
-  65% { transform: scale(1.08) rotate(3deg); }
-  100% { transform: scale(1) rotate(0); }
+  0% {
+    transform: scale(1);
+  }
+
+  35% {
+    transform: scale(0.92) rotate(-3deg);
+  }
+
+  65% {
+    transform: scale(1.08) rotate(3deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
 }
 
 .card-tap-kiss {
@@ -1225,18 +1267,22 @@ body {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.15) rotate(-18deg);
   }
+
   24% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.35) rotate(6deg);
   }
+
   44% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.5) rotate(-4deg);
   }
+
   74% {
     opacity: 0.95;
     transform: translate(-50%, -70%) scale(1.3) rotate(4deg);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -105%) scale(0.85) rotate(14deg);
@@ -1244,10 +1290,21 @@ body {
 }
 
 @keyframes kissFaceMouth {
-  0% { transform: scale(0.88); }
-  35% { transform: scale(1.14) rotate(-5deg); }
-  60% { transform: scale(1.04) rotate(4deg); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.88);
+  }
+
+  35% {
+    transform: scale(1.14) rotate(-5deg);
+  }
+
+  60% {
+    transform: scale(1.04) rotate(4deg);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes kissHeartFly {
@@ -1255,14 +1312,17 @@ body {
     opacity: 0;
     transform: translate(0, 0) scale(0.3);
   }
+
   26% {
     opacity: 1;
     transform: translate(18px, -22px) scale(1.25);
   }
+
   70% {
     opacity: 1;
     transform: translate(42px, -65px) scale(1.45) rotate(18deg);
   }
+
   100% {
     opacity: 0;
     transform: translate(60px, -115px) scale(1.7) rotate(32deg);
@@ -2312,6 +2372,7 @@ body.fireworks-modal-active .theme-segment-btn {
     opacity: 0;
     transform: scale(1.02);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -2361,6 +2422,7 @@ body.fireworks-modal-active .theme-segment-btn {
     transform: scale(0.8);
     opacity: 0.6;
   }
+
   100% {
     transform: scale(1.3);
     opacity: 1;
@@ -2397,9 +2459,12 @@ body.fireworks-modal-active .theme-segment-btn {
 }
 
 @keyframes timerGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
   }
+
   50% {
     box-shadow: 0 0 22px rgba(255, 215, 0, 0.5);
   }
@@ -2496,6 +2561,7 @@ body.fireworks-modal-active .theme-segment-btn {
   0% {
     filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.75)) drop-shadow(0 0 35px rgba(255, 0, 128, 0.5));
   }
+
   100% {
     filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.98)) drop-shadow(0 0 60px rgba(0, 240, 255, 0.8));
   }
@@ -2554,10 +2620,13 @@ body.fireworks-modal-active .theme-segment-btn {
 }
 
 @keyframes tapHintFloat {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
     opacity: 0.75;
   }
+
   50% {
     transform: translateY(-6px);
     opacity: 1;
@@ -2596,6 +2665,7 @@ body.fireworks-modal-active .theme-segment-btn {
     opacity: 0;
     transform: scale(0.65) translateY(40px);
   }
+
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -2626,6 +2696,7 @@ body.fireworks-modal-active .theme-segment-btn {
   0% {
     transform: scale(0.95);
   }
+
   100% {
     transform: scale(1.1);
   }
@@ -2730,26 +2801,32 @@ body.fireworks-modal-active .theme-segment-btn {
     padding: 0.65rem 0.85rem;
     gap: 0.4rem;
   }
+
   .fireworks-show-badge {
     display: none;
   }
+
   .fireworks-timer-pill {
     font-size: 0.82rem;
     padding: 0.28rem 0.65rem;
   }
+
   .fireworks-top-controls {
     gap: 0.4rem;
   }
+
   .fireworks-icon-btn,
   .fireworks-close-btn {
     width: 34px;
     height: 34px;
     font-size: 0.95rem;
   }
+
   .fireworks-skip-btn {
     font-size: 0.76rem;
     padding: 0.32rem 0.65rem;
   }
+
   .fireworks-tap-hint {
     font-size: 0.75rem;
     padding: 0.35rem 0.85rem;
@@ -2757,10 +2834,12 @@ body.fireworks-modal-active .theme-segment-btn {
     max-width: 90%;
     text-align: center;
   }
+
   .fireworks-reveal-card {
     padding: 1.75rem 1.25rem;
     border-radius: 22px;
   }
+
   .fireworks-reveal-icon {
     font-size: 3.2rem;
   }
@@ -4036,6 +4115,7 @@ body.fireworks-modal-active .theme-segment-btn {
     padding: 3px;
     gap: 2px;
   }
+
   .theme-segment-btn {
     padding: 0.36rem 0.68rem;
     font-size: 0.72rem;
@@ -4529,9 +4609,12 @@ body.fireworks-modal-active .theme-segment-btn {
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), var(--gold-glow);
   }
+
   50% {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), var(--gold-glow), 0 0 25px var(--rose);
   }
@@ -5601,6 +5684,7 @@ body.fireworks-modal-active .theme-segment-btn {
     opacity: 0.85;
     filter: drop-shadow(0 0 6px #ffd700);
   }
+
   100% {
     transform: scale(1.18);
     opacity: 1;
@@ -5637,23 +5721,43 @@ body.fireworks-modal-active .theme-segment-btn {
 }
 
 @keyframes sliceCutFrontRight {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(32px, 22px); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(32px, 22px);
+  }
 }
 
 @keyframes sliceCutFrontLeft {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-32px, 22px); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-32px, 22px);
+  }
 }
 
 @keyframes sliceCutBackRight {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(26px, -18px); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(26px, -18px);
+  }
 }
 
 @keyframes sliceCutBackLeft {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-26px, -18px); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-26px, -18px);
+  }
 }
 
 .slice-cake-btn {
@@ -5704,12 +5808,15 @@ body.fireworks-modal-active .theme-segment-btn {
     transform: translate(35px, -45px) rotate(45deg);
     opacity: 0;
   }
+
   25% {
     opacity: 1;
   }
+
   75% {
     transform: translate(-25px, 35px) rotate(-15deg);
   }
+
   100% {
     transform: translate(-35px, 55px) rotate(0deg);
     opacity: 0;
@@ -5971,4 +6078,550 @@ body.fireworks-modal-active .theme-segment-btn {
 .love-clock-note .note-hint {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* =========================================================
+   SPECIAL ROMANTIC SCRATCH VOUCHERS SECTION
+========================================================= */
+.vouchers-section {
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(1rem, 4vw, 2.5rem);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(35, 8, 30, 0.95) 50%, var(--bg-dark) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.vouchers-container {
+  max-width: 1160px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.vouchers-header {
+  text-align: center;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.vouchers-badge {
+  display: inline-block;
+  font-size: clamp(0.78rem, 2.2vw, 0.88rem);
+  font-weight: 800;
+  color: #ffd700;
+  background: rgba(255, 215, 0, 0.16);
+  border: 1.5px solid rgba(255, 215, 0, 0.5);
+  border-radius: 50px;
+  padding: 6px 20px;
+  letter-spacing: 0.8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 18px rgba(255, 215, 0, 0.2);
+}
+
+.vouchers-intro {
+  font-size: clamp(0.98rem, 2.8vw, 1.18rem);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 640px;
+  margin: 1rem auto 1.4rem;
+  line-height: 1.65;
+}
+
+.vouchers-counter-pill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 0, 128, 0.18);
+  border: 1.5px solid rgba(255, 107, 157, 0.45);
+  color: #ff80b3;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 6px 18px;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+}
+
+/* Vouchers Grid */
+.vouchers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: clamp(1.4rem, 3.5vw, 2.2rem);
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 480px) {
+  .vouchers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Individual Voucher Card (Ticket Aesthetic) */
+.voucher-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(38, 10, 32, 0.96) 0%, rgba(20, 5, 22, 0.98) 100%);
+  border: 2px solid rgba(255, 107, 157, 0.35);
+  border-radius: 24px;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 0, 128, 0.12);
+  min-height: 410px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  overflow: hidden;
+}
+
+.voucher-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 215, 0, 0.6);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.2);
+}
+
+/* Special Reverse Card (Voucher 5 for Mehboob) */
+.voucher-card-reverse {
+  background: linear-gradient(145deg, rgba(46, 22, 8, 0.97) 0%, rgba(25, 12, 4, 0.98) 100%);
+  border: 2.5px solid #ffd700;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.voucher-card-reverse:hover {
+  border-color: #ffffff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.45);
+}
+
+/* Ticket Side Notches */
+.voucher-notch {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0d0117;
+  top: 135px;
+  z-index: 5;
+}
+
+.voucher-notch-left {
+  left: -14px;
+  box-shadow: inset -4px 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.voucher-notch-right {
+  right: -14px;
+  box-shadow: inset 4px 0 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Secret Voucher Content */
+.voucher-inner {
+  padding: 1.8rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.voucher-stub {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.voucher-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.voucher-badge {
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 4px 12px;
+  border-radius: 50px;
+  background: rgba(255, 107, 157, 0.18);
+  color: #ff80b3;
+  border: 1px solid rgba(255, 107, 157, 0.4);
+}
+
+.voucher-card-reverse .voucher-badge {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.55);
+}
+
+.voucher-code {
+  font-family: monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+}
+
+.voucher-title {
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: clamp(1.2rem, 3.2vw, 1.45rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.voucher-card-reverse .voucher-title {
+  color: #ffd700;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.voucher-subtitle {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.05rem, 2.8vw, 1.25rem);
+  color: #ffd700;
+  margin: 0;
+  font-weight: 700;
+}
+
+.voucher-card-reverse .voucher-subtitle {
+  color: #ff9e80;
+}
+
+/* Dashed Separation Line */
+.voucher-divider-dashed {
+  border-top: 1.5px dashed rgba(255, 255, 255, 0.22);
+  margin: 1.2rem -1.6rem;
+  position: relative;
+}
+
+/* Voucher Body Details */
+.voucher-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.voucher-desc {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+}
+
+.voucher-perks {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.voucher-perk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+}
+
+.perk-bullet {
+  color: #ff4081;
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+.voucher-card-reverse .perk-bullet {
+  color: #ffd700;
+}
+
+.voucher-validity {
+  margin-top: auto;
+  margin-bottom: 1.2rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 107, 157, 0.25);
+  border-radius: 12px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.voucher-card-reverse .voucher-validity {
+  border-color: rgba(255, 215, 0, 0.3);
+  color: #ffe082;
+}
+
+/* Verification Seal & Footer Actions */
+.voucher-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.voucher-seal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 0.7rem;
+  letter-spacing: 0.6px;
+}
+
+.seal-text {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.64rem;
+}
+
+.seal-name {
+  color: #ffd700;
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.voucher-redeem-btn {
+  background: linear-gradient(135deg, #ff0080 0%, #ff4081 50%, #9c27b0 100%);
+  border: 1.5px solid #ffd700;
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(255, 0, 128, 0.45);
+  transition: all 0.25s ease;
+}
+
+.voucher-redeem-btn:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 0, 128, 0.65), 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.voucher-redeemed-tag {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1.5px solid #4caf50;
+  color: #81c784;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Canvas Scratch Foil Layer */
+.voucher-foil-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  overflow: hidden;
+  z-index: 10;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.voucher-scratch-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.voucher-foil-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 12;
+}
+
+.voucher-quick-scratch-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.voucher-quick-scratch-btn:hover {
+  background: #ff0080;
+  border-color: #ffd700;
+  transform: scale(1.06);
+}
+
+/* Section Global Action Bar */
+.vouchers-action-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.vouchers-global-reveal-btn {
+  background: linear-gradient(135deg, #ffd700 0%, #ff9e80 50%, #ff4081 100%);
+  border: 2px solid #ffffff;
+  color: #1a051d;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.vouchers-global-reveal-btn:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 12px 35px rgba(255, 215, 0, 0.6);
+}
+
+.vouchers-reset-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(10px);
+}
+
+.vouchers-reset-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #ffd700;
+  color: #ffd700;
+  transform: scale(1.04);
+}
+
+/* =========================================================
+   LIGHT THEME OVERRIDES FOR ROMANTIC VOUCHERS
+========================================================= */
+[data-theme="light"] .vouchers-section {
+  background: linear-gradient(180deg, #f7e8ef 0%, #fff7fb 50%, #eee0e6 100%);
+}
+
+[data-theme="light"] .vouchers-badge {
+  background: #fff0f5 !important;
+  color: #801235 !important;
+  border-color: rgba(184, 40, 88, 0.3) !important;
+}
+
+[data-theme="light"] .vouchers-intro {
+  color: #2b0e25 !important;
+}
+
+[data-theme="light"] .vouchers-counter-pill {
+  background: #ffffff !important;
+  color: #801235 !important;
+  border-color: rgba(184, 40, 88, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(130, 30, 70, 0.08) !important;
+}
+
+[data-theme="light"] .voucher-card {
+  background: #ffffff !important;
+  border: 2px solid rgba(184, 40, 88, 0.24) !important;
+  box-shadow: 0 16px 45px rgba(130, 30, 70, 0.1) !important;
+}
+
+[data-theme="light"] .voucher-card:hover {
+  border-color: #b82858 !important;
+  box-shadow: 0 20px 50px rgba(184, 40, 88, 0.18) !important;
+}
+
+[data-theme="light"] .voucher-card-reverse {
+  background: #fffdf7 !important;
+  border: 2.5px solid #b38222 !important;
+  box-shadow: 0 18px 50px rgba(179, 130, 34, 0.16) !important;
+}
+
+[data-theme="light"] .voucher-notch {
+  background: #f7e8ef !important;
+  box-shadow: inset 0 0 6px rgba(184, 40, 88, 0.2) !important;
+}
+
+[data-theme="light"] .voucher-title {
+  color: #1c0819 !important;
+}
+
+[data-theme="light"] .voucher-card-reverse .voucher-title {
+  color: #7a5005 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .voucher-subtitle {
+  color: #801235 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .voucher-card-reverse .voucher-subtitle {
+  color: #9c4c06 !important;
+}
+
+[data-theme="light"] .voucher-desc {
+  color: #2b0e25 !important;
+}
+
+[data-theme="light"] .voucher-divider-dashed {
+  border-color: rgba(184, 40, 88, 0.25) !important;
+}
+
+[data-theme="light"] .voucher-perk-item {
+  color: #240a1d !important;
+}
+
+[data-theme="light"] .perk-bullet {
+  color: #801235 !important;
+}
+
+[data-theme="light"] .voucher-card-reverse .perk-bullet {
+  color: #b38222 !important;
+}
+
+[data-theme="light"] .voucher-validity {
+  background: #fff0f5 !important;
+  border-color: rgba(184, 40, 88, 0.25) !important;
+  color: #801235 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .voucher-card-reverse .voucher-validity {
+  background: #fff9e6 !important;
+  border-color: rgba(179, 130, 34, 0.3) !important;
+  color: #7a5005 !important;
+}
+
+[data-theme="light"] .voucher-footer {
+  border-top-color: rgba(184, 40, 88, 0.18) !important;
+}
+
+[data-theme="light"] .seal-text {
+  color: #4a1432 !important;
+}
+
+[data-theme="light"] .seal-name {
+  color: #801235 !important;
+}
+
+[data-theme="light"] .voucher-redeemed-tag {
+  background: #e8f5e9 !important;
+  border-color: #4caf50 !important;
+  color: #2e7d32 !important;
+}
+
+[data-theme="light"] .vouchers-reset-btn {
+  background: #ffffff !important;
+  border-color: rgba(184, 40, 88, 0.3) !important;
+  color: #801235 !important;
 }

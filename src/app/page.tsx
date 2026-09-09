@@ -4042,6 +4042,519 @@ function LoveClockSection() {
   );
 }
 
+// ─── Special Romantic Scratch Vouchers Section ───
+interface VoucherData {
+  id: number;
+  couponNo: string;
+  category: string;
+  badgeEmoji: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  perks: string[];
+  validity: string;
+  isSpecialReverse?: boolean;
+}
+
+const VOUCHERS_LIST: VoucherData[] = [
+  {
+    id: 1,
+    couponNo: "LM-ROYAL-001",
+    category: "ROYAL PRIVILEGE",
+    badgeEmoji: "👑",
+    title: "24 Hours of Absolute Obedience",
+    subtitle: "Your Wish Is My Absolute Command",
+    description:
+      "For one full continuous 24-hour day, Mehboob will agree to everything you say and fulfill all your wishes with a bright smile. No arguments, zero counter-opinions—whatever you say goes!",
+    perks: [
+      "100% Guaranteed Agreement on Demand",
+      "Zero Arguments or Counter-Opinions Allowed",
+      "Full Royal Princess Treatment All Day",
+    ],
+    validity: "Valid for 24 Full Hours • Lifetime Redeemable",
+  },
+  {
+    id: 2,
+    couponNo: "LM-LUXE-002",
+    category: "LUXURY WELLNESS",
+    badgeEmoji: "💆‍♀️",
+    title: "VIP Relaxing Head & Shoulder Massage in RC",
+    subtitle: "5-Star Royal Pampering & Care",
+    description:
+      "An ultra-relaxing, uninterrupted 45-minute premium head, neck & shoulder massage in RC with peaceful aromatherapy, soothing background music, and ultimate serenity.",
+    perks: [
+      "Complete Tension & Stress Relief",
+      "Lavender Aromatherapy Included",
+      "Complimentary Warm Cup of Chai or Coffee",
+    ],
+    validity: "Redeemable Anytime on Demand • Unlimited Peace",
+  },
+  {
+    id: 3,
+    couponNo: "LM-CUDDLE-003",
+    category: "SWEET AFFECTION",
+    badgeEmoji: "🫂",
+    title: "Unlimited Warm Hugs & Kisses Pass",
+    subtitle: "Endless Cuddles On Demand",
+    description:
+      "An all-access lifetime VIP pass granting you endless, tight warm hugs, gentle forehead kisses, and sweet comforting cuddles whenever your heart desires.",
+    perks: [
+      "Unlimited Supply of Tight Loving Hugs",
+      "Instant Forehead Kisses Anytime You Request",
+      "Available 24 Hours a Day, 365 Days a Year",
+    ],
+    validity: "Permanent & Unconditional • Never Expires",
+  },
+  {
+    id: 4,
+    couponNo: "LM-DINE-004",
+    category: "ROMANTIC DINING",
+    badgeEmoji: "🥂",
+    title: "Fine Dining Date at Your Favorite Place",
+    subtitle: "Wherever You Point, We Dine",
+    description:
+      "A dreamy romantic dinner date at your absolute favorite restaurant of your choice. All your favorite dishes, dressed up nicely, candlelight setting, and dessert completely on Mehboob!",
+    perks: [
+      "Your Free Choice of Any Restaurant",
+      "Candlelight Ambience & Romantic Table",
+      "All Your Favorite Food & Dessert on Mehboob",
+    ],
+    validity: "Redeemable Whenever You Crave It • No Limits",
+  },
+  {
+    id: 5,
+    couponNo: "LM-MEHBOOB-777",
+    category: "SPECIAL REVERSAL PASS 💫",
+    badgeEmoji: "💖",
+    title: "The Golden Reversal Pass (Mehboob's Wish)",
+    subtitle: "Reserved Exclusively for Mehboob",
+    description:
+      "A special reverse pass! When you arrive and come here to be right by my side, you must grant Mehboob one heartfelt wish of his without saying no.",
+    perks: [
+      "Activated When You Arrive By My Side",
+      "Strictly Non-Negotiable • Must Say 'Yes' 🙈",
+      "Sealed with Eternal Love & Warmth",
+    ],
+    validity: "Redeemable Upon Your Arrival • Exclusive for Mehboob",
+    isSpecialReverse: true,
+  },
+];
+
+function ScratchCardItem({
+  voucher,
+  isScratched,
+  isRedeemed,
+  onScratchComplete,
+  onRedeem,
+}: {
+  voucher: VoucherData;
+  isScratched: boolean;
+  isRedeemed: boolean;
+  onScratchComplete: (id: number) => void;
+  onRedeem: (id: number) => void;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const isScratchingRef = useRef(false);
+  const moveCounter = useRef(0);
+
+  // Initialize Canvas with metallic foil texture
+  const initFoil = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return;
+    ctx.scale(dpr, dpr);
+
+    const w = rect.width;
+    const h = rect.height;
+
+    // Metallic foil gradient
+    const grad = ctx.createLinearGradient(0, 0, w, h);
+    if (voucher.isSpecialReverse) {
+      grad.addColorStop(0, "#e5a93c");
+      grad.addColorStop(0.3, "#fff2b2");
+      grad.addColorStop(0.6, "#d48b16");
+      grad.addColorStop(0.85, "#ffd97d");
+      grad.addColorStop(1, "#b36b00");
+    } else {
+      grad.addColorStop(0, "#d88ba2");
+      grad.addColorStop(0.28, "#fbe2cf");
+      grad.addColorStop(0.55, "#e89cb2");
+      grad.addColorStop(0.82, "#fad4ba");
+      grad.addColorStop(1, "#be6d85");
+    }
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Subtle shimmer speckles
+    ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+    for (let i = 0; i < 36; i++) {
+      const sx = (Math.sin(i * 79) * 0.5 + 0.5) * w;
+      const sy = (Math.cos(i * 43) * 0.5 + 0.5) * h;
+      const sr = (i % 3) + 1.2;
+      ctx.beginPath();
+      ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Foil Badge Frame in center
+    const badgeW = Math.min(w * 0.78, 250);
+    const badgeH = 72;
+    const badgeX = (w - badgeW) / 2;
+    const badgeY = (h - badgeH) / 2;
+
+    ctx.save();
+    ctx.fillStyle = "rgba(0, 0, 0, 0.32)";
+    ctx.beginPath();
+    if (typeof ctx.roundRect === "function") {
+      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 14);
+    } else {
+      ctx.rect(badgeX, badgeY, badgeW, badgeH);
+    }
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Centered foil text
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "bold 13px 'Outfit', sans-serif";
+    ctx.fillText("✨ SCRATCH TO REVEAL ✨", w / 2, badgeY + 25);
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.font = "600 11px sans-serif";
+    ctx.fillText("Touch or Drag with Finger", w / 2, badgeY + 47);
+    ctx.restore();
+  }, [voucher.isSpecialReverse]);
+
+  useEffect(() => {
+    if (!isScratched) {
+      initFoil();
+    }
+  }, [isScratched, initFoil]);
+
+  const checkPercent = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || isScratched) return;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return;
+
+    try {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+      let clearPixels = 0;
+      const step = 32;
+      const totalSampled = Math.floor(data.length / step);
+      for (let i = 3; i < data.length; i += step) {
+        if (data[i] === 0) {
+          clearPixels++;
+        }
+      }
+      const pct = Math.min(100, Math.round((clearPixels / totalSampled) * 100));
+
+      if (pct >= 35) {
+        onScratchComplete(voucher.id);
+      }
+    } catch { }
+  }, [isScratched, onScratchComplete, voucher.id]);
+
+  const scratchAt = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const x = (clientX - rect.left) * dpr;
+    const y = (clientY - rect.top) * dpr;
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return;
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 30 * dpr, 0, Math.PI * 2);
+    ctx.fill();
+
+    moveCounter.current++;
+    if (moveCounter.current % 10 === 0) {
+      checkPercent();
+    }
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (isScratched) return;
+    isScratchingRef.current = true;
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch { }
+    scratchAt(e.clientX, e.clientY);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isScratchingRef.current || isScratched) return;
+    scratchAt(e.clientX, e.clientY);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isScratchingRef.current) return;
+    isScratchingRef.current = false;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch { }
+    checkPercent();
+  };
+
+  return (
+    <div
+      className={`voucher-card ${voucher.isSpecialReverse ? "voucher-card-reverse" : ""} ${
+        isScratched ? "voucher-revealed" : ""
+      } ${isRedeemed ? "voucher-redeemed" : ""}`}
+    >
+      {/* Notch cutouts for authentic perforated ticket look */}
+      <div className="voucher-notch voucher-notch-left" aria-hidden="true" />
+      <div className="voucher-notch voucher-notch-right" aria-hidden="true" />
+
+      {/* Secret Voucher Content (Underneath Foil) */}
+      <div className="voucher-inner">
+        {/* Header Stub */}
+        <div className="voucher-stub">
+          <div className="voucher-badge-row">
+            <span className="voucher-badge">
+              {voucher.badgeEmoji} {voucher.category}
+            </span>
+            <span className="voucher-code">{voucher.couponNo}</span>
+          </div>
+
+          <h3 className="voucher-title">{voucher.title}</h3>
+          <p className="voucher-subtitle">&ldquo;{voucher.subtitle}&rdquo;</p>
+        </div>
+
+        <div className="voucher-divider-dashed" />
+
+        {/* Voucher Body */}
+        <div className="voucher-body">
+          <p className="voucher-desc">{voucher.description}</p>
+
+          <ul className="voucher-perks">
+            {voucher.perks.map((perk, i) => (
+              <li key={i} className="voucher-perk-item">
+                <span className="perk-bullet">✦</span>
+                <span>{perk}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="voucher-validity">
+            <span className="validity-icon">⏳</span>
+            <span>{voucher.validity}</span>
+          </div>
+
+          {/* Verification Seal & Action */}
+          <div className="voucher-footer">
+            <div className="voucher-seal">
+              <span className="seal-text">SEALED BY</span>
+              <span className="seal-name">MEHBOOB 💍</span>
+            </div>
+
+            {isScratched && !isRedeemed && (
+              <button
+                type="button"
+                className="voucher-redeem-btn"
+                onClick={() => onRedeem(voucher.id)}
+              >
+                🎁 Redeem Voucher
+              </button>
+            )}
+
+            {isRedeemed && (
+              <div className="voucher-redeemed-tag">
+                <span>✅ Redeemed with Love! 💖</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Canvas Scratch Foil (Overlaid on top until scratched) */}
+      {!isScratched && (
+        <div className="voucher-foil-wrap">
+          <canvas
+            ref={canvasRef}
+            className="voucher-scratch-canvas"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+          />
+          <div className="voucher-foil-controls">
+            <button
+              type="button"
+              className="voucher-quick-scratch-btn"
+              onClick={() => onScratchComplete(voucher.id)}
+              title="Click to instantly reveal this voucher"
+            >
+              ✨ Quick Reveal
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VouchersSection() {
+  const [scratchedIds, setScratchedIds] = useState<Set<number>>(new Set());
+  const [redeemedIds, setRedeemedIds] = useState<Set<number>>(new Set());
+
+  // Load persisted vouchers
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("birthday_vouchers_scratched");
+      if (saved) {
+        setScratchedIds(new Set(JSON.parse(saved)));
+      }
+      const savedRedeemed = sessionStorage.getItem("birthday_vouchers_redeemed");
+      if (savedRedeemed) {
+        setRedeemedIds(new Set(JSON.parse(savedRedeemed)));
+      }
+    } catch { }
+  }, []);
+
+  const handleScratchComplete = useCallback(async (id: number) => {
+    playAudioCue("royalVictory");
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 45,
+        spread: 70,
+        origin: { y: 0.65 },
+        colors: ["#ffd700", "#ff0080", "#ff69b4", "#ffffff"],
+      });
+    } catch { }
+
+    setScratchedIds((prev) => {
+      const next = new Set(prev);
+      next.add(id);
+      try {
+        sessionStorage.setItem("birthday_vouchers_scratched", JSON.stringify(Array.from(next)));
+      } catch { }
+      return next;
+    });
+  }, []);
+
+  const handleRedeem = useCallback(async (id: number) => {
+    playAudioCue("success");
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 60,
+        spread: 90,
+        origin: { y: 0.6 },
+        colors: ["#ff4081", "#ffd700", "#ffffff"],
+      });
+    } catch { }
+
+    setRedeemedIds((prev) => {
+      const next = new Set(prev);
+      next.add(id);
+      try {
+        sessionStorage.setItem("birthday_vouchers_redeemed", JSON.stringify(Array.from(next)));
+      } catch { }
+      return next;
+    });
+  }, []);
+
+  const handleRevealAll = useCallback(async () => {
+    playAudioCue("royalVictory");
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 80,
+        spread: 100,
+        origin: { y: 0.5 },
+      });
+    } catch { }
+    const all = new Set(VOUCHERS_LIST.map((v) => v.id));
+    setScratchedIds(all);
+    try {
+      sessionStorage.setItem("birthday_vouchers_scratched", JSON.stringify(Array.from(all)));
+    } catch { }
+  }, []);
+
+  const handleReset = useCallback(() => {
+    playAudioCue("cardFlip");
+    setScratchedIds(new Set());
+    setRedeemedIds(new Set());
+    try {
+      sessionStorage.removeItem("birthday_vouchers_scratched");
+      sessionStorage.removeItem("birthday_vouchers_redeemed");
+    } catch { }
+  }, []);
+
+  const revealedCount = scratchedIds.size;
+
+  return (
+    <section className="vouchers-section" id="vouchers">
+      <div className="vouchers-container">
+        <div className="vouchers-header">
+          <span className="vouchers-badge">🎟️ EXCLUSIVE BIRTHDAY PRIVILEGES</span>
+          <h2 className="section-title">✨ Romantic Scratch-Off Vouchers ✨</h2>
+          <div className="section-divider" />
+          <p className="vouchers-intro">
+            Scratch the sparkling foil on each card with your finger or mouse to unveil 5 official luxury love coupons made just for you! 💖
+          </p>
+          <div className="vouchers-counter-pill">
+            <span>🎉 {revealedCount} of 5 Vouchers Unveiled</span>
+          </div>
+        </div>
+
+        <div className="vouchers-grid">
+          {VOUCHERS_LIST.map((voucher) => (
+            <ScratchCardItem
+              key={voucher.id}
+              voucher={voucher}
+              isScratched={scratchedIds.has(voucher.id)}
+              isRedeemed={redeemedIds.has(voucher.id)}
+              onScratchComplete={handleScratchComplete}
+              onRedeem={handleRedeem}
+            />
+          ))}
+        </div>
+
+        <div className="vouchers-action-bar">
+          {revealedCount < 5 && (
+            <button
+              type="button"
+              className="vouchers-global-reveal-btn"
+              onClick={handleRevealAll}
+            >
+              ✨ Reveal All Vouchers
+            </button>
+          )}
+          {revealedCount > 0 && (
+            <button
+              type="button"
+              className="vouchers-reset-btn"
+              onClick={handleReset}
+              title="Reset scratch cards to play again"
+            >
+              🔄 Scratch Again
+            </button>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Main Page ───
 export default function BirthdayPage() {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
@@ -4299,6 +4812,9 @@ export default function BirthdayPage() {
 
             {/* ─── Special Quiz for You ─── */}
             <SpecialQuizSection />
+
+            {/* ─── Romantic Scratch-Off Vouchers ─── */}
+            <VouchersSection />
 
             {/* ─── Timeline ─── */}
             <Timeline />
