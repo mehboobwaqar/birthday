@@ -1634,24 +1634,41 @@ function SpecialQuizSection() {
   // Stages:
   // 0: Q1 - Do you love me?
   // 1: Q2 (1st time) - Will you marry Mehboob Waqar?
-  // 2: Q2 (2nd time) - Kaho Na... Will you marry Mehboob Waqar forever?
-  // 3: Q2 (3rd time) - Will you marry Mehboob Waqar? (Simple & Clean)
-  // 4: Grand Congratulations Card!
+  // 2: Q2 (2nd time) - Will you marry Mehboob Waqar forever?
+  // 3: Q2 (3rd time) - Will you marry Mehboob Waqar? (Final Promise)
+  // 4: Official Nikkah Declaration Card!
   const [quizStage, setQuizStage] = useState(0);
   const [runawayOffset, setRunawayOffset] = useState({ x: 0, y: 0 });
   const [dodgeCount, setDodgeCount] = useState(0);
   const [fleeText, setFleeText] = useState("No 😜");
   const [celebrationToast, setCelebrationToast] = useState<string | null>(null);
 
+  // Safe dodging targets that NEVER overlap or hide under the Yes button!
+  const dodgeZoneIndexRef = useRef(0);
+  const safeDodgeTargets = useMemo(
+    () => [
+      { x: 0, y: -120 },     // 1. Straight up high above
+      { x: 90, y: -85 },     // 2. Up & to the Right
+      { x: 105, y: 35 },     // 3. Far to the Right
+      { x: -120, y: -125 },  // 4. High UP to the Left (Safely above the Yes button!)
+      { x: 85, y: 95 },      // 5. Down & to the Right
+      { x: 25, y: -135 },    // 6. Very high above
+      { x: -210, y: 0 },     // 7. Far Left beyond Yes button
+      { x: 95, y: -120 },    // 8. Top-right corner
+      { x: -145, y: -120 },  // 9. High above Yes button
+    ],
+    []
+  );
+
   const fleePhrasesQ1 = useMemo(
     () => [
       "No 😜",
-      "Aray kahan! 🏃‍♀️",
-      "Pakad ke dikhao! 😝",
-      "Nahi ho sakta! 🙅‍♀️",
-      "Only YES allowed! 💖",
       "Try again! 😂",
-      "Bach ke kahan jaogi! 💨",
+      "Can't catch me! 💨",
+      "Only YES allowed! 💖",
+      "Nice try! 😝",
+      "Nope, not here! 🏃‍♀️",
+      "Too slow! 💨",
     ],
     []
   );
@@ -1659,11 +1676,11 @@ function SpecialQuizSection() {
   const fleePhrasesQ2Round1 = useMemo(
     () => [
       "Not Qabool 🙅‍♀️",
-      "Aise kaise! 🏃‍♂️",
       "No chance! 😜",
-      "Sirf Qabool Hai! 💍",
-      "Bhag gaya! 💨",
-      "Koshish bekaar hai! 😂",
+      "Only Qabool allowed! 💍",
+      "Run away! 💨",
+      "Try again! 😂",
+      "Catch me first! 🏃‍♂️",
     ],
     []
   );
@@ -1671,11 +1688,11 @@ function SpecialQuizSection() {
   const fleePhrasesQ2Round2 = useMemo(
     () => [
       "Not Qabool 🙈",
-      "Pakro mujhe! 🏃‍♀️",
-      "Mehboob sirf tumhara hai! ❤️",
-      "Chalo phir koshish karo! 😜",
-      "Qabool karna hi parega! 💍",
-      "Main nahi rukne wala! 💨",
+      "Still running! 🏃‍♀️",
+      "Mehboob is yours forever! ❤️",
+      "Nice try! 😜",
+      "You have to say Qabool! 💍",
+      "Can't touch this! 💨",
     ],
     []
   );
@@ -1683,11 +1700,11 @@ function SpecialQuizSection() {
   const fleePhrasesQ2Round3 = useMemo(
     () => [
       "Not Qabool 😜",
-      "Haha ab to bilkul nahi! 🏃‍♀️",
-      "Ab to ho gaya Qabool! 💖",
-      "Pakro pakro! 💨",
       "No escape now! 💍",
-      "Pakka wada hai! 💕",
+      "Almost mine! 💖",
+      "Say Qabool! 👰‍♀️",
+      "Forever promise! 💕",
+      "Just say YES! 💍",
     ],
     []
   );
@@ -1700,19 +1717,15 @@ function SpecialQuizSection() {
       }
       playAudioCue("funnyBoing"); // 🤪 Funny cartoon boing + squeak!
 
-      // Random bounded translation across full screen area
-      const vw = typeof window !== "undefined" ? window.innerWidth : 380;
-      const vh = typeof window !== "undefined" ? window.innerHeight : 600;
+      // Pick next safe zone from curated non-overlapping list
+      dodgeZoneIndexRef.current = (dodgeZoneIndexRef.current + 1) % safeDodgeTargets.length;
+      const target = safeDodgeTargets[dodgeZoneIndexRef.current];
 
-      const maxX = Math.min(Math.floor(vw * 0.38), 170);
-      const maxY = Math.min(Math.floor(vh * 0.22), 130);
+      // Add small dynamic organic jitter (±12px)
+      const jitterX = Math.floor((Math.random() * 2 - 1) * 12);
+      const jitterY = Math.floor((Math.random() * 2 - 1) * 10);
 
-      const dirX = Math.random() > 0.5 ? 1 : -1;
-      const dirY = Math.random() > 0.5 ? 1 : -1;
-      const nextX = dirX * (Math.floor(Math.random() * (maxX - 45)) + 45);
-      const nextY = dirY * (Math.floor(Math.random() * (maxY - 35)) + 35);
-
-      setRunawayOffset({ x: nextX, y: nextY });
+      setRunawayOffset({ x: target.x + jitterX, y: target.y + jitterY });
       setDodgeCount((prev) => prev + 1);
 
       let list = fleePhrasesQ1;
@@ -1722,7 +1735,7 @@ function SpecialQuizSection() {
 
       setFleeText(list[(dodgeCount + 1) % list.length]);
     },
-    [dodgeCount, quizStage, fleePhrasesQ1, fleePhrasesQ2Round1, fleePhrasesQ2Round2, fleePhrasesQ2Round3]
+    [dodgeCount, quizStage, safeDodgeTargets, fleePhrasesQ1, fleePhrasesQ2Round1, fleePhrasesQ2Round2, fleePhrasesQ2Round3]
   );
 
   const resetRunaway = (defaultText: string) => {
@@ -1796,7 +1809,7 @@ function SpecialQuizSection() {
     playAudioCue("quizYes");
     playAudioCue("kiss");
     triggerConfetti("mini");
-    setCelebrationToast("I knew it! Main bhi aapse be-inteha pyar karta hoon! 🥰✨ Ab sab se ahem sawal...");
+    setCelebrationToast("I knew it! I love you so much more, my Wifeyyy! 🥰✨ Now for the most important question...");
     setTimeout(() => {
       setCelebrationToast(null);
       setQuizStage(1);
@@ -1808,7 +1821,7 @@ function SpecialQuizSection() {
     playAudioCue("quizYes");
     playAudioCue("heartPop");
     triggerConfetti("mini");
-    setCelebrationToast("MashAllah! 1st Qabool Hai locked! 💖 Lekin rasam ke mutabiq 2 dafa aur poochna hai... 🌹");
+    setCelebrationToast("Alhamdulillah! 1st Qabool Hai locked! 💖 But tradition requires 2 more times... 🌹");
     setTimeout(() => {
       setCelebrationToast(null);
       setQuizStage(2);
@@ -1820,7 +1833,7 @@ function SpecialQuizSection() {
     playAudioCue("quizYes");
     playAudioCue("kiss");
     triggerConfetti("mini");
-    setCelebrationToast("Alhamdulillah! 2 dafa Qabool ho gaya! 🌹 Ab aakhri aur sab se pakka wada... 💍💖");
+    setCelebrationToast("MashAllah! 2 times Qabool Hai! 🌹 Now for the final, eternal promise... 💍💖");
     setTimeout(() => {
       setCelebrationToast(null);
       setQuizStage(3);
@@ -1832,7 +1845,7 @@ function SpecialQuizSection() {
     playAudioCue("quizYes");
     playAudioCue("success");
     triggerConfetti("grand");
-    setCelebrationToast("🎉 MUBARAK HO! 3 TIMES QABOOL HAI! You are officially mine forever! 💍👰‍♀️");
+    setCelebrationToast("🎉 CONGRATULATIONS! 3 TIMES QABOOL HAI! You are officially mine forever! 💍👰‍♀️");
     setTimeout(() => {
       setCelebrationToast(null);
       setQuizStage(4);
@@ -1854,7 +1867,7 @@ function SpecialQuizSection() {
           <div className="quiz-teaser-icon">💝</div>
           <h2 className="quiz-teaser-title">Special Romantic Quiz</h2>
           <p className="quiz-teaser-desc">
-            Dil ki baat jaan-ne ka waqt... A little romantic surprise quiz just for you, Wifeyyy! 🙈💍
+            Time to test your heart... A sweet romantic quiz made just for you, Wifeyyy! 🙈💍
           </p>
           <button
             type="button"
@@ -1892,9 +1905,9 @@ function SpecialQuizSection() {
           {/* Stage 0: Q1 - Do you love me? */}
           {quizStage === 0 && (
             <div className="quiz-screen-body">
-              <span className="quiz-screen-badge">💘 Question 1 of 2</span>
+              <span className="quiz-screen-badge">💘 Question 1 of 2 • Love Check</span>
               <h2 className="quiz-screen-title">Do you love me? 🥺💖</h2>
-              <p className="quiz-screen-subtitle">Sach sach batana... sooch samajh kar jawab dena! 🙈✨</p>
+              <p className="quiz-screen-subtitle">Be completely honest... No takebacks allowed! 🙈✨</p>
 
               <div className="quiz-screen-btn-arena">
                 <button type="button" className="quiz-screen-yes-btn" onClick={handleAnswerYesQ1}>
@@ -1921,13 +1934,13 @@ function SpecialQuizSection() {
           {/* Stage 1: Q2 (1st time) - Will you marry Mehboob Waqar? */}
           {quizStage === 1 && (
             <div className="quiz-screen-body">
-              <span className="quiz-screen-badge">💍 Question 2 • 1st Time (Pehli Dafa)</span>
+              <span className="quiz-screen-badge">💍 Question 2 • 1st Vow (First Time)</span>
               <h2 className="quiz-screen-title">Will you marry Mehboob Waqar? 💍👰‍♀️</h2>
-              <p className="quiz-screen-subtitle">Pehli dafa pucha ja raha hai... Dil par hath rakh kar bolo! 🌹</p>
+              <p className="quiz-screen-subtitle">Asking for the first time... Answer straight from your heart! 🌹</p>
 
               <div className="quiz-screen-btn-arena">
                 <button type="button" className="quiz-screen-yes-btn" onClick={handleQaboolRound1}>
-                  Qabool Hai! 💖
+                  Qabool Hai! 💖 (I Do!)
                 </button>
 
                 <button
@@ -1951,13 +1964,13 @@ function SpecialQuizSection() {
           {quizStage === 2 && (
             <div className="quiz-screen-body">
               <div className="quiz-rose-garland">🌹 🌸 💐 🌹 🌸 💐 🌹</div>
-              <span className="quiz-screen-badge rose-badge">🌹 Question 2 • 2nd Time (Doosri Dafa)</span>
-              <h2 className="quiz-screen-title rose-title">Kaho Na... Will you marry Mehboob Waqar forever? 🌹💍</h2>
-              <p className="quiz-screen-subtitle">Doosri dafa qabool karwaya ja raha hai... Sharmao mat, zor se bolo! 🙈❤️</p>
+              <span className="quiz-screen-badge rose-badge">🌹 Question 2 • 2nd Vow (Second Time)</span>
+              <h2 className="quiz-screen-title rose-title">Will you marry Mehboob Waqar forever? 🌹💍</h2>
+              <p className="quiz-screen-subtitle">Asking for the second time... Say it louder with all your love! 🙈❤️</p>
 
               <div className="quiz-screen-btn-arena">
                 <button type="button" className="quiz-screen-yes-btn rose-btn" onClick={handleQaboolRound2}>
-                  Qabool Hai, Dil Se! 💕🌹
+                  With All My Heart, Qabool Hai! 💕🌹
                 </button>
 
                 <button
@@ -1980,13 +1993,13 @@ function SpecialQuizSection() {
           {/* Stage 3: Q2 (3rd time) - Simple, Clean & Romantic UI */}
           {quizStage === 3 && (
             <div className="quiz-screen-body">
-              <span className="quiz-screen-badge">💍 3rd Time • Final Qabool Hai</span>
+              <span className="quiz-screen-badge">💍 Question 2 • 3rd Vow (Final Promise)</span>
               <h2 className="quiz-screen-title">Will you marry Mehboob Waqar? 💍❤️</h2>
-              <p className="quiz-screen-subtitle">Teesri aur aakhri dafa... Hamesha hamesha ke liye, dil se bolo! 🥺✨</p>
+              <p className="quiz-screen-subtitle">The 3rd and final vow... Forever and for all eternity! 🥺✨</p>
 
               <div className="quiz-screen-btn-arena">
                 <button type="button" className="quiz-screen-yes-btn" onClick={handleQaboolRound3}>
-                  Hamesha Qabool Hai! 💍💖
+                  Forever &amp; Always, Qabool Hai! 💍💖
                 </button>
 
                 <button
@@ -2006,50 +2019,81 @@ function SpecialQuizSection() {
             </div>
           )}
 
-          {/* Stage 4: Grand Congratulations Card */}
+          {/* Stage 4: Luxury Nikkah / Wedding Declaration Card */}
           {quizStage === 4 && (
-            <div className="quiz-screen-congrats-card">
-              <div className="congrats-sparkles">✨ 💍 👰‍♀️ 🤵‍♂️ 👑 ✨</div>
-              <div style={{ textAlign: "center" }}>
-                <span className="quiz-screen-badge" style={{ borderColor: "rgba(255, 215, 0, 0.6)" }}>
-                  💍 OFFICIALLY &amp; FOREVER ACCEPTED 💍
-                </span>
-              </div>
-              <h3 className="congrats-header">🎉 CONGRATULATIONS MRS. MEHBOOB WAQAR! 🎉</h3>
-              <div className="section-divider" style={{ margin: "1rem auto 1.5rem" }} />
+            <div className="nikkah-card">
+              <div className="nikkah-inner-frame">
+                <div className="nikkah-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                
+                <div className="nikkah-badge">💍 OFFICIAL NIKKAH DECLARATION 💍</div>
+                
+                <h3 className="nikkah-title">Certificate of Eternal Love</h3>
+                <p className="nikkah-subtitle">United in Heart, Soul &amp; Destiny</p>
 
-              <div className="congrats-letter">
-                <p className="congrats-salutation">To My Dearest Wifey &amp; Forever Soulmate,</p>
+                <div className="nikkah-divider" />
 
-                <p>
-                  <strong>You said YES!</strong> You said <em>Qabool Hai</em> three times with all your heart, and in this universe and every universe after, you are mine and I am yours forever and ever! 💍👰‍♀️💖
+                {/* The Royal Couple Names */}
+                <div className="nikkah-couple-box">
+                  <div className="nikkah-person groom">
+                    <span className="nikkah-role">The Groom</span>
+                    <span className="nikkah-name">Mehboob Waqar</span>
+                    <span className="nikkah-tag">Forever Yours 🤵‍♂️❤️</span>
+                  </div>
+
+                  <div className="nikkah-heart-badge">
+                    <span className="nikkah-rings">💍 💕 💍</span>
+                    <span className="nikkah-qabool-stamp">3x QABOOL HAI</span>
+                  </div>
+
+                  <div className="nikkah-person bride">
+                    <span className="nikkah-role">The Beautiful Bride</span>
+                    <span className="nikkah-name">Laiba Mehboob</span>
+                    <span className="nikkah-tag">My Queen 👰‍♀️💖</span>
+                  </div>
+                </div>
+
+                <div className="nikkah-divider" />
+
+                {/* Short, Sweet & Elegant Vow Text */}
+                <p className="nikkah-short-vow">
+                  With <strong>three sacred declarations of &quot;Qabool Hai&quot;</strong>, our hearts are eternally entwined. 
+                  In this life, in every prayer, and across every lifetime, you are my forever soulmate, my peace, and my greatest blessing.
                 </p>
 
-                <p>
-                  Thank you for choosing me, for trusting me, and for making my world so unimaginably beautiful. Marrying you and spending every sunrise, every quiet evening, and every heartbeat by your side is the greatest blessing, the sweetest dream, and the truest honor of my entire life.
-                </p>
+                <div className="nikkah-birthday-tag">
+                  🎂 Celebrated on Your 23rd Birthday • September 9 ✨
+                </div>
 
-                <p>
-                  I promise to hold your hand through every high and low, to protect that radiant smile that captured my soul from the very first day, and to cherish you endlessly until my very last breath. You are my home, my peace, my queen, and my forever lifeline.
-                </p>
+                {/* Signatures & Seal */}
+                <div className="nikkah-signatures">
+                  <div className="nikkah-sig-col">
+                    <span className="nikkah-sig-script">Mehboob Waqar</span>
+                    <span className="nikkah-sig-label">Groom&apos;s Signature ✍️</span>
+                  </div>
 
-                <p className="congrats-birthday-wish">
-                  Happy 23rd Birthday to the love of my life, my breathtaking Wifey! Here’s to us, our eternal bond, and a lifetime of boundless love, happiness, and laughter together! 🥂💖✨
-                </p>
+                  <div className="nikkah-seal">
+                    <div className="nikkah-seal-circle">
+                      <span>SEALED</span>
+                      <span className="seal-heart">❤️</span>
+                      <span>FOREVER</span>
+                    </div>
+                  </div>
 
-                <p className="congrats-signature">
-                  Forever &amp; Always Yours,<br />
-                  <span className="congrats-name">Mehboob Waqar ❤️👑</span>
-                </p>
-              </div>
+                  <div className="nikkah-sig-col">
+                    <span className="nikkah-sig-script">Laiba Mehboob</span>
+                    <span className="nikkah-sig-label">Bride&apos;s Signature ✍️</span>
+                  </div>
+                </div>
 
-              <div className="congrats-actions">
-                <button type="button" className="quiz-back-btn" onClick={handleCloseQuiz}>
-                  🏠 Wapis Main Screen Par Jayein
-                </button>
-                <button type="button" className="quiz-replay-btn" onClick={handleRestartQuiz}>
-                  🔄 Play Quiz Again
-                </button>
+                {/* Actions */}
+                <div className="congrats-actions" style={{ marginTop: "2rem" }}>
+                  <button type="button" className="quiz-back-btn" onClick={handleCloseQuiz}>
+                    🏠 Go to Main Screen
+                  </button>
+                  <button type="button" className="quiz-replay-btn" onClick={handleRestartQuiz}>
+                    🔄 Play Quiz Again
+                  </button>
+                </div>
               </div>
             </div>
           )}
