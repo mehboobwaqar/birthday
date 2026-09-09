@@ -815,12 +815,11 @@ function QualitiesSection() {
   );
 }
 
-// ─── Realistic 3D Birthday Cake Section ───
+// ─── Realistic 3D Birthday Cake Section with 4 Proper Slices ───
 function CakeSection() {
   const [candlesBlown, setCandlesBlown] = useState(false);
   const [cakeSliced, setCakeSliced] = useState(false);
   const [isSlicing, setIsSlicing] = useState(false);
-  const [bitesFed, setBitesFed] = useState(1);
   const age = getAge();
 
   const handleBlowCandles = useCallback(() => {
@@ -855,9 +854,10 @@ function CakeSection() {
 
     import("canvas-confetti")
       .then((mod) => {
-        mod.default({
-          particleCount: 65,
-          spread: 75,
+        const confetti = mod.default;
+        confetti({
+          particleCount: 80,
+          spread: 85,
           origin: { y: 0.58, x: 0.5 },
           colors: ["#ffd700", "#ff0080", "#ff4081", "#ffffff", "#ce93d8"],
         });
@@ -870,63 +870,21 @@ function CakeSection() {
     }, 550);
   }, [isSlicing]);
 
-  const handleFeedBite = useCallback(() => {
-    playAudioCue("heartPop");
-    setBitesFed((prev) => prev + 1);
-
-    import("canvas-confetti")
-      .then((mod) => {
-        mod.default({
-          particleCount: 35,
-          spread: 60,
-          origin: { y: 0.62, x: 0.5 },
-          colors: ["#ff0080", "#ff4081", "#ffd700"],
-        });
-      })
-      .catch(() => {});
-  }, []);
-
   const handleRelight = useCallback(() => {
     playAudioCue("twinkle");
     setCandlesBlown(false);
     setCakeSliced(false);
-    setBitesFed(1);
   }, []);
-
-  // Strawberry positions on top of the cake
-  const strawberries = [
-    { x: 140, y: 152, s: 0.9 },
-    { x: 170, y: 142, s: 1.0 },
-    { x: 205, y: 140, s: 1.05 },
-    { x: 240, y: 148, s: 0.95 },
-    { x: 190, y: 165, s: 1.1 },
-  ];
-
-  // Cream swirls along top ellipse perimeter
-  const creamSwirls = [
-    { x: 95, y: 154 },
-    { x: 118, y: 142 },
-    { x: 150, y: 132 },
-    { x: 190, y: 126 },
-    { x: 230, y: 132 },
-    { x: 262, y: 142 },
-    { x: 285, y: 154 },
-    { x: 260, y: 168 },
-    { x: 225, y: 176 },
-    { x: 190, y: 180 },
-    { x: 155, y: 176 },
-    { x: 120, y: 168 },
-  ];
 
   // Realistic candles (rendered only when !candlesBlown)
   const candleCoords = [
-    { x: 130, y: 150 },
-    { x: 152, y: 140 },
-    { x: 178, y: 134 },
-    { x: 202, y: 134 },
-    { x: 228, y: 140 },
-    { x: 250, y: 150 },
-    { x: 190, y: 158 },
+    { x: 135, y: 146 },
+    { x: 158, y: 136 },
+    { x: 182, y: 130 },
+    { x: 206, y: 130 },
+    { x: 230, y: 136 },
+    { x: 252, y: 146 },
+    { x: 194, y: 154 },
   ];
 
   return (
@@ -937,8 +895,8 @@ function CakeSection() {
       {/* Realistic 3D Birthday Cake Stage */}
       <div
         className="realistic-cake-stage"
-        onClick={!candlesBlown ? handleBlowCandles : !cakeSliced ? handleSliceCake : handleFeedBite}
-        title={!candlesBlown ? "Click to Blow Candles!" : !cakeSliced ? "Click to Slice Cake!" : "Click to Feed Wifey!"}
+        onClick={!candlesBlown ? handleBlowCandles : !cakeSliced ? handleSliceCake : undefined}
+        title={!candlesBlown ? "Click to Blow Candles!" : !cakeSliced ? "Click to Slice Cake!" : "Cake Sliced!"}
       >
         <svg className="realistic-cake-svg" viewBox="0 0 380 300">
           <defs>
@@ -1011,146 +969,198 @@ function CakeSection() {
           <ellipse cx="190" cy="252" rx="150" ry="32" fill="url(#goldStandGrad)" stroke="#ffe082" strokeWidth="2.5" />
           <ellipse cx="190" cy="248" rx="142" ry="28" fill="#2a0535" stroke="rgba(255,215,0,0.4)" strokeWidth="1.5" />
 
-          {/* 3. Main Cake Cylinder Body */}
-          {!cakeSliced ? (
-            // Complete round cake
-            <g className="cake-full-body">
-              {/* Cylinder wall */}
+          {/* 3. 4 PROPER CAKE SLICES (Quadrants that slide apart when sliced) */}
+          <g className="cake-slices-4-wrapper">
+            {/* ─── SLICE 1: TOP-LEFT QUADRANT ─── */}
+            <g
+              className="cake-slice-quadrant"
+              style={{
+                transform: cakeSliced ? "translate(-18px, -12px)" : "translate(0, 0)",
+                transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              }}
+            >
+              {/* Back wall of Top-Left Slice */}
               <path
-                d="M 80 155 C 80 198, 300 198, 300 155 L 300 230 C 300 273, 80 273, 80 230 Z"
+                d="M 80 155 A 110 40 0 0 1 190 115 L 190 190 A 110 40 0 0 0 80 230 Z"
+                fill="url(#cakeSideRealGrad)"
+                opacity="0.88"
+              />
+              {/* Exposed cut wall along horizontal cut (facing viewer) */}
+              {cakeSliced && (
+                <g>
+                  <path d="M 80 155 L 190 155 L 190 230 L 80 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
+                  <line x1="80" y1="180" x2="190" y2="180" stroke="#fffde7" strokeWidth="3" />
+                  <line x1="80" y1="195" x2="190" y2="195" stroke="#d81b60" strokeWidth="3.5" />
+                  <line x1="80" y1="210" x2="190" y2="210" stroke="#fffde7" strokeWidth="3" />
+                </g>
+              )}
+              {/* Top frosted surface quadrant */}
+              <path
+                d="M 190 155 L 80 155 A 110 40 0 0 1 190 115 Z"
+                fill="url(#cakeTopRealGrad)"
+                stroke={cakeSliced ? "#ffd700" : "none"}
+                strokeWidth={cakeSliced ? "1.5" : "0"}
+              />
+              {/* Cream swirls on this quadrant */}
+              <circle cx="118" cy="142" r="7.5" fill="url(#creamRosetteGrad)" />
+              <circle cx="150" cy="132" r="7.5" fill="url(#creamRosetteGrad)" />
+              {/* Strawberry */}
+              <g transform="translate(142, 142) scale(0.95)">
+                <path d="M 0 -7 C 8 -7, 10 3, 0 12 C -10 3, -8 -7, 0 -7 Z" fill="url(#strawberryGrad)" />
+                <path d="M 0 -7 L -3 -11 L -1 -7 L 3 -11 L 1 -7 Z" fill="#4caf50" />
+              </g>
+            </g>
+
+            {/* ─── SLICE 2: TOP-RIGHT QUADRANT ─── */}
+            <g
+              className="cake-slice-quadrant"
+              style={{
+                transform: cakeSliced ? "translate(18px, -12px)" : "translate(0, 0)",
+                transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              }}
+            >
+              {/* Back wall of Top-Right Slice */}
+              <path
+                d="M 190 115 A 110 40 0 0 1 300 155 L 300 230 A 110 40 0 0 0 190 190 Z"
+                fill="url(#cakeSideRealGrad)"
+                opacity="0.88"
+              />
+              {/* Exposed cut wall along horizontal cut (facing viewer) */}
+              {cakeSliced && (
+                <g>
+                  <path d="M 190 155 L 300 155 L 300 230 L 190 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
+                  <line x1="190" y1="180" x2="300" y2="180" stroke="#fffde7" strokeWidth="3" />
+                  <line x1="190" y1="195" x2="300" y2="195" stroke="#d81b60" strokeWidth="3.5" />
+                  <line x1="190" y1="210" x2="300" y2="210" stroke="#fffde7" strokeWidth="3" />
+                </g>
+              )}
+              {/* Top frosted surface quadrant */}
+              <path
+                d="M 190 155 L 190 115 A 110 40 0 0 1 300 155 Z"
+                fill="url(#cakeTopRealGrad)"
+                stroke={cakeSliced ? "#ffd700" : "none"}
+                strokeWidth={cakeSliced ? "1.5" : "0"}
+              />
+              {/* Cream swirls on this quadrant */}
+              <circle cx="230" cy="132" r="7.5" fill="url(#creamRosetteGrad)" />
+              <circle cx="262" cy="142" r="7.5" fill="url(#creamRosetteGrad)" />
+              {/* Strawberry */}
+              <g transform="translate(232, 142) scale(0.95)">
+                <path d="M 0 -7 C 8 -7, 10 3, 0 12 C -10 3, -8 -7, 0 -7 Z" fill="url(#strawberryGrad)" />
+                <path d="M 0 -7 L -3 -11 L -1 -7 L 3 -11 L 1 -7 Z" fill="#4caf50" />
+              </g>
+            </g>
+
+            {/* ─── SLICE 4: BOTTOM-LEFT QUADRANT ─── */}
+            <g
+              className="cake-slice-quadrant"
+              style={{
+                transform: cakeSliced ? "translate(-18px, 14px)" : "translate(0, 0)",
+                transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              }}
+            >
+              {/* Front curved wall */}
+              <path
+                d="M 80 155 A 110 40 0 0 0 190 195 L 190 270 C 130 270, 80 258, 80 230 Z"
                 fill="url(#cakeSideRealGrad)"
               />
-
               {/* Bottom biscuit crust */}
               <path
-                d="M 80 216 C 80 258, 300 258, 300 216 L 300 230 C 300 273, 80 273, 80 230 Z"
+                d="M 80 218 C 80 245, 130 255, 190 255 L 190 270 C 130 270, 80 258, 80 230 Z"
                 fill="url(#biscuitBaseGrad)"
-                opacity="0.95"
               />
-
               {/* Whipped cream divider line */}
+              <path d="M 82 195 C 82 225, 135 236, 190 236" fill="none" stroke="#fffde7" strokeWidth="3.5" strokeDasharray="6 3" />
+              {/* Dripping glaze */}
               <path
-                d="M 82 195 C 82 236, 298 236, 298 195"
-                fill="none"
-                stroke="#fffde7"
-                strokeWidth="4"
-                strokeDasharray="8 4"
-                opacity="0.85"
-              />
-
-              {/* Luscious dripping strawberry ganache glaze */}
-              <path
-                d="M 80 155 C 95 178, 105 186, 115 172 C 128 198, 138 205, 148 174 C 160 210, 172 216, 185 170 C 198 204, 210 210, 222 172 C 235 194, 245 200, 255 170 C 268 190, 280 184, 300 155 C 300 145, 80 145, 80 155 Z"
+                d="M 80 155 C 95 178, 105 186, 115 172 C 128 198, 138 205, 148 174 C 160 210, 172 216, 185 170 L 190 195 L 80 155 Z"
                 fill="url(#dripGlazeGrad)"
-                filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))"
               />
-
-              {/* Top frosted surface */}
-              <ellipse cx="190" cy="155" rx="110" ry="40" fill="url(#cakeTopRealGrad)" />
-
-              {/* Glossy top specular highlight */}
-              <ellipse cx="160" cy="148" rx="60" ry="18" fill="rgba(255,255,255,0.25)" transform="rotate(-6, 160, 148)" />
-
-              {/* Cream swirls on top perimeter */}
-              {creamSwirls.map((swirl, idx) => (
-                <g key={`swirl-${idx}`}>
-                  <circle cx={swirl.x} cy={swirl.y} r="8" fill="url(#creamRosetteGrad)" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.2))" />
-                  <circle cx={swirl.x - 2} cy={swirl.y - 2} r="4" fill="#ffffff" opacity="0.85" />
+              {/* Exposed cut wall along vertical cut (facing right) */}
+              {cakeSliced && (
+                <g>
+                  <path d="M 190 155 L 190 195 L 190 270 L 190 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
+                  <line x1="190" y1="180" x2="190" y2="255" stroke="#fffde7" strokeWidth="3" />
+                  <line x1="190" y1="195" x2="190" y2="260" stroke="#d81b60" strokeWidth="3.5" />
                 </g>
-              ))}
-
-              {/* Fresh strawberries on top */}
-              {strawberries.map((sb, idx) => (
-                <g key={`sb-${idx}`} transform={`translate(${sb.x}, ${sb.y}) scale(${sb.s})`}>
-                  {/* Strawberry body */}
-                  <path
-                    d="M 0 -8 C 9 -8, 11 4, 0 14 C -11 4, -9 -8, 0 -8 Z"
-                    fill="url(#strawberryGrad)"
-                    filter="drop-shadow(0 3px 4px rgba(0,0,0,0.35))"
-                  />
-                  {/* Yellow seed dots */}
-                  <circle cx="-3" cy="-1" r="0.7" fill="#ffe082" />
-                  <circle cx="3" cy="-1" r="0.7" fill="#ffe082" />
-                  <circle cx="0" cy="4" r="0.7" fill="#ffe082" />
-                  <circle cx="-2" cy="7" r="0.6" fill="#ffe082" />
-                  <circle cx="2" cy="7" r="0.6" fill="#ffe082" />
-                  {/* Green star calyx leaves */}
-                  <path d="M 0 -8 L -3 -12 L -1 -8 L 3 -12 L 1 -8 L 5 -9 L 2 -6 Z" fill="#4caf50" />
-                </g>
-              ))}
-
-              {/* Golden edible sparkles */}
-              <text x="175" y="158" fontSize="11" fill="#ffd700" opacity="0.9">✨</text>
-              <text x="215" y="152" fontSize="10" fill="#ffd700" opacity="0.9">⭐</text>
-            </g>
-          ) : (
-            // Cake with slice cut out + sliced piece served on plate
-            <g className="cake-sliced-body">
-              {/* Remaining cake cylinder */}
+              )}
+              {/* Top frosted surface quadrant */}
               <path
-                d="M 80 155 C 80 198, 240 198, 240 175 L 190 155 L 240 135 C 240 135, 300 142, 300 155 L 300 230 C 300 273, 80 273, 80 230 Z"
+                d="M 190 155 L 190 195 A 110 40 0 0 1 80 155 Z"
+                fill="url(#cakeTopRealGrad)"
+                stroke={cakeSliced ? "#ffd700" : "none"}
+                strokeWidth={cakeSliced ? "1.5" : "0"}
+              />
+              {/* Cream swirls on this quadrant */}
+              <circle cx="95" cy="154" r="7.5" fill="url(#creamRosetteGrad)" />
+              <circle cx="120" cy="168" r="7.5" fill="url(#creamRosetteGrad)" />
+              <circle cx="155" cy="176" r="7.5" fill="url(#creamRosetteGrad)" />
+              {/* Strawberry */}
+              <g transform="translate(140, 162) scale(1)">
+                <path d="M 0 -7 C 8 -7, 10 3, 0 12 C -10 3, -8 -7, 0 -7 Z" fill="url(#strawberryGrad)" />
+                <path d="M 0 -7 L -3 -11 L -1 -7 L 3 -11 L 1 -7 Z" fill="#4caf50" />
+              </g>
+            </g>
+
+            {/* ─── SLICE 3: BOTTOM-RIGHT QUADRANT ─── */}
+            <g
+              className="cake-slice-quadrant"
+              style={{
+                transform: cakeSliced ? "translate(18px, 14px)" : "translate(0, 0)",
+                transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              }}
+            >
+              {/* Front curved wall */}
+              <path
+                d="M 190 195 A 110 40 0 0 0 300 155 L 300 230 C 300 258, 250 270, 190 270 Z"
                 fill="url(#cakeSideRealGrad)"
               />
-
-              {/* Cut cavity inside layers */}
+              {/* Bottom biscuit crust */}
               <path
-                d="M 190 155 L 245 178 L 245 240 L 190 220 Z"
-                fill="url(#insideSpongeGrad)"
-                stroke="#ffd700"
-                strokeWidth="1"
+                d="M 190 255 C 250 255, 300 245, 300 218 L 300 230 C 300 258, 250 270, 190 270 Z"
+                fill="url(#biscuitBaseGrad)"
               />
-              {/* Jam line inside cut */}
-              <line x1="190" y1="187" x2="245" y2="209" stroke="#d81b60" strokeWidth="4" />
-              <line x1="190" y1="172" x2="245" y2="194" stroke="#ffffff" strokeWidth="3" />
-
-              {/* Top frosted surface with cut wedge */}
+              {/* Whipped cream divider line */}
+              <path d="M 190 236 C 245 236, 298 225, 298 195" fill="none" stroke="#fffde7" strokeWidth="3.5" strokeDasharray="6 3" />
+              {/* Dripping glaze */}
               <path
-                d="M 80 155 C 80 135, 150 115, 190 115 C 230 115, 290 135, 300 155 C 290 170, 245 178, 245 178 L 190 155 L 245 135 C 245 135, 200 195, 80 155 Z"
-                fill="url(#cakeTopRealGrad)"
+                d="M 190 195 L 198 170 C 210 204, 222 210, 235 172 C 248 194, 258 200, 268 170 C 280 190, 290 184, 300 155 L 190 195 Z"
+                fill="url(#dripGlazeGrad)"
               />
-
-              {/* Remaining cream swirls */}
-              {creamSwirls.slice(0, 8).map((swirl, idx) => (
-                <g key={`swirl-cut-${idx}`}>
-                  <circle cx={swirl.x} cy={swirl.y} r="8" fill="url(#creamRosetteGrad)" />
-                  <circle cx={swirl.x - 2} cy={swirl.y - 2} r="4" fill="#ffffff" opacity="0.85" />
+              {/* Exposed cut wall along vertical cut (facing left) */}
+              {cakeSliced && (
+                <g>
+                  <path d="M 190 155 L 190 195 L 190 270 L 190 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
+                  <line x1="190" y1="180" x2="190" y2="255" stroke="#fffde7" strokeWidth="3" />
+                  <line x1="190" y1="195" x2="190" y2="260" stroke="#d81b60" strokeWidth="3.5" />
                 </g>
-              ))}
+              )}
+              {/* Top frosted surface quadrant */}
+              <path
+                d="M 190 155 L 300 155 A 110 40 0 0 1 190 195 Z"
+                fill="url(#cakeTopRealGrad)"
+                stroke={cakeSliced ? "#ffd700" : "none"}
+                strokeWidth={cakeSliced ? "1.5" : "0"}
+              />
+              {/* Cream swirls on this quadrant */}
+              <circle cx="285" cy="154" r="7.5" fill="url(#creamRosetteGrad)" />
+              <circle cx="260" cy="168" r="7.5" fill="url(#creamRosetteGrad)" />
+              <circle cx="225" cy="176" r="7.5" fill="url(#creamRosetteGrad)" />
+              {/* Strawberry */}
+              <g transform="translate(235, 162) scale(1)">
+                <path d="M 0 -7 C 8 -7, 10 3, 0 12 C -10 3, -8 -7, 0 -7 Z" fill="url(#strawberryGrad)" />
+                <path d="M 0 -7 L -3 -11 L -1 -7 L 3 -11 L 1 -7 Z" fill="#4caf50" />
+              </g>
+            </g>
+          </g>
 
-              {/* Sliced Piece Proudly Served on Dessert Plate in Front */}
-              <g className="served-slice-group">
-                {/* Golden dessert plate */}
-                <ellipse cx="275" cy="245" rx="55" ry="20" fill="url(#goldStandGrad)" stroke="#ffe082" strokeWidth="2" />
-                <ellipse cx="275" cy="243" rx="48" ry="17" fill="#fff" opacity="0.92" />
-
-                {/* Sliced 3D wedge cake piece */}
-                <path
-                  d="M 245 225 L 290 208 L 305 235 L 260 252 Z"
-                  fill="url(#cakeSideRealGrad)"
-                />
-                <path
-                  d="M 245 225 L 275 195 L 305 210 L 290 208 Z"
-                  fill="url(#cakeTopRealGrad)"
-                />
-                {/* Side cross section on slice */}
-                <path
-                  d="M 245 225 L 275 195 L 275 225 L 245 255 Z"
-                  fill="url(#insideSpongeGrad)"
-                  stroke="#ffd700"
-                  strokeWidth="0.8"
-                />
-
-                {/* Cream rosette on slice */}
-                <circle cx="275" cy="198" r="7" fill="url(#creamRosetteGrad)" />
-                {/* Fresh strawberry on slice */}
-                <path
-                  d="M 275 188 C 282 188, 284 198, 275 206 C 266 198, 268 188, 275 188 Z"
-                  fill="url(#strawberryGrad)"
-                />
-                <path d="M 275 188 L 273 184 L 275 187 L 278 184 Z" fill="#4caf50" strokeWidth="1" />
-
-                {/* Dessert Fork */}
-                <text x="312" y="252" fontSize="20" transform="rotate(-15, 312, 252)">🍴</text>
+          {/* Center Rosette Cream & Strawberry (before sliced) */}
+          {!cakeSliced && (
+            <g transform="translate(190, 155)">
+              <circle cx="0" cy="0" r="10" fill="url(#creamRosetteGrad)" />
+              <g transform="translate(0, -4) scale(1.05)">
+                <path d="M 0 -7 C 8 -7, 10 3, 0 12 C -10 3, -8 -7, 0 -7 Z" fill="url(#strawberryGrad)" />
+                <path d="M 0 -7 L -3 -11 L -1 -7 L 3 -11 L 1 -7 Z" fill="#4caf50" />
               </g>
             </g>
           )}
@@ -1227,7 +1237,7 @@ function CakeSection() {
           </button>
         )}
 
-        {/* AFTER BLOW: ONLY Slice the Cake button */}
+        {/* AFTER BLOW & BEFORE SLICE: ONLY Slice the Cake button */}
         {candlesBlown && !cakeSliced && (
           <div className="cake-actions-wrap">
             <button
@@ -1240,12 +1250,9 @@ function CakeSection() {
           </div>
         )}
 
-        {/* AFTER SLICE: Feed Another Bite & Relight buttons */}
+        {/* AFTER SLICE: Simple Relight & Cut Again button (NO feed bite button, NO dialog) */}
         {cakeSliced && (
           <div className="cake-actions-wrap">
-            <button className="feed-more-btn" onClick={handleFeedBite}>
-              Feed Another Bite! 🍓😋
-            </button>
             <button className="cake-relight-btn" onClick={handleRelight}>
               🔄 Relight Candles & Cut Again
             </button>
@@ -1253,34 +1260,11 @@ function CakeSection() {
         )}
       </div>
 
-      {/* ─── SLICED CAKE SERVING CARD ─── */}
-      {cakeSliced && (
-        <div className="cake-slice-card">
-          <div className="slice-plate">
-            <span className="slice-fork-emoji">🍴</span>
-            <span className="slice-plate-emoji">🍰</span>
-            <span className="slice-fork-emoji">✨</span>
-          </div>
-
-          <h3 className="slice-title">
-            Pehla Piece Meri Sweet Wifey Ke Liye! 🥰
-          </h3>
-
-          <p className="slice-text">
-            Pehla aur sab se meetha piece meri pyari Laiba ke liye! Aapki zindagi me hamesha meetha ras, dher sari barkat aur be-inteha pyaar bana rahe! 🎂💖
-          </p>
-
-          <div className="slice-bites-count">
-            <span className="bites-badge">Bites Fed with Love: {bitesFed} 🥄💕</span>
-          </div>
-        </div>
-      )}
-
-      <p className="cake-message" style={{ marginTop: "1.5rem" }}>
+      <p className="cake-message" style={{ marginTop: "1.2rem" }}>
         {cakeSliced
-          ? `Mmm... The sweetest cake for the most special girl! Happy ${age}th Birthday, Laiba! 🍰✨`
+          ? `Happy Birthday, my sweet potato Wifey! 🎂💖 May your life be as sweet as this cake!`
           : candlesBlown
-          ? `Candles are blown! Now click "Slice the Cake! 🔪🎂" to cut the cake! 🌟`
+          ? `Candles are blown! Now click "Slice the Cake! 🔪🎂" to slice the cake! 🌟`
           : `Close your eyes, make a wish, and blow out the candles! ✨ You deserve every dream come true! 💫`}
       </p>
     </section>
