@@ -1377,14 +1377,11 @@ function Timeline() {
       id: 28,
       emoji: "🎉",
       badge: "Happy 23rd Birthday Wifeyy! 🎂",
-      title: `Turning ${age} — Cutie Puttiteeee & That Smile I Love!`,
+      title: `Turning ${age} — Today's Grand Celebration! 🎂👑`,
       date: `September 10, ${BIRTHDAY_YEAR}`,
-      text: `23rd Birthday Mubarak ho meri jaan, meri rani, meri cutie puttiteeee! Tumhari wo muskurahat jis par main mar mita tha, hamesha aisi hi chamakti rahe! Happy Birthday Meri Wifey! 💖👑`,
-      photos: [
-        "/gallery/cutie-puttitee.jpeg",
-        "/gallery/cutiness.jpeg",
-        "/gallery/that-smile.jpeg",
-      ],
+      text: `23rd Birthday Mubarak ho meri jaan, meri rani, meri cutie puttiteeee! Aaj ka din sab se bada celebration hai... Abhi to cake katna, full party aur photoshoot baqi hai! 💖👑`,
+      isComingSoon: true,
+      photos: [] as string[],
     },
   ];
 
@@ -1479,22 +1476,35 @@ function Timeline() {
               <h3 className="timeline-title">{item.title}</h3>
               <p className="timeline-text">{item.text}</p>
 
-              <div className="timeline-photo-box">
-                {item.photos.length > 1 && (
-                  <span className="timeline-multi-badge">
-                    📸 {item.photos.length} Photos
-                  </span>
-                )}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.photos[0]}
-                  alt={item.title}
-                  loading="lazy"
-                />
-                <div className="timeline-photo-overlay">
-                  <span>🔍 Tap to view gallery ({item.photos.length} photos)</span>
+              {item.isComingSoon || item.photos.length === 0 ? (
+                <div className="timeline-photo-box timeline-coming-soon-card">
+                  <div className="coming-soon-preview-content">
+                    <div className="coming-soon-camera-bounce">📸🎂✨</div>
+                    <span className="coming-soon-badge">🎂 23rd Birthday Photoshoot</span>
+                    <p className="coming-soon-teaser">
+                      &ldquo;Pics Coming Soon... Abhi to cake katna aur cute photos lena baqi hai! 🙈💖&rdquo;
+                    </p>
+                    <span className="coming-soon-tap-hint">🔍 Tap to open surprise ✨</span>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="timeline-photo-box">
+                  {item.photos.length > 1 && (
+                    <span className="timeline-multi-badge">
+                      📸 {item.photos.length} Photos
+                    </span>
+                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.photos[0]}
+                    alt={item.title}
+                    loading="lazy"
+                  />
+                  <div className="timeline-photo-overlay">
+                    <span>🔍 Tap to view gallery ({item.photos.length} photos)</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -1516,59 +1526,75 @@ function Timeline() {
             </button>
 
             <div className="timeline-modal-body">
-              {/* Photo Area with Next/Prev Arrows if Multiple Photos */}
-              <div className="timeline-photo-slider-area">
-                {currentPhotos.length > 1 && (
-                  <button
-                    className="timeline-photo-nav timeline-photo-prev"
-                    onClick={goToPrevPhoto}
-                    aria-label="Previous photo"
-                  >
-                    ‹
-                  </button>
-                )}
-
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={currentPhotoUrl}
-                  alt={`${currentMilestone.title} - Photo ${activePhotoIdx + 1}`}
-                  className="timeline-modal-img"
-                />
-
-                {currentPhotos.length > 1 && (
-                  <button
-                    className="timeline-photo-nav timeline-photo-next"
-                    onClick={goToNextPhoto}
-                    aria-label="Next photo"
-                  >
-                    ›
-                  </button>
-                )}
-              </div>
-
-              {/* Multi-photo indicator and thumbnails */}
-              {currentPhotos.length > 1 && (
-                <>
-                  <span className="timeline-photo-counter">
-                    Photo {activePhotoIdx + 1} of {currentPhotos.length}
-                  </span>
-                  <div className="timeline-thumb-strip">
-                    {currentPhotos.map((url, idx) => (
-                      <button
-                        key={url}
-                        type="button"
-                        className={`timeline-thumb-btn ${idx === activePhotoIdx ? "active" : ""}`}
-                        onClick={() => {
-                          playAudioCue("cardFlip");
-                          setActivePhotoIdx(idx);
-                        }}
-                        title={`View photo ${idx + 1}`}
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt={`Thumbnail ${idx + 1}`} />
-                      </button>
-                    ))}
+              {currentMilestone.isComingSoon || currentPhotos.length === 0 ? (
+                <div className="timeline-coming-soon-box">
+                  <div className="coming-soon-icon">📸✨🎂</div>
+                  <h4 className="coming-soon-title">23rd Birthday Photoshoot — Coming Soon!</h4>
+                  <p className="coming-soon-text">
+                    Aree sabar meri jaan! 🙈 Abhi to 23 saal ki hui ho! Pehle cake kato, cute si birthday dress pehno aur pyari pyari poses do... Uske baad hamari 23rd Birthday ki grand pictures yahan upload hongi! 😉💖📸
+                  </p>
+                  <div className="coming-soon-status">
+                    <span className="status-dot pulse" />
+                    <span>Status: Birthday Photoshoot in progress... 99% ⏳</span>
                   </div>
+                </div>
+              ) : (
+                <>
+                  {/* Photo Area with Next/Prev Arrows if Multiple Photos */}
+                  <div className="timeline-photo-slider-area">
+                    {currentPhotos.length > 1 && (
+                      <button
+                        className="timeline-photo-nav timeline-photo-prev"
+                        onClick={goToPrevPhoto}
+                        aria-label="Previous photo"
+                      >
+                        ‹
+                      </button>
+                    )}
+
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={currentPhotoUrl}
+                      alt={`${currentMilestone.title} - Photo ${activePhotoIdx + 1}`}
+                      className="timeline-modal-img"
+                    />
+
+                    {currentPhotos.length > 1 && (
+                      <button
+                        className="timeline-photo-nav timeline-photo-next"
+                        onClick={goToNextPhoto}
+                        aria-label="Next photo"
+                      >
+                        ›
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Multi-photo indicator and thumbnails */}
+                  {currentPhotos.length > 1 && (
+                    <>
+                      <span className="timeline-photo-counter">
+                        Photo {activePhotoIdx + 1} of {currentPhotos.length}
+                      </span>
+                      <div className="timeline-thumb-strip">
+                        {currentPhotos.map((url, idx) => (
+                          <button
+                            key={url}
+                            type="button"
+                            className={`timeline-thumb-btn ${idx === activePhotoIdx ? "active" : ""}`}
+                            onClick={() => {
+                              playAudioCue("cardFlip");
+                              setActivePhotoIdx(idx);
+                            }}
+                            title={`View photo ${idx + 1}`}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={url} alt={`Thumbnail ${idx + 1}`} />
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </>
               )}
 
