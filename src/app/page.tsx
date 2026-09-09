@@ -3527,158 +3527,142 @@ function SpecialQuizSection() {
             </div>
           )}
 
-          {/* Stage 4: Royal Cute Nikkahnama Signing Stage */}
+          {/* Stage 4: Authentic Framed Royal Nikkahnama (Inspired by Seerah Stories Nikkahnama) */}
           {quizStage === 4 && (
-            <div className="nikkah-card nikkahnama-parchment-card">
-              <div className="nikkah-inner-frame nikkahnama-inner-frame">
-                {/* Islamic Bismillah Calligraphy */}
-                <div className="nikkah-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-
-                {/* Quranic Sacred Verse (Surah Ar-Rum: 21) */}
-                <div className="nikkahnama-verse-card">
-                  <p className="nikkahnama-arabic-verse">
-                    وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
-                  </p>
-                  <p className="nikkahnama-verse-translation">
-                    &ldquo;And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them; and He placed between your hearts affection and mercy.&rdquo;{" "}
-                    <span className="verse-ref">— [Surah Ar-Rum: 21]</span>
-                  </p>
-                </div>
-
-                <div className="nikkah-badge">📜 OFFICIAL ISLAMIC NIKKAHNAMA • نکاح نامہ 💍</div>
-
-                <h3 className="nikkah-title">The Sacred Marriage Covenant</h3>
-                <p className="nikkah-subtitle">United in Love, Faith, Soul &amp; Eternity</p>
-
-                {/* Key Details of the Nikkah */}
-                <div className="nikkahnama-terms-grid">
-                  <div className="nikkahnama-term-box">
-                    <span className="term-icon">📅</span>
-                    <div className="term-content">
-                      <span className="term-label">Date of Nikkah</span>
-                      <span className="term-value">September 9, 2026 (Her 23rd Birthday 🎂)</span>
+            <div className="nikkahnama-frame-card">
+              <div className="nikkahnama-parchment">
+                {/* Mihrab Arch Top Border */}
+                <div className="nikkahnama-arch-header">
+                  <div className="nikkahnama-arch-filigree">
+                    <span className="arch-flourish">⚜️</span>
+                    <div className="nikkahnama-bismillah-arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                    <div className="nikkahnama-quran-main">وَخَلَقْنَاكُمْ أَزْوَاجًا</div>
+                    <div className="nikkahnama-quran-trans">
+                      &ldquo;And We Created You In Pairs&rdquo; <span className="ayah-num">— [Surah An-Naba: 8]</span>
                     </div>
-                  </div>
-                  <div className="nikkahnama-term-box">
-                    <span className="term-icon">💎</span>
-                    <div className="term-content">
-                      <span className="term-label">Mahr (حق مہر)</span>
-                      <span className="term-value">Infinite Love, Lifelong Care &amp; 100% Loyalty ❤️</span>
-                    </div>
-                  </div>
-                  <div className="nikkahnama-term-box">
-                    <span className="term-icon">💍</span>
-                    <div className="term-content">
-                      <span className="term-label">Consent (ایجاب و قبول)</span>
-                      <span className="term-value">3x &ldquo;Qabool Hai&rdquo; Declared with Full Heart 💖</span>
-                    </div>
-                  </div>
-                  <div className="nikkahnama-term-box">
-                    <span className="term-icon">🌟</span>
-                    <div className="term-content">
-                      <span className="term-label">Witnesses (گواہ)</span>
-                      <span className="term-value">Allah SWT, The Angels &amp; Endless Love ✨</span>
-                    </div>
+                    <span className="arch-flourish">⚜️</span>
                   </div>
                 </div>
 
-                <div className="nikkah-divider" />
+                <div className="nikkahnama-cert-intro">
+                  <span className="nikkahnama-cert-seal-badge">📜 OFFICIAL ISLAMIC MARRIAGE CONTRACT • نکاح نامہ</span>
+                  <p className="nikkahnama-cert-text">
+                    THIS NIKKAH, MADE IN ACCORDANCE WITH ISLAMIC VALUES, SACRED DEVOTION &amp; MUTUAL RESPECT WITH THE AGREED UPON MAHR, ON SEPTEMBER 09, 2026, IS TO CERTIFY THE ETERNAL MARRIAGE OF:
+                  </p>
+                </div>
 
-                {/* Side-by-Side Thumbprint & Signature Arena */}
-                <div className="nikkahnama-signatures-arena">
-                  {/* GROOM: Mehboob Waqar (Thumbprint Already Stamped!) */}
-                  <div className="nikkahnama-party-card groom-party">
-                    <div className="party-badge groom-badge">🤵‍♂️ The Groom • دولہا</div>
-                    <h4 className="party-name">Mehboob Waqar</h4>
-                    <span className="party-sig-script">Mehboob Waqar</span>
+                {/* Royal Couple Names */}
+                <div className="nikkahnama-names-showcase">
+                  <h3 className="nikkahnama-groom-name">Mehboob Waqar</h3>
+                  <div className="nikkahnama-ampersand">&amp;</div>
+                  <h3 className="nikkahnama-bride-name">Laiba Mehboob</h3>
+                </div>
 
-                    {/* Stamped Thumbprint Box */}
-                    <div className="party-thumbprint-container">
-                      <span className="thumbprint-label">Groom&apos;s Thumbprint</span>
-                      <div className="thumbprint-box groom-stamped-box" title="Mehboob Waqar's Official Stamped Thumbprint">
-                        <ThumbprintGraphic isStamped={true} />
-                        <div className="thumbprint-stamp-overlay">
-                          <span className="stamp-seal-icon">✓</span>
-                          <span className="stamp-seal-text">STAMPED</span>
+                {/* Du'a */}
+                <div className="nikkahnama-dua-box">
+                  <p className="nikkahnama-dua-text">
+                    &ldquo;May Allah bless you, surround you with blessings, and bring you both together in goodness, peace and eternal love.&rdquo;
+                  </p>
+                </div>
+
+                {/* Sacred Details Pill Strip */}
+                <div className="nikkahnama-pills-strip">
+                  <div className="nikkahnama-pill">
+                    <span className="pill-icon">📅</span>
+                    <span>Date: <strong>09 September 2026</strong> (Her 23rd Birthday 🎂)</span>
+                  </div>
+                  <div className="nikkahnama-pill">
+                    <span className="pill-icon">💎</span>
+                    <span>Mahr: <strong>Infinite Love, Respect &amp; Loyalty ❤️</strong></span>
+                  </div>
+                  <div className="nikkahnama-pill">
+                    <span className="pill-icon">💍</span>
+                    <span>Consent: <strong>3x Qabool Hai Declared 💖</strong></span>
+                  </div>
+                </div>
+
+                {/* The Signature Equation Arena: [ Groom ] + [ Bride ] = [ ❤️ ] (From User's Image!) */}
+                <div className="nikkahnama-equation-arena">
+                  {/* Groom Box */}
+                  <div className="equation-party-col groom-col">
+                    <span className="equation-role-label">Groom (دولہا)</span>
+                    <span className="equation-party-name">Mehboob Waqar</span>
+                    <span className="equation-party-sig">Mehboob Waqar</span>
+
+                    <div className="equation-thumbprint-box groom-box" title="Mehboob Waqar's Stamped Thumbprint">
+                      <ThumbprintGraphic isStamped={true} />
+                      <div className="equation-stamp-tag">
+                        <span>✓ STAMPED</span>
+                      </div>
+                    </div>
+                    <span className="equation-subtag">✓ Sealed &amp; Agreed 🤵‍♂️</span>
+                  </div>
+
+                  {/* Plus Sign */}
+                  <div className="equation-operator plus-operator">+</div>
+
+                  {/* Bride Box (Glowing interactive scanner) */}
+                  <div className={`equation-party-col bride-col ${isBrideStamped ? "stamped" : "glowing"}`}>
+                    <span className="equation-role-label bride-label">Bride (دلہن)</span>
+                    <span className="equation-party-name bride-name">Laiba Mehboob</span>
+                    <span className="equation-party-sig bride-sig">Laiba Mehboob</span>
+
+                    {!isBrideStamped ? (
+                      <button
+                        type="button"
+                        className="equation-thumbprint-box bride-scanner-btn glowing-interactive"
+                        onClick={handleBrideThumbprint}
+                        onPointerDown={handleBrideThumbprint}
+                        title="Touch or Click to Stamp Your Thumbprint, Laiba!"
+                        aria-label="Stamp Laiba Mehboob Fingerprint"
+                      >
+                        <ThumbprintGraphic isStamped={false} isGlowing={true} isBride={true} />
+                        <div className="equation-scanner-indicator">
+                          <span className="scanner-pointer-icon">👆</span>
+                          <span className="scanner-pointer-text">Touch to Sign</span>
+                        </div>
+                      </button>
+                    ) : (
+                      <div className="equation-thumbprint-box bride-stamped-box stamp-impact-animate" title="Laiba Mehboob's Thumbprint">
+                        <ThumbprintGraphic isStamped={true} isBride={true} />
+                        <div className="equation-stamp-tag bride-stamp">
+                          <span>💖 ACCEPTED</span>
                         </div>
                       </div>
-                      <div className="party-status-tag verified">
-                        <span>✓ ALREADY SIGNED &amp; SEALED</span>
-                      </div>
-                    </div>
+                    )}
+                    <span className="equation-subtag">
+                      {isBrideStamped ? "✓ Officially Sealed 👰‍♀️💖" : "✨ Touch to Place Finger ✨"}
+                    </span>
                   </div>
 
-                  {/* Sacred Rings & Seal in Middle */}
-                  <div className="nikkahnama-center-crests">
-                    <div className="nikkah-rings-sparkle">💍 💖 💍</div>
-                    <div className="nikkah-sacred-seal">
-                      <span>عقد نکاح</span>
-                      <span className="sacred-seal-sub">ETERNAL</span>
+                  {/* Equals Sign */}
+                  <div className="equation-operator equals-operator">=</div>
+
+                  {/* Result: Eternal Love Heart Box */}
+                  <div className={`equation-party-col heart-col ${isBrideStamped ? "heart-active-glow" : ""}`}>
+                    <span className="equation-role-label heart-label">Sacred Union</span>
+                    <span className="equation-party-name heart-name">Eternal Love</span>
+                    <span className="equation-party-sig heart-sig">Forever &amp; Always</span>
+
+                    <div className="equation-heart-box">
+                      <div className="big-equation-heart">❤️</div>
+                      <span className="heart-box-tag">ONE SOUL</span>
                     </div>
-                  </div>
-
-                  {/* BRIDE: Laiba Mehboob (Interactive Glowing Thumbprint Scanner!) */}
-                  <div className={`nikkahnama-party-card bride-party ${isBrideStamped ? "stamped-complete" : "pending-stamp"}`}>
-                    <div className="party-badge bride-badge">👰‍♀️ The Beautiful Bride • دلہن</div>
-                    <h4 className="party-name bride-color">Laiba Mehboob</h4>
-                    <span className="party-sig-script bride-script">Laiba Mehboob</span>
-
-                    {/* Interactive Glowing / Stamped Thumbprint Box */}
-                    <div className="party-thumbprint-container">
-                      <span className="thumbprint-label">
-                        {isBrideStamped ? "Bride's Thumbprint" : "Place Fingerprint to Sign"}
-                      </span>
-
-                      {!isBrideStamped ? (
-                        <button
-                          type="button"
-                          className="thumbprint-box bride-scanner-box glowing-interactive"
-                          onClick={handleBrideThumbprint}
-                          onPointerDown={handleBrideThumbprint}
-                          aria-label="Place Laiba Mehboob Fingerprint Here"
-                          title="Touch or Click to Stamp your Fingerprint, Laiba!"
-                        >
-                          <ThumbprintGraphic isStamped={false} isGlowing={true} isBride={true} />
-                          <div className="scanner-glowing-indicator">
-                            <span className="scanner-hand-icon">👆</span>
-                            <span className="scanner-text-main">Touch &amp; Hold Here</span>
-                            <span className="scanner-text-sub">Place Finger to Sign 💖</span>
-                          </div>
-                        </button>
-                      ) : (
-                        <div className="thumbprint-box bride-stamped-box stamp-impact-animate" title="Laiba Mehboob's Blessed Thumbprint">
-                          <ThumbprintGraphic isStamped={true} isBride={true} />
-                          <div className="thumbprint-stamp-overlay bride-overlay">
-                            <span className="stamp-seal-icon">💖</span>
-                            <span className="stamp-seal-text">ACCEPTED</span>
-                          </div>
-                        </div>
-                      )}
-
-                      <div className={`party-status-tag ${isBrideStamped ? "verified bride-verified" : "awaiting"}`}>
-                        {isBrideStamped ? (
-                          <span>✓ OFFICIALLY ACCEPTED &amp; SEALED 👰‍♀️💖</span>
-                        ) : (
-                          <span className="pulse-text">✨ WAITING FOR LAIBA&apos;S TOUCH...</span>
-                        )}
-                      </div>
-                    </div>
+                    <span className="equation-subtag">Sealed in Eternity 💍</span>
                   </div>
                 </div>
 
-                {/* Bottom Guidance & Actions */}
-                <div className="nikkahnama-bottom-controls">
+                {/* Bottom Guidance & Continue Button */}
+                <div className="nikkahnama-footer-actions">
                   {!isBrideStamped ? (
-                    <div className="nikkahnama-prompt-banner">
-                      <span className="prompt-sparkle">✨</span>
-                      <p>
-                        <strong>Laiba, touch the glowing pink fingerprint box above</strong> to stamp your consent and seal our sacred Nikkah! 💍❤️
-                      </p>
+                    <div className="nikkahnama-touch-prompt">
+                      <span className="prompt-finger-icon">👆</span>
+                      <span><strong>Laiba, touch the glowing middle fingerprint box</strong> to stamp your consent and seal our Nikkah! 💖</span>
                     </div>
                   ) : (
-                    <div className="nikkahnama-completed-actions">
-                      <p className="nikkahnama-success-message">
-                        💍 <strong>Alhamdulillah! Both Thumbprints are Sealed!</strong> You are officially Mehboob&apos;s Queen for all eternity! 👑❤️
+                    <div className="nikkahnama-done-box">
+                      <p className="nikkahnama-congrats-line">
+                        🎉 <strong>Alhamdulillah! Both Thumbprints are Sealed!</strong> Nikkah Officially Complete! 💍❤️
                       </p>
                       <button
                         type="button"
@@ -3688,12 +3672,12 @@ function SpecialQuizSection() {
                           setQuizStage(5);
                         }}
                       >
-                        🎉 Continue to Grand Celebration &amp; Vows ➡️
+                        🎉 View Wedding Celebration &amp; Vows ➡️
                       </button>
                     </div>
                   )}
 
-                  <div className="congrats-actions" style={{ marginTop: "1.2rem" }}>
+                  <div className="congrats-actions" style={{ marginTop: "1rem" }}>
                     <button type="button" className="quiz-back-btn" onClick={handleCloseQuiz}>
                       🏠 Go to Main Screen
                     </button>
@@ -3703,77 +3687,76 @@ function SpecialQuizSection() {
             </div>
           )}
 
-          {/* Stage 5: Grand Wedding Celebration & Congratulations Screen */}
+          {/* Stage 5: Grand Wedding Celebration & Congratulations Screen (Never Cut Off) */}
           {quizStage === 5 && (
-            <div className="nikkah-card">
-              <div className="nikkah-inner-frame">
-                <div className="nikkah-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-                
-                <div className="nikkah-badge celebration-badge">💍 NIKKAH MUBARAK • OFFICIAL MARRIAGE 💍</div>
-                
-                <h3 className="nikkah-title">Certificate of Eternal Love</h3>
-                <p className="nikkah-subtitle">United in Heart, Soul &amp; Destiny • Signed &amp; Sealed Forever</p>
+            <div className="nikkah-celebration-card">
+              <div className="celebration-inner-frame">
+                <div className="celebration-rings-banner">💍 💐 💖 💐 💍</div>
+                <span className="celebration-proclamation-badge">💍 NIKKAH MUBARAK • SACRED MARRIAGE SEALED 💍</span>
 
-                <div className="nikkah-divider" />
+                <h2 className="celebration-main-title">Certificate of Eternal Love</h2>
+                <p className="celebration-sub-title">United in Heart, Soul &amp; Destiny • Signed &amp; Sealed Forever</p>
 
-                {/* The Royal Couple Names */}
-                <div className="nikkah-couple-box">
-                  <div className="nikkah-person groom">
-                    <span className="nikkah-role">The Groom</span>
-                    <span className="nikkah-name">Mehboob Waqar</span>
-                    <span className="nikkah-tag">Forever Yours 🤵‍♂️❤️</span>
-                    <div className="mini-thumb-status">✓ Thumbprint Sealed</div>
+                <div className="celebration-divider" />
+
+                {/* Couple Presentation */}
+                <div className="celebration-couple-row">
+                  <div className="celebration-person-box groom">
+                    <span className="person-role">The Groom</span>
+                    <h3 className="person-name">Mehboob Waqar</h3>
+                    <span className="person-tag">Forever Yours 🤵‍♂️❤️</span>
+                    <div className="thumb-sealed-badge">✓ Thumbprint Stamped</div>
                   </div>
 
-                  <div className="nikkah-heart-badge">
-                    <span className="nikkah-rings">💍 💕 💍</span>
-                    <span className="nikkah-qabool-stamp">3x QABOOL HAI</span>
-                    <span className="nikkah-signed-seal">OFFICIALLY MARRIED</span>
+                  <div className="celebration-center-crest">
+                    <span className="crest-rings">💍 💕 💍</span>
+                    <span className="crest-stamp">3x QABOOL HAI</span>
+                    <span className="crest-sealed-text">OFFICIALLY MARRIED</span>
                   </div>
 
-                  <div className="nikkah-person bride">
-                    <span className="nikkah-role">The Beautiful Bride</span>
-                    <span className="nikkah-name">Laiba Mehboob</span>
-                    <span className="nikkah-tag">My Queen 👰‍♀️💖</span>
-                    <div className="mini-thumb-status bride-status">✓ Thumbprint Stamped</div>
+                  <div className="celebration-person-box bride">
+                    <span className="person-role">The Beautiful Bride</span>
+                    <h3 className="person-name bride-name">Laiba Mehboob</h3>
+                    <span className="person-tag">My Queen Forever 👰‍♀️💖</span>
+                    <div className="thumb-sealed-badge bride-sealed">✓ Thumbprint Stamped</div>
                   </div>
                 </div>
 
-                <div className="nikkah-divider" />
+                <div className="celebration-divider" />
 
-                {/* Short, Sweet & Elegant Vow Text */}
-                <p className="nikkah-short-vow">
-                  With <strong>three sacred declarations of &quot;Qabool Hai&quot;</strong> and both blessed thumbprints sealed on the Nikkahnama, our hearts and souls are eternally entwined. 
-                  In this life, in every prayer, and across every lifetime, you are my forever queen, my peace, and my greatest blessing from Allah.
+                {/* Sacred Vows */}
+                <p className="celebration-vow-quote">
+                  With <strong>three sacred declarations of &quot;Qabool Hai&quot;</strong> and both blessed thumbprints sealed on our Nikkahnama, our hearts, souls, and destinies are eternally entwined.
+                  In this life, in every prayer, and across all eternity, you are my forever queen, my peace, and my greatest blessing from Allah.
                 </p>
 
-                <div className="nikkah-birthday-tag">
-                  🎂 Celebrated on Your 23rd Birthday • September 9 ✨
+                <div className="celebration-date-badge">
+                  🎂 Celebrated on Your 23rd Birthday • September 09, 2026 ✨
                 </div>
 
                 {/* Signatures & Seal */}
-                <div className="nikkah-signatures">
-                  <div className="nikkah-sig-col">
-                    <span className="nikkah-sig-script">Mehboob Waqar</span>
-                    <span className="nikkah-sig-label">Groom&apos;s Signature ✍️</span>
+                <div className="celebration-signatures-grid">
+                  <div className="sig-col">
+                    <span className="sig-script">Mehboob Waqar</span>
+                    <span className="sig-label">Groom&apos;s Signature ✍️</span>
                   </div>
 
-                  <div className="nikkah-seal">
-                    <div className="nikkah-seal-circle">
+                  <div className="seal-col">
+                    <div className="wax-seal-ornament">
                       <span>SEALED</span>
-                      <span className="seal-heart">❤️</span>
+                      <span className="seal-heart-icon">❤️</span>
                       <span>FOREVER</span>
                     </div>
                   </div>
 
-                  <div className="nikkah-sig-col">
-                    <span className="nikkah-sig-script">Laiba Mehboob</span>
-                    <span className="nikkah-sig-label">Bride&apos;s Signature ✍️</span>
+                  <div className="sig-col">
+                    <span className="sig-script bride-script">Laiba Mehboob</span>
+                    <span className="sig-label">Bride&apos;s Signature ✍️</span>
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div className="congrats-actions" style={{ marginTop: "2rem" }}>
+                {/* Action Buttons */}
+                <div className="congrats-actions" style={{ marginTop: "1.8rem" }}>
                   <button
                     type="button"
                     className="nikkah-view-cert-btn"

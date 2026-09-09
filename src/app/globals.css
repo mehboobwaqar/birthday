@@ -5077,23 +5077,27 @@ body.fireworks-modal-active .theme-segment-btn {
   height: 100vh;
   height: 100dvh;
   z-index: 100000;
-  background: radial-gradient(ellipse at 50% 30%, #3d095e 0%, #1c032e 55%, #0d0117 100%);
+  background: radial-gradient(ellipse at 50% 20%, #2c0738 0%, #140220 55%, #08010d 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: clamp(1.5rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem);
+  justify-content: flex-start !important; /* CRITICAL FIX: Always start at top, never cut off! */
+  padding-top: max(75px, env(safe-area-inset-top, 16px) + 55px) !important;
+  padding-bottom: max(60px, env(safe-area-inset-bottom, 16px) + 40px) !important;
+  padding-left: clamp(0.6rem, 3vw, 1.5rem);
+  padding-right: clamp(0.6rem, 3vw, 1.5rem);
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: auto !important;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   animation: lightboxFadeIn 0.35s ease-out;
 }
 
 .quiz-screen-close {
   position: fixed;
-  top: clamp(1rem, 3.5vw, 1.8rem);
-  right: clamp(1rem, 3.5vw, 1.8rem);
-  background: rgba(255, 255, 255, 0.14);
+  top: max(16px, env(safe-area-inset-top, 16px));
+  right: max(16px, env(safe-area-inset-right, 16px));
+  background: rgba(255, 255, 255, 0.16);
   border: 1.5px solid rgba(255, 107, 157, 0.5);
   border-radius: 50%;
   color: #ffffff;
@@ -5105,10 +5109,10 @@ body.fireworks-modal-active .theme-segment-btn {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  z-index: 100020;
+  z-index: 100050;
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .quiz-screen-close:hover {
@@ -5585,745 +5589,872 @@ body.fireworks-modal-active .theme-segment-btn {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   📜 CUTE & ROYAL NIKKAHNAMA & GLOWING THUMBPRINT SCANNER STYLES
+   📜 AUTHENTIC FRAMED NIKKAHNAMA & SIGNATURE EQUATION STYLES
+   Inspired by Authentic Framed Islamic Nikkahnama (Seerah Stories)
+   Fixed mobile scroll & top cut-off for Stage 4 & Stage 5
    ═══════════════════════════════════════════════════════════════ */
 
-.nikkahnama-parchment-card {
-  max-width: 780px !important;
-  background: linear-gradient(155deg, rgba(38, 6, 56, 0.97) 0%, rgba(18, 2, 28, 0.98) 50%, rgba(46, 8, 48, 0.96) 100%) !important;
-  border: 2.5px solid #ffd700 !important;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95), 0 0 50px rgba(255, 215, 0, 0.35), inset 0 0 35px rgba(255, 215, 0, 0.12) !important;
-}
-
-.nikkahnama-inner-frame {
-  background: radial-gradient(circle at 50% 15%, rgba(255, 215, 0, 0.08) 0%, transparent 60%) !important;
-  padding: clamp(1.2rem, 3.5vw, 2.2rem) clamp(0.9rem, 2.5vw, 1.8rem) !important;
-}
-
-/* Quranic Verse Box */
-.nikkahnama-verse-card {
-  background: rgba(255, 215, 0, 0.07);
-  border: 1px solid rgba(255, 215, 0, 0.35);
+/* Outer Wooden Picture Frame Card */
+.nikkahnama-frame-card {
+  width: 100%;
+  max-width: 690px !important;
+  margin: 0 auto 3.5rem auto !important; /* CRITICAL FIX: Pinned from top, never cut off! */
+  background: linear-gradient(145deg, #dfc097 0%, #b8915b 25%, #eccfa4 50%, #a8814d 75%, #dfc097 100%);
+  border: 4px solid #815b2e;
   border-radius: 18px;
-  padding: 1rem 1.4rem;
-  margin: 0.6rem auto 1.2rem;
-  max-width: 620px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding: clamp(10px, 2.5vw, 18px);
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.65),
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+  position: relative;
+  box-sizing: border-box;
+  animation: framePopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nikkahnama-arabic-verse {
-  font-family: 'Amiri', 'Traditional Arabic', serif;
-  font-size: clamp(1.15rem, 3.8vw, 1.45rem);
-  line-height: 1.85;
-  color: #ffd700;
-  text-shadow: 0 0 14px rgba(255, 215, 0, 0.55);
-  margin-bottom: 0.45rem;
-  letter-spacing: 1px;
+@keyframes framePopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-.nikkahnama-verse-translation {
-  font-size: clamp(0.78rem, 2.2vw, 0.88rem);
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.92);
-  line-height: 1.6;
+/* Inner Ivory Parchment Document */
+.nikkahnama-parchment {
+  background: #fffefb;
+  background-image: 
+    radial-gradient(#eedcc2 0.75px, transparent 0.75px),
+    radial-gradient(#f7efe3 0.75px, #fffefb 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  border: 3px double #1e2f65;
+  border-radius: 12px;
+  padding: clamp(1.1rem, 3.2vw, 2.2rem) clamp(0.8rem, 2.6vw, 1.8rem);
+  box-shadow: 
+    inset 0 0 25px rgba(184, 145, 91, 0.2),
+    inset 0 0 0 1px rgba(184, 145, 91, 0.4);
+  position: relative;
+  color: #1a1a24;
 }
 
-.verse-ref {
-  color: #ff80b3;
-  font-weight: 700;
-  font-style: normal;
+/* Mihrab Islamic Arch Header */
+.nikkahnama-arch-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1.5px solid rgba(30, 47, 101, 0.2);
 }
 
-/* Nikkah Terms Grid */
-.nikkahnama-terms-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.75rem;
-  margin: 1.2rem 0;
-  text-align: left;
-}
-
-.nikkahnama-term-box {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 215, 0, 0.25);
-  border-radius: 14px;
-  padding: 0.75rem 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: all 0.25s ease;
-}
-
-.nikkahnama-term-box:hover {
-  background: rgba(255, 215, 0, 0.08);
-  border-color: rgba(255, 215, 0, 0.5);
-  transform: translateY(-2px);
-}
-
-.term-icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-}
-
-.term-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.term-label {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  font-weight: 800;
-  color: #ffd700;
-}
-
-.term-value {
-  font-size: 0.82rem;
-  color: #ffffff;
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-/* Signatures & Thumbprint Arena */
-.nikkahnama-signatures-arena {
-  display: flex;
-  justify-content: space-around;
-  align-items: stretch;
-  gap: clamp(0.8rem, 2.5vw, 1.5rem);
-  margin: 1.6rem 0 1.2rem;
-  flex-wrap: wrap;
-}
-
-.nikkahnama-party-card {
-  flex: 1;
-  min-width: 210px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid rgba(255, 215, 0, 0.35);
-  border-radius: 20px;
-  padding: 1.2rem 1rem;
+.nikkahnama-arch-filigree {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease;
 }
 
-.groom-party {
-  border-color: rgba(255, 215, 0, 0.5);
-  background: linear-gradient(160deg, rgba(255, 215, 0, 0.08) 0%, rgba(18, 2, 26, 0.5) 100%);
+.arch-flourish {
+  font-size: 1.25rem;
+  color: #c5a059;
+  filter: drop-shadow(0 1px 2px rgba(197, 160, 89, 0.5));
 }
 
-.bride-party {
-  border-color: rgba(255, 107, 157, 0.5);
-  background: linear-gradient(160deg, rgba(255, 107, 157, 0.12) 0%, rgba(20, 2, 28, 0.5) 100%);
-}
-
-.bride-party.pending-stamp {
-  border-color: #ff0080;
-  box-shadow: 0 0 25px rgba(255, 0, 128, 0.35);
-}
-
-.party-badge {
-  font-size: 0.72rem;
-  font-weight: 800;
+.nikkahnama-bismillah-arabic {
+  font-family: "Amiri", "Scheherazade New", "Traditional Arabic", serif;
+  font-size: clamp(1.3rem, 4vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.5;
+  color: #1e2f65;
   letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 0.28rem 0.9rem;
-  border-radius: 50px;
+  text-shadow: 0 1px 2px rgba(30, 47, 101, 0.15);
 }
 
-.groom-badge {
-  background: rgba(255, 215, 0, 0.18);
-  color: #ffd700;
-  border: 1px solid rgba(255, 215, 0, 0.45);
-}
-
-.bride-badge {
-  background: rgba(255, 107, 157, 0.22);
-  color: #ff80b3;
-  border: 1px solid rgba(255, 107, 157, 0.55);
-}
-
-.party-name {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.25rem, 3.8vw, 1.65rem);
+.nikkahnama-quran-main {
+  font-family: "Amiri", "Scheherazade New", "Traditional Arabic", serif;
+  font-size: clamp(1.5rem, 5.2vw, 2.3rem);
   font-weight: 800;
-  color: #ffd700;
+  line-height: 1.6;
+  color: #8b1c34;
   margin: 0.15rem 0;
-  text-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+  text-shadow: 0 1px 3px rgba(139, 28, 52, 0.2);
+  letter-spacing: 1.5px;
 }
 
-.party-name.bride-color {
-  color: #ff80b3;
-  text-shadow: 0 0 12px rgba(255, 107, 157, 0.45);
-}
-
-.party-sig-script {
-  font-family: 'Great Vibes', cursive;
-  font-size: clamp(1.6rem, 4.2vw, 2.2rem);
-  color: #ffd700;
-  line-height: 1.1;
-  margin-bottom: 0.2rem;
-}
-
-.bride-script {
-  color: #ff80b3;
-}
-
-/* Center Rings and Sacred Seal */
-.nikkahnama-center-crests {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-}
-
-.nikkah-rings-sparkle {
-  font-size: 1.6rem;
-  animation: pulseHeart 1.5s infinite alternate;
-}
-
-.nikkah-sacred-seal {
-  width: 62px;
-  height: 62px;
-  border: 2px dashed #ffd700;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #ffd700;
-  letter-spacing: 1px;
-  background: rgba(255, 215, 0, 0.1);
-  box-shadow: 0 0 18px rgba(255, 215, 0, 0.35);
-  animation: pulseGlow 2.5s infinite ease-in-out;
-}
-
-.sacred-seal-sub {
-  font-size: 0.52rem;
-  letter-spacing: 1.2px;
-  opacity: 0.85;
-}
-
-/* Thumbprint Containers & Boxes */
-.party-thumbprint-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-  margin-top: 0.4rem;
-  width: 100%;
-}
-
-.thumbprint-label {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.thumbprint-box {
-  width: 106px;
-  height: 142px;
-  border-radius: 24px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-/* Mehboob Waqar's Pre-Stamped Thumbprint Box */
-.groom-stamped-box {
-  background: radial-gradient(circle, rgba(183, 28, 28, 0.2) 0%, rgba(20, 3, 26, 0.88) 100%);
-  border: 2px solid rgba(229, 57, 53, 0.7);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), inset 0 0 18px rgba(183, 28, 28, 0.35);
-  transform: rotate(-3deg);
-}
-
-/* Laiba's Glowing Interactive Thumbprint Scanner Box */
-.bride-scanner-box.glowing-interactive {
-  background: radial-gradient(circle, rgba(255, 0, 128, 0.25) 0%, rgba(30, 4, 38, 0.92) 100%);
-  border: 2.5px solid #ff0080;
-  cursor: pointer;
-  box-shadow: 0 0 25px rgba(255, 0, 128, 0.7), 0 0 45px rgba(255, 215, 0, 0.4), inset 0 0 20px rgba(255, 0, 128, 0.4);
-  animation: thumbprintPulseGlow 1.8s infinite alternate ease-in-out;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  outline: none;
-}
-
-.bride-scanner-box.glowing-interactive:hover,
-.bride-scanner-box.glowing-interactive:focus-visible,
-.bride-scanner-box.glowing-interactive:active {
-  transform: scale(1.06);
-  box-shadow: 0 0 35px rgba(255, 0, 128, 0.95), 0 0 60px rgba(255, 215, 0, 0.65), inset 0 0 25px rgba(255, 0, 128, 0.6);
-  border-color: #ffd700;
-}
-
-/* Laiba's Stamped Thumbprint Box */
-.bride-stamped-box {
-  background: radial-gradient(circle, rgba(255, 42, 112, 0.25) 0%, rgba(22, 3, 30, 0.88) 100%);
-  border: 2px solid rgba(255, 42, 112, 0.8);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 42, 112, 0.4), 0 0 25px rgba(255, 215, 0, 0.35);
-  transform: rotate(3deg);
-}
-
-/* Biometric Thumbprint SVG & Graphics */
-.thumbprint-graphic-wrap {
-  width: 76px;
-  height: 104px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.thumbprint-svg {
-  width: 100%;
-  height: 100%;
-  transition: all 0.3s ease;
-}
-
-.thumbprint-svg.ink-stamped {
-  filter: drop-shadow(0 0 6px rgba(229, 57, 53, 0.7));
-}
-
-.groom-thumb .thumbprint-svg.ink-stamped {
-  color: #e53935;
-}
-
-.bride-thumb .thumbprint-svg.ink-stamped {
-  color: #ff2a70;
-  filter: drop-shadow(0 0 8px rgba(255, 42, 112, 0.8));
-}
-
-.thumbprint-svg.pad-outline {
-  color: rgba(255, 128, 179, 0.6);
-  stroke-dasharray: 4 2;
-  animation: outlineDash 6s linear infinite;
-}
-
-@keyframes outlineDash {
-  0% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: 60; }
-}
-
-/* Scanner Laser Beam */
-.thumbprint-scan-beam {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent 0%, #ff0080 30%, #ffd700 50%, #ff0080 70%, transparent 100%);
-  box-shadow: 0 0 12px #ff0080, 0 0 20px #ffd700;
-  pointer-events: none;
-  animation: scanLaserBeam 1.8s infinite ease-in-out;
-}
-
-@keyframes scanLaserBeam {
-  0% {
-    top: 8px;
-    opacity: 0.3;
-  }
-  50% {
-    top: calc(100% - 12px);
-    opacity: 1;
-  }
-  100% {
-    top: 8px;
-    opacity: 0.3;
-  }
-}
-
-/* Scanner Prompt Indicator */
-.scanner-glowing-indicator {
-  position: absolute;
-  bottom: 6px;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.scanner-hand-icon {
-  font-size: 1.15rem;
-  animation: bounceHand 1.1s infinite ease-in-out;
-}
-
-.scanner-text-main {
-  font-size: 0.58rem;
-  font-weight: 800;
-  color: #ffd700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
-}
-
-.scanner-text-sub {
-  font-size: 0.52rem;
-  color: #ff80b3;
-  font-weight: 700;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
-}
-
-@keyframes bounceHand {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-@keyframes thumbprintPulseGlow {
-  0% {
-    box-shadow: 0 0 20px rgba(255, 0, 128, 0.6), 0 0 32px rgba(255, 215, 0, 0.3), inset 0 0 15px rgba(255, 0, 128, 0.3);
-    border-color: #ff0080;
-  }
-  100% {
-    box-shadow: 0 0 35px rgba(255, 0, 128, 0.95), 0 0 60px rgba(255, 215, 0, 0.65), inset 0 0 25px rgba(255, 0, 128, 0.55);
-    border-color: #ffd700;
-  }
-}
-
-/* Stamp Impact Animation on Click */
-.stamp-impact-animate {
-  animation: stampImpactBounce 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@keyframes stampImpactBounce {
-  0% {
-    transform: rotate(3deg) scale(1.4);
-    opacity: 0;
-  }
-  60% {
-    transform: rotate(3deg) scale(0.94);
-    opacity: 1;
-  }
-  85% {
-    transform: rotate(3deg) scale(1.04);
-  }
-  100% {
-    transform: rotate(3deg) scale(1);
-  }
-}
-
-/* Stamp Overlays */
-.thumbprint-stamp-overlay {
-  position: absolute;
-  bottom: 8px;
-  background: rgba(183, 28, 28, 0.88);
-  border: 1px solid rgba(255, 215, 0, 0.5);
-  border-radius: 50px;
-  padding: 0.15rem 0.55rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: #ffd700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-}
-
-.thumbprint-stamp-overlay.bride-overlay {
-  background: rgba(233, 30, 99, 0.9);
-  border-color: #ffd700;
-  color: #ffffff;
-}
-
-.stamp-seal-icon {
-  font-size: 0.65rem;
-}
-
-/* Status Tags */
-.party-status-tag {
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  padding: 0.25rem 0.75rem;
-  border-radius: 50px;
-  text-align: center;
-  white-space: nowrap;
-  margin-top: 0.35rem;
-}
-
-.party-status-tag.verified {
-  color: #ffd700;
-  background: rgba(255, 215, 0, 0.15);
-  border: 1px solid rgba(255, 215, 0, 0.4);
-}
-
-.party-status-tag.bride-verified {
-  color: #ff80b3;
-  background: rgba(255, 0, 128, 0.2);
-  border: 1px solid rgba(255, 0, 128, 0.5);
-}
-
-.party-status-tag.awaiting {
-  color: #ffd700;
-  background: rgba(255, 0, 128, 0.16);
-  border: 1px dashed #ffd700;
-}
-
-.pulse-text {
-  animation: pulseText 1.2s infinite alternate;
-}
-
-@keyframes pulseText {
-  0% { opacity: 0.6; }
-  100% { opacity: 1; }
-}
-
-/* Nikkahnama Bottom Controls & Advance Button */
-.nikkahnama-bottom-controls {
-  margin-top: 1.2rem;
-}
-
-.nikkahnama-prompt-banner {
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.18), rgba(255, 215, 0, 0.15));
-  border: 1.5px solid rgba(255, 215, 0, 0.45);
-  border-radius: 16px;
-  padding: 0.85rem 1.2rem;
-  margin: 1.2rem auto 0;
-  max-width: 540px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  color: #ffffff;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-}
-
-.prompt-sparkle {
-  font-size: 1.4rem;
-  animation: pulseHeart 1.2s infinite alternate;
-}
-
-.nikkahnama-completed-actions {
-  margin: 1.2rem auto 0;
-  max-width: 580px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.nikkahnama-success-message {
-  font-size: 0.98rem;
-  color: #ffd700;
+.nikkahnama-quran-trans {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+  font-style: italic;
   font-weight: 600;
-  line-height: 1.5;
-  text-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+  color: #3b4252;
+  line-height: 1.4;
 }
 
-.nikkahnama-advance-btn {
-  background: linear-gradient(135deg, #ff0080 0%, #ffd700 100%);
-  border: none;
-  color: #120324;
-  padding: 14px 34px;
-  border-radius: 50px;
-  font-size: 1.05rem;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(255, 0, 128, 0.5), 0 0 20px rgba(255, 215, 0, 0.4);
-  transition: all 0.3s ease;
-  animation: pulseGlow 2.5s infinite ease-in-out;
-}
-
-.nikkahnama-advance-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 15px 40px rgba(255, 0, 128, 0.7);
-}
-
-/* View Signed Nikkahnama button on Celebration screen */
-.nikkah-view-cert-btn {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(255, 0, 128, 0.25) 100%);
-  border: 1.5px solid #ffd700;
-  color: #ffd700;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-size: 0.95rem;
+.ayah-num {
+  font-size: 0.8rem;
+  font-style: normal;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.25);
+  color: #8b1c34;
 }
 
-.nikkah-view-cert-btn:hover {
-  background: linear-gradient(135deg, #ffd700 0%, #ff80b3 100%);
-  color: #120324;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.45);
+/* Nikkah Certification Statement */
+.nikkahnama-cert-intro {
+  text-align: center;
+  margin: 0.9rem auto 1.1rem;
+  max-width: 580px;
 }
 
-.mini-thumb-status {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #ffd700;
-  background: rgba(255, 215, 0, 0.15);
-  border: 1px solid rgba(255, 215, 0, 0.4);
-  padding: 0.2rem 0.6rem;
-  border-radius: 50px;
-  margin-top: 0.35rem;
-}
-
-.mini-thumb-status.bride-status {
-  color: #ff80b3;
-  background: rgba(255, 107, 157, 0.2);
-  border-color: rgba(255, 107, 157, 0.5);
-}
-
-.nikkah-signed-seal {
-  font-size: 0.68rem;
+.nikkahnama-cert-seal-badge {
+  display: inline-block;
+  font-size: clamp(0.68rem, 1.9vw, 0.78rem);
   font-weight: 800;
-  letter-spacing: 1px;
-  color: #ffd700;
-  background: rgba(255, 215, 0, 0.2);
-  border: 1px solid #ffd700;
-  padding: 0.25rem 0.6rem;
-  border-radius: 50px;
-  margin-top: 0.25rem;
+  letter-spacing: 1.2px;
+  color: #1e2f65;
+  background: rgba(30, 47, 101, 0.08);
+  border: 1px solid rgba(30, 47, 101, 0.25);
+  border-radius: 999px;
+  padding: 0.25rem 0.8rem;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
 }
 
-.celebration-badge {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.22), rgba(255, 0, 128, 0.22)) !important;
-  border-color: #ffd700 !important;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.35) !important;
+.nikkahnama-cert-text {
+  font-size: clamp(0.74rem, 2.1vw, 0.85rem);
+  font-weight: 600;
+  line-height: 1.6;
+  color: #3f4756;
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Royal Couple Names Showcase */
+.nikkahnama-names-showcase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.6rem, 2.5vw, 1.4rem);
+  margin: 1.1rem 0 0.8rem;
+  flex-wrap: wrap;
+}
+
+.nikkahnama-groom-name {
+  font-family: "Playfair Display", "Dancing Script", Georgia, serif;
+  font-size: clamp(1.4rem, 4.4vw, 2.1rem);
+  font-weight: 800;
+  color: #1e2f65;
+  margin: 0;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(30, 47, 101, 0.15);
+}
+
+.nikkahnama-ampersand {
+  font-family: "Great Vibes", "Dancing Script", cursive;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  color: #c5a059;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.nikkahnama-bride-name {
+  font-family: "Playfair Display", "Dancing Script", Georgia, serif;
+  font-size: clamp(1.4rem, 4.4vw, 2.1rem);
+  font-weight: 800;
+  color: #8b1c34;
+  margin: 0;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(139, 28, 52, 0.15);
+}
+
+/* Pious Du\a Box */
+.nikkahnama-dua-box {
+  background: rgba(197, 160, 89, 0.1);
+  border: 1px dashed rgba(197, 160, 89, 0.55);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  margin: 0.7rem auto 1.1rem;
+  max-width: 580px;
+  text-align: center;
+}
+
+.nikkahnama-dua-text {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(0.76rem, 2.2vw, 0.88rem);
+  font-style: italic;
+  font-weight: 600;
+  color: #4a3e2a;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Sacred Details Pill Strip */
+.nikkahnama-pills-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin: 0.9rem 0 1.3rem;
+}
+
+.nikkahnama-pill {
+  background: #fbf7ee;
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: clamp(0.7rem, 2vw, 0.8rem);
+  color: #2b2b2b;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.pill-icon {
+  font-size: 0.9rem;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   LIGHT THEME OVERRIDES FOR NIKKAHNAMA & THUMBPRINTS
+   THE SIGNATURE EQUATION ARENA: [ Groom ] + [ Bride ] = [ ❤️ ]
+   Directly matching the authentic physical layout in Image 2
    ═══════════════════════════════════════════════════════════════ */
-
-[data-theme="light"] .nikkahnama-parchment-card {
-  background: #fffdf9 !important;
-  border: 2.5px solid #c2185b !important;
-  box-shadow: 0 20px 60px rgba(194, 24, 91, 0.15), 0 0 30px rgba(255, 215, 0, 0.25) !important;
-  color: #1c0819 !important;
+.nikkahnama-equation-arena {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.35rem, 1.8vw, 0.9rem);
+  margin: 1.2rem auto;
+  max-width: 610px;
+  padding: 0.8rem clamp(0.4rem, 1.5vw, 0.8rem);
+  background: rgba(30, 47, 101, 0.03);
+  border: 1.5px solid rgba(30, 47, 101, 0.15);
+  border-radius: 16px;
 }
 
-[data-theme="light"] .nikkahnama-inner-frame {
-  border-color: rgba(194, 24, 91, 0.35) !important;
-  background: radial-gradient(circle at 50% 15%, rgba(255, 240, 245, 0.7) 0%, transparent 60%) !important;
+.equation-party-col {
+  flex: 1;
+  min-width: 80px;
+  max-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-[data-theme="light"] .nikkahnama-verse-card {
-  background: #fff5f8 !important;
-  border: 1px solid rgba(194, 24, 91, 0.25) !important;
+.equation-role-label {
+  font-size: clamp(0.64rem, 1.8vw, 0.74rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1e2f65;
+  margin-bottom: 0.15rem;
 }
 
-[data-theme="light"] .nikkahnama-arabic-verse {
-  color: #880e4f !important;
-  text-shadow: none !important;
+.equation-role-label.bride-label {
+  color: #8b1c34;
 }
 
-[data-theme="light"] .nikkahnama-verse-translation {
-  color: #3e1b2e !important;
+.equation-role-label.heart-label {
+  color: #c5a059;
 }
 
-[data-theme="light"] .nikkahnama-term-box {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(194, 24, 91, 0.2) !important;
+.equation-party-name {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(0.72rem, 2.1vw, 0.88rem);
+  font-weight: 700;
+  color: #1e2f65;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
-[data-theme="light"] .term-label {
-  color: #880e4f !important;
+.equation-party-name.bride-name {
+  color: #8b1c34;
 }
 
-[data-theme="light"] .term-value {
-  color: #1c0819 !important;
+.equation-party-name.heart-name {
+  color: #c5a059;
 }
 
-[data-theme="light"] .nikkahnama-party-card {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(194, 24, 91, 0.25) !important;
-  box-shadow: 0 8px 24px rgba(130, 30, 70, 0.08) !important;
+.equation-party-sig {
+  font-family: "Dancing Script", "Great Vibes", cursive;
+  font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+  font-weight: 700;
+  color: #1e2f65;
+  opacity: 0.9;
+  margin-bottom: 0.35rem;
+  line-height: 1.2;
 }
 
-[data-theme="light"] .party-name {
-  color: #880e4f !important;
-  text-shadow: none !important;
+.equation-party-sig.bride-sig {
+  color: #8b1c34;
 }
 
-[data-theme="light"] .party-name.bride-color {
-  color: #c2185b !important;
-  text-shadow: none !important;
+.equation-party-sig.heart-sig {
+  color: #c5a059;
+  font-size: clamp(0.74rem, 2vw, 0.9rem);
 }
 
-[data-theme="light"] .party-sig-script {
-  color: #880e4f !important;
+/* The Square Thumbprint Boxes (Matching the physical frame) */
+.equation-thumbprint-box {
+  width: 100%;
+  max-width: 130px;
+  aspect-ratio: 1 / 1.15;
+  background: #ffffff;
+  border: 2px solid #1e2f65;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0.4rem;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
-[data-theme="light"] .bride-script {
-  color: #c2185b !important;
+/* Groom Box: Stamped */
+.groom-box {
+  border-color: #1e2f65;
+  background: #fbfdff;
 }
 
-[data-theme="light"] .thumbprint-label {
-  color: #5a2040 !important;
+.groom-box .thumbprint-svg.ink-stamped {
+  color: #b71c1c !important; /* Authentic Red Stamp Ink */
+  filter: drop-shadow(0 2px 5px rgba(183, 28, 28, 0.45));
 }
 
-[data-theme="light"] .groom-stamped-box {
+.equation-stamp-tag {
+  position: absolute;
+  bottom: 5px;
+  background: #b71c1c;
+  color: #ffffff;
+  font-size: clamp(0.55rem, 1.5vw, 0.65rem);
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.6px;
+  box-shadow: 0 2px 6px rgba(183, 28, 28, 0.4);
+}
+
+.equation-stamp-tag.bride-stamp {
+  background: #c2185b;
+  box-shadow: 0 2px 6px rgba(194, 24, 91, 0.4);
+}
+
+/* Bride Interactive Glowing Scanner Button */
+.bride-scanner-btn {
+  cursor: pointer;
+  border: 2px dashed #e91e63 !important;
   background: #fff0f5 !important;
-  border-color: #c2185b !important;
-  box-shadow: inset 0 0 15px rgba(194, 24, 91, 0.15) !important;
+  box-shadow: 
+    0 0 18px rgba(233, 30, 99, 0.4),
+    inset 0 0 14px rgba(233, 30, 99, 0.15) !important;
+  animation: bridePadPulse 1.6s infinite alternate !important;
+  outline: none;
 }
 
-[data-theme="light"] .bride-scanner-box.glowing-interactive {
-  background: #fff0f5 !important;
+@keyframes bridePadPulse {
+  0% {
+    border-color: #e91e63;
+    box-shadow: 0 0 12px rgba(233, 30, 99, 0.4), inset 0 0 8px rgba(233, 30, 99, 0.15);
+    transform: scale(1);
+  }
+  100% {
+    border-color: #ffd700;
+    box-shadow: 0 0 24px rgba(255, 107, 157, 0.7), 0 0 10px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 107, 157, 0.25);
+    transform: scale(1.03);
+  }
+}
+
+.bride-scanner-btn:hover,
+.bride-scanner-btn:active {
+  transform: scale(1.05) !important;
+  border-color: #ffd700 !important;
+  background: #ffe4ee !important;
+}
+
+.equation-scanner-indicator {
+  position: absolute;
+  bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: #e91e63;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: clamp(0.55rem, 1.5vw, 0.65rem);
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.5);
+}
+
+.scanner-pointer-icon {
+  font-size: 0.8rem;
+  animation: bounceHand 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes bounceHand {
+  from { transform: translateY(0); }
+  to { transform: translateY(-3px); }
+}
+
+.bride-stamped-box {
+  border-color: #8b1c34 !important;
+  background: #fff8f9 !important;
+}
+
+.bride-stamped-box .thumbprint-svg.ink-stamped {
+  color: #c2185b !important; /* Rose Crimson Ink */
+  filter: drop-shadow(0 2px 5px rgba(194, 24, 91, 0.45));
+}
+
+.stamp-impact-animate {
+  animation: stampImpactPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes stampImpactPop {
+  0% { transform: scale(1.4); opacity: 0.5; }
+  60% { transform: scale(0.92); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Plus and Equals Operators */
+.equation-operator {
+  font-size: clamp(1.4rem, 4.5vw, 2.3rem);
+  font-weight: 800;
+  color: #b8915b;
+  line-height: 1;
+  flex-shrink: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Result Box: The Heart */
+.equation-heart-box {
+  width: 100%;
+  max-width: 130px;
+  aspect-ratio: 1 / 1.15;
+  background: #ffffff;
+  border: 2px solid #b8915b;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0.4rem;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s ease;
+}
+
+.big-equation-heart {
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 6px rgba(233, 30, 99, 0.3));
+}
+
+.heart-box-tag {
+  position: absolute;
+  bottom: 5px;
+  background: #b8915b;
+  color: #ffffff;
+  font-size: clamp(0.52rem, 1.4vw, 0.62rem);
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* When Bride stamps, Heart bursts into glowing romance */
+.heart-active-glow .equation-heart-box {
   border-color: #e91e63 !important;
-  box-shadow: 0 0 20px rgba(233, 30, 99, 0.4), inset 0 0 15px rgba(233, 30, 99, 0.2) !important;
+  background: radial-gradient(circle at center, #fff0f5 0%, #ffffff 80%) !important;
+  box-shadow: 
+    0 0 25px rgba(233, 30, 99, 0.4),
+    0 0 10px rgba(255, 215, 0, 0.4) !important;
 }
 
-[data-theme="light"] .bride-stamped-box {
-  background: #fff0f5 !important;
-  border-color: #c2185b !important;
-  box-shadow: inset 0 0 15px rgba(194, 24, 91, 0.2) !important;
+.heart-active-glow .big-equation-heart {
+  animation: heartThrobPulse 0.9s infinite ease-in-out !important;
+  filter: drop-shadow(0 0 12px rgba(233, 30, 99, 0.65)) !important;
 }
 
-[data-theme="light"] .groom-thumb .thumbprint-svg.ink-stamped {
-  color: #b71c1c !important;
-  filter: none !important;
+@keyframes heartThrobPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
 }
 
-[data-theme="light"] .bride-thumb .thumbprint-svg.ink-stamped {
-  color: #c2185b !important;
-  filter: none !important;
+.heart-active-glow .heart-box-tag {
+  background: #e91e63 !important;
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.5) !important;
 }
 
-[data-theme="light"] .thumbprint-svg.pad-outline {
-  color: rgba(233, 30, 99, 0.45) !important;
+.equation-subtag {
+  font-size: clamp(0.62rem, 1.8vw, 0.72rem);
+  font-weight: 700;
+  color: #555e6d;
+  margin-top: 0.35rem;
+  line-height: 1.2;
 }
 
-[data-theme="light"] .nikkahnama-prompt-banner {
-  background: #fff5f8 !important;
-  border-color: rgba(194, 24, 91, 0.3) !important;
-  color: #1c0819 !important;
+/* Footer Actions in Nikkahnama */
+.nikkahnama-footer-actions {
+  text-align: center;
+  margin-top: 1.2rem;
 }
 
-[data-theme="light"] .nikkahnama-success-message {
-  color: #880e4f !important;
-  text-shadow: none !important;
+.nikkahnama-touch-prompt {
+  background: #fff0f5;
+  border: 1.5px solid rgba(233, 30, 99, 0.4);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  font-size: clamp(0.78rem, 2.3vw, 0.9rem);
+  color: #880e4f;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 520px;
+  animation: pulseTouchBar 2s infinite ease-in-out;
 }
 
-[data-theme="light"] .nikkah-view-cert-btn {
-  background: #fff0f5 !important;
-  border-color: #c2185b !important;
-  color: #880e4f !important;
+@keyframes pulseTouchBar {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
 }
+
+.prompt-finger-icon {
+  font-size: 1.2rem;
+  animation: bounceHand 0.8s infinite alternate ease-in-out;
+}
+
+.nikkahnama-done-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nikkahnama-congrats-line {
+  font-size: clamp(0.85rem, 2.4vw, 1rem);
+  color: #1e2f65;
+  font-weight: 700;
+  margin: 0;
+}
+
+.nikkahnama-advance-btn {
+  background: linear-gradient(135deg, #1e2f65 0%, #283593 100%);
+  color: #ffffff;
+  border: 2px solid #ffd700;
+  border-radius: 999px;
+  padding: 0.75rem 1.6rem;
+  font-size: clamp(0.85rem, 2.4vw, 1rem);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(30, 47, 101, 0.4), 0 0 15px rgba(255, 215, 0, 0.35);
+  transition: all 0.3s ease;
+}
+
+.nikkahnama-advance-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 25px rgba(30, 47, 101, 0.55), 0 0 25px rgba(255, 215, 0, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STAGE 5: CELEBRATION CARD STYLES
+   Fixed top margin to NEVER cut off at top on mobile
+   ═══════════════════════════════════════════════════════════════ */
+.nikkah-celebration-card {
+  width: 100%;
+  max-width: 680px !important;
+  margin: 0 auto 3.5rem auto !important; /* CRITICAL FIX: Pinned from top, never cut off! */
+  background: linear-gradient(145deg, #dfc097 0%, #b8915b 25%, #eccfa4 50%, #a8814d 75%, #dfc097 100%);
+  border: 4px solid #815b2e;
+  border-radius: 18px;
+  padding: clamp(10px, 2.5vw, 18px);
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.65),
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  position: relative;
+  box-sizing: border-box;
+  animation: framePopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.celebration-inner-frame {
+  background: #fffefb;
+  border: 3px double #1e2f65;
+  border-radius: 12px;
+  padding: clamp(1.1rem, 3.2vw, 2.2rem) clamp(0.8rem, 2.6vw, 1.8rem);
+  box-shadow: inset 0 0 25px rgba(184, 145, 91, 0.2);
+  text-align: center;
+  color: #1a1a24;
+}
+
+.celebration-rings-banner {
+  font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+  margin-bottom: 0.4rem;
+  letter-spacing: 4px;
+}
+
+.celebration-proclamation-badge {
+  display: inline-block;
+  font-size: clamp(0.68rem, 2vw, 0.8rem);
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #8b1c34;
+  background: rgba(139, 28, 52, 0.08);
+  border: 1px solid rgba(139, 28, 52, 0.25);
+  border-radius: 999px;
+  padding: 0.3rem 0.9rem;
+  margin-bottom: 0.65rem;
+}
+
+.celebration-main-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.4rem, 4.8vw, 2.2rem);
+  font-weight: 800;
+  color: #1e2f65;
+  margin: 0.2rem 0;
+  letter-spacing: 0.5px;
+}
+
+.celebration-sub-title {
+  font-size: clamp(0.78rem, 2.3vw, 0.92rem);
+  font-weight: 600;
+  color: #555e6d;
+  margin: 0 0 1rem;
+}
+
+.celebration-divider {
+  height: 1.5px;
+  background: linear-gradient(to right, transparent, rgba(197, 160, 89, 0.5), transparent);
+  margin: 1rem auto;
+  max-width: 450px;
+}
+
+.celebration-couple-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2vw, 1.2rem);
+  margin: 1.1rem 0;
+  flex-wrap: wrap;
+}
+
+.celebration-person-box {
+  flex: 1;
+  min-width: 140px;
+  max-width: 220px;
+  background: #fdfaf4;
+  border: 1.5px solid rgba(30, 47, 101, 0.2);
+  border-radius: 12px;
+  padding: 0.85rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.celebration-person-box.bride {
+  border-color: rgba(139, 28, 52, 0.25);
+  background: #fff8f9;
+}
+
+.person-role {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b;
+}
+
+.person-name {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  font-weight: 800;
+  color: #1e2f65;
+  margin: 0;
+}
+
+.person-name.bride-name {
+  color: #8b1c34;
+}
+
+.person-tag {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #555e6d;
+}
+
+.thumb-sealed-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: #1e2f65;
+  color: #ffffff;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 0.2rem;
+}
+
+.thumb-sealed-badge.bride-sealed {
+  background: #8b1c34;
+}
+
+.celebration-center-crest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.5rem;
+}
+
+.crest-rings {
+  font-size: 1.3rem;
+}
+
+.crest-stamp {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #c5a059;
+  letter-spacing: 0.8px;
+}
+
+.crest-sealed-text {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #1e2f65;
+  letter-spacing: 0.5px;
+}
+
+.celebration-vow-quote {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(0.82rem, 2.4vw, 0.95rem);
+  font-style: italic;
+  font-weight: 600;
+  color: #3b4252;
+  line-height: 1.65;
+  max-width: 520px;
+  margin: 0.9rem auto;
+}
+
+.celebration-date-badge {
+  display: inline-block;
+  font-size: clamp(0.72rem, 2.1vw, 0.82rem);
+  font-weight: 700;
+  color: #1e2f65;
+  background: rgba(197, 160, 89, 0.15);
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  margin: 0.6rem 0 1.2rem;
+}
+
+/* Signatures Grid */
+.celebration-signatures-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.6rem, 2vw, 1.4rem);
+  margin: 1.1rem 0 0.6rem;
+}
+
+.sig-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 95px;
+}
+
+.sig-script {
+  font-family: "Dancing Script", "Great Vibes", cursive;
+  font-size: clamp(1.2rem, 3.8vw, 1.6rem);
+  font-weight: 700;
+  color: #1e2f65;
+  line-height: 1.2;
+}
+
+.sig-script.bride-script {
+  color: #8b1c34;
+}
+
+.sig-label {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 600;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  padding-top: 2px;
+  width: 100%;
+  text-align: center;
+}
+
+.seal-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wax-seal-ornament {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e53935 0%, #b71c1c 65%, #7f0000 100%);
+  color: #ffd700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(183, 28, 28, 0.45);
+  border: 2px solid #ffcdd2;
+}
+
+.seal-heart-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* Celebration Action Buttons */
+.congrats-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.nikkah-view-cert-btn {
+  background: #1e2f65;
+  color: #ffffff;
+  border: 1.5px solid #ffd700;
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(30, 47, 101, 0.35);
+}
+
+.nikkah-view-cert-btn:hover {
+  background: #283593;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 47, 101, 0.5);
+}
+
 
 /* ─── Timeline 23rd Birthday "Pics loading......." Clean Box ─── */
 .timeline-loading-box {
