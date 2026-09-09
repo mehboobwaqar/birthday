@@ -12,6 +12,7 @@ const SECRET_PASSWORD = "nono";
 type AudioCueType =
   | "envelopeOpen"
   | "candleBlow"
+  | "cakeSlice"
   | "giftOpen"
   | "letterOpen"
   | "cardFlip"
@@ -111,6 +112,33 @@ function playAudioCue(type: AudioCueType) {
         gain.connect(ctx.destination);
         osc.start(start);
         osc.stop(start + 0.85);
+      });
+    } else if (type === "cakeSlice") {
+      // 🔪 Knife slice whoosh + sweet celebratory chimes
+      const oscWhoosh = ctx.createOscillator();
+      const gainWhoosh = ctx.createGain();
+      oscWhoosh.type = "triangle";
+      oscWhoosh.frequency.setValueAtTime(680, ctx.currentTime);
+      oscWhoosh.frequency.exponentialRampToValueAtTime(160, ctx.currentTime + 0.18);
+      gainWhoosh.gain.setValueAtTime(0.3, ctx.currentTime);
+      gainWhoosh.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      oscWhoosh.connect(gainWhoosh);
+      gainWhoosh.connect(ctx.destination);
+      oscWhoosh.start();
+      oscWhoosh.stop(ctx.currentTime + 0.2);
+
+      [783.99, 1046.5, 1318.51].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        const start = ctx.currentTime + 0.15 + idx * 0.08;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.2, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.6);
       });
     } else if (type === "giftOpen") {
       // 🎁 Surprise Gift Open: Cheerful box pop + joyful ascending fanfare
@@ -787,9 +815,12 @@ function QualitiesSection() {
   );
 }
 
-// ─── Cake Section with Interactive Candles ───
+// ─── Cake Section with Interactive Candles & Cake Slicing ───
 function CakeSection() {
   const [candlesBlown, setCandlesBlown] = useState(false);
+  const [cakeSliced, setCakeSliced] = useState(false);
+  const [isSlicing, setIsSlicing] = useState(false);
+  const [bitesFed, setBitesFed] = useState(1);
   const age = getAge();
 
   const handleBlowCandles = useCallback(async () => {
@@ -817,6 +848,52 @@ function CakeSection() {
     }
   }, [candlesBlown]);
 
+  const handleSliceCake = useCallback(async () => {
+    if (isSlicing) return;
+    setIsSlicing(true);
+    playAudioCue("cakeSlice");
+
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 70,
+        spread: 80,
+        origin: { y: 0.6, x: 0.5 },
+        colors: ["#ffd700", "#ff0080", "#ff4081", "#ffffff", "#ce93d8"],
+      });
+    } catch (e) {
+      console.log("Confetti error:", e);
+    }
+
+    setTimeout(() => {
+      setCakeSliced(true);
+      setIsSlicing(false);
+    }, 650);
+  }, [isSlicing]);
+
+  const handleFeedBite = useCallback(async () => {
+    playAudioCue("heartPop");
+    setBitesFed((prev) => prev + 1);
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 35,
+        spread: 60,
+        origin: { y: 0.62, x: 0.5 },
+        colors: ["#ff0080", "#ff4081", "#ffd700"],
+      });
+    } catch (e) {
+      console.log("Confetti error:", e);
+    }
+  }, []);
+
+  const handleRelight = useCallback(() => {
+    playAudioCue("twinkle");
+    setCandlesBlown(false);
+    setCakeSliced(false);
+    setBitesFed(1);
+  }, []);
+
   return (
     <section className="cake-section" id="cake">
       <h2 className="section-title">🎂 Make a Wish, Wifeyyy G! 🎂</h2>
@@ -833,20 +910,70 @@ function CakeSection() {
         </div>
       )}
 
-      <div className="cake-container" onClick={handleBlowCandles}>
-        <span className="cake-emoji">{candlesBlown ? "🎉" : "🎂"}</span>
+      <div
+        className="cake-container"
+        onClick={candlesBlown && !cakeSliced ? handleSliceCake : handleBlowCandles}
+      >
+        <span className="cake-emoji">{cakeSliced ? "🍰" : candlesBlown ? "🎂" : "🎂"}</span>
         <div className="cake-glow" />
+        {isSlicing && <div className="knife-slicing-animation">🔪</div>}
       </div>
 
       <div className="age-badge">{age}</div>
 
-      <button className={`blow-candles-btn ${candlesBlown ? "blown" : ""}`} onClick={handleBlowCandles}>
-        {candlesBlown ? "🎉 Wish Made! 🎉" : "💨 Blow the Candles!"}
-      </button>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+        <button
+          className={`blow-candles-btn ${candlesBlown ? "blown" : ""}`}
+          onClick={handleBlowCandles}
+        >
+          {candlesBlown ? "🎉 Candles Blown! Wish Made! 🎉" : "💨 Blow the Candles!"}
+        </button>
+
+        {/* Slice the Cake button appears after candles are blown */}
+        {candlesBlown && !cakeSliced && (
+          <div className="cake-actions-wrap" style={{ marginTop: "0.5rem" }}>
+            <button
+              className={`slice-cake-btn ${isSlicing ? "slicing" : ""}`}
+              onClick={handleSliceCake}
+              disabled={isSlicing}
+            >
+              <span>{isSlicing ? "🔪 Slicing Cake..." : "Slice the Cake! 🔪🎂"}</span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Sliced Cake Serving Plate & Feeding card */}
+      {cakeSliced && (
+        <div className="cake-slice-card">
+          <div className="slice-plate">
+            <span className="slice-fork-emoji">🍴</span>
+            <span className="slice-plate-emoji">🍰</span>
+            <span className="slice-fork-emoji">✨</span>
+          </div>
+          <h3 className="slice-title">Pehla Piece Meri Wifey Ke Liye! 🥰</h3>
+          <p className="slice-text">
+            Pehla aur sab se sweet piece meri pyari Laiba ke liye! Aapki zindagi me hamesha meetha ras, dher sari barkat aur hamara be-inteha pyaar bana rahe! 🎂💖
+          </p>
+          <div className="slice-bites-count">
+            <span className="bites-badge">Bites Fed with Love: {bitesFed} 🥄💕</span>
+          </div>
+          <div className="slice-action-buttons">
+            <button className="feed-more-btn" onClick={handleFeedBite}>
+              Feed Another Bite! 🍓😋
+            </button>
+            <button className="cake-relight-btn" onClick={handleRelight}>
+              🔄 Relight Candles
+            </button>
+          </div>
+        </div>
+      )}
 
       <p className="cake-message" style={{ marginTop: "1.5rem" }}>
-        {candlesBlown
-          ? `Every wish you make deserves to come true, Laiba! ✨ Here's to an incredible year of being ${age}! 🌟`
+        {cakeSliced
+          ? `Mmm... The sweetest birthday cake for the sweetest girl in the entire universe! 🍰✨`
+          : candlesBlown
+          ? `Every wish you make deserves to come true, Laiba! ✨ Here's to an incredible year of being ${age}! 🌟 Now slice the cake! 🔪`
           : `Close your eyes, make a wish, and blow out the candles! ✨ You deserve every dream come true! 💫`}
       </p>
     </section>
@@ -2719,6 +2846,124 @@ function EnvelopeIntro({ onOpen }: { onOpen: () => void }) {
   );
 }
 
+// ─── Love Duration Clock (Live Ticking Since 04 April 2024) ───
+interface LoveDuration {
+  years: number;
+  months: number;
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  totalDays: number;
+}
+
+function calculateLoveDuration(startDate: Date, currentDate: Date): LoveDuration {
+  let years = currentDate.getFullYear() - startDate.getFullYear();
+  let months = currentDate.getMonth() - startDate.getMonth();
+  let days = currentDate.getDate() - startDate.getDate();
+  let hours = currentDate.getHours() - startDate.getHours();
+  let minutes = currentDate.getMinutes() - startDate.getMinutes();
+  let seconds = currentDate.getSeconds() - startDate.getSeconds();
+
+  if (seconds < 0) {
+    seconds += 60;
+    minutes -= 1;
+  }
+  if (minutes < 0) {
+    minutes += 60;
+    hours -= 1;
+  }
+  if (hours < 0) {
+    hours += 24;
+    days -= 1;
+  }
+  if (days < 0) {
+    const prevMonthLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+    days += prevMonthLastDay;
+    months -= 1;
+  }
+  if (months < 0) {
+    months += 12;
+    years -= 1;
+  }
+
+  const diffMs = Math.max(0, currentDate.getTime() - startDate.getTime());
+  const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  return {
+    years: Math.max(0, years),
+    months: Math.max(0, months),
+    days: Math.max(0, days),
+    hours: Math.max(0, hours),
+    minutes: Math.max(0, minutes),
+    seconds: Math.max(0, seconds),
+    totalDays,
+  };
+}
+
+function LoveClockSection() {
+  const [duration, setDuration] = useState<LoveDuration | null>(null);
+
+  useEffect(() => {
+    // 04 April 2024
+    const startDate = new Date(2024, 3, 4, 0, 0, 0);
+    const update = () => {
+      setDuration(calculateLoveDuration(startDate, new Date()));
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!duration) {
+    return null;
+  }
+
+  const timeUnits = [
+    { label: "Years", value: duration.years, emoji: "🌹" },
+    { label: "Months", value: duration.months, emoji: "🌙" },
+    { label: "Days", value: duration.days, emoji: "☀️" },
+    { label: "Hours", value: String(duration.hours).padStart(2, "0"), emoji: "⏳" },
+    { label: "Minutes", value: String(duration.minutes).padStart(2, "0"), emoji: "⏱️" },
+    { label: "Seconds", value: String(duration.seconds).padStart(2, "0"), emoji: "💓", isSeconds: true },
+  ];
+
+  return (
+    <section className="love-clock-section" id="love-clock">
+      <div className="love-clock-card">
+        <div className="love-clock-badge">
+          <span>💍 Together Since 04 April 2024</span>
+        </div>
+
+        <h2 className="love-clock-title">Loving You For 💖</h2>
+        <p className="love-clock-subtitle">
+          Loving You For: {duration.years} Years, {duration.months} Months, {duration.days} Days, {duration.hours} Hours, {duration.minutes} Minutes, {duration.seconds} Seconds
+        </p>
+
+        <div className="love-clock-grid">
+          {timeUnits.map((unit, idx) => (
+            <div key={idx} className={`love-clock-box ${unit.isSeconds ? "seconds-box" : ""}`}>
+              <span className="love-clock-box-emoji">{unit.emoji}</span>
+              <span className="love-clock-num">{unit.value}</span>
+              <span className="love-clock-label">{unit.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="love-clock-note">
+          <span className="love-clock-pulse-heart">💖</span>
+          <div className="note-text">
+            Together for <strong>{duration.totalDays.toLocaleString()}</strong> beautiful days and counting...
+          </div>
+          <div className="note-hint">
+            "04 April 2024 ko shuru hui thi hamari pyari kahani, aur yeh silsila ta-umr chalega!" 🥰♾️
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Main Page ───
 export default function BirthdayPage() {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
@@ -2932,6 +3177,9 @@ export default function BirthdayPage() {
 
             {/* ─── Timeline ─── */}
             <Timeline />
+
+            {/* ─── Live Love Clock (Since 04 April 2024) ─── */}
+            <LoveClockSection />
 
             {/* ─── Footer ─── */}
             <footer className="footer">

@@ -4438,3 +4438,330 @@ body {
 .modal-loading-box .loading-text {
   font-size: 1.25rem;
 }
+
+/* ============ CAKE SLICING & FEEDING STYLES ============ */
+.cake-actions-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
+
+.slice-cake-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 2.4rem;
+  background: linear-gradient(135deg, #ff0080 0%, #ff4081 50%, #ffd700 100%);
+  border: 2.5px solid #ffd700;
+  border-radius: 50px;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(255, 0, 128, 0.5), 0 0 20px rgba(255, 215, 0, 0.4);
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+.slice-cake-btn:hover {
+  transform: scale(1.06) translateY(-3px);
+  box-shadow: 0 15px 40px rgba(255, 0, 128, 0.7), 0 0 30px rgba(255, 215, 0, 0.6);
+  border-color: #ffffff;
+}
+
+.slice-cake-btn:active {
+  transform: scale(0.96);
+}
+
+.slice-cake-btn.slicing {
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.knife-slicing-animation {
+  position: absolute;
+  top: -25px;
+  right: 15%;
+  font-size: clamp(3.5rem, 8vw, 5rem);
+  z-index: 25;
+  animation: sliceCut 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.65));
+}
+
+@keyframes sliceCut {
+  0% {
+    transform: translate(25px, -45px) rotate(45deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    transform: translate(-35px, 45px) rotate(-15deg);
+  }
+  100% {
+    transform: translate(-45px, 65px) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+.cake-slice-card {
+  margin: 2rem auto 1rem;
+  max-width: 540px;
+  background: linear-gradient(135deg, rgba(85, 15, 55, 0.88) 0%, rgba(35, 8, 45, 0.96) 100%);
+  border: 2px solid rgba(255, 215, 0, 0.55);
+  border-radius: 24px;
+  padding: 1.8rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(255, 0, 128, 0.25);
+  animation: lightboxZoom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.slice-plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.slice-plate-emoji {
+  font-size: clamp(3.2rem, 7.5vw, 4.5rem);
+  animation: bounce 2s infinite ease-in-out;
+  filter: drop-shadow(0 8px 25px rgba(255, 0, 128, 0.5));
+}
+
+.slice-fork-emoji {
+  font-size: clamp(2.2rem, 5vw, 3rem);
+}
+
+.slice-title {
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: clamp(1.25rem, 3.8vw, 1.6rem);
+  font-weight: 800;
+  color: #ffd700;
+  margin-bottom: 0.6rem;
+  text-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
+}
+
+.slice-text {
+  font-size: clamp(0.95rem, 2.6vw, 1.08rem);
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  margin-bottom: 1.4rem;
+}
+
+.bites-badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  background: rgba(255, 64, 129, 0.25);
+  border: 1px solid rgba(255, 64, 129, 0.5);
+  color: #ff80b3;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.slice-action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.feed-more-btn {
+  background: linear-gradient(135deg, #ff0080, #e040fb);
+  border: 1.5px solid #ffd700;
+  color: #ffffff;
+  padding: 11px 24px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255, 0, 128, 0.4);
+  transition: all 0.3s ease;
+}
+
+.feed-more-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(255, 0, 128, 0.6);
+}
+
+.cake-relight-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cake-relight-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #ffd700;
+}
+
+/* ============ LOVE DURATION CLOCK SECTION ============ */
+.love-clock-section {
+  padding: 5rem 1.5rem;
+  position: relative;
+  background: linear-gradient(180deg, var(--bg-dark) 0%, #1e0530 50%, var(--bg-dark) 100%);
+  text-align: center;
+  overflow: hidden;
+}
+
+.love-clock-card {
+  max-width: 840px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(60, 10, 50, 0.78) 0%, rgba(25, 5, 35, 0.94) 100%);
+  border: 2px solid rgba(255, 215, 0, 0.45);
+  border-radius: 28px;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.2rem, 4vw, 2.5rem);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), inset 0 0 40px rgba(255, 0, 128, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  position: relative;
+  z-index: 2;
+}
+
+.love-clock-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.18), rgba(255, 64, 129, 0.22));
+  border: 1.5px solid rgba(255, 215, 0, 0.6);
+  color: #ffd700;
+  font-size: clamp(0.78rem, 2.2vw, 0.88rem);
+  font-weight: 800;
+  padding: 6px 18px;
+  border-radius: 50px;
+  letter-spacing: 1px;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 4px 18px rgba(255, 215, 0, 0.25);
+}
+
+.love-clock-title {
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+  background: linear-gradient(135deg, #ffffff 0%, #ff80b3 50%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.love-clock-subtitle {
+  font-size: clamp(0.95rem, 2.6vw, 1.12rem);
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.6;
+  max-width: 580px;
+  margin: 0 auto 2.2rem;
+}
+
+.love-clock-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(8px, 2vw, 16px);
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .love-clock-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
+.love-clock-box {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1.5px solid rgba(255, 107, 157, 0.35);
+  border-radius: 18px;
+  padding: clamp(12px, 2.5vw, 20px) 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 15px rgba(255, 0, 128, 0.1);
+}
+
+.love-clock-box:hover {
+  border-color: #ffd700;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+}
+
+.love-clock-box.seconds-box {
+  border-color: rgba(255, 215, 0, 0.6);
+  background: rgba(45, 10, 40, 0.65);
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.25);
+}
+
+.love-clock-box-emoji {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.love-clock-num {
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 0, 128, 0.6);
+  line-height: 1.1;
+}
+
+.seconds-box .love-clock-num {
+  color: #ffd700;
+  text-shadow: 0 0 18px rgba(255, 215, 0, 0.7);
+}
+
+.love-clock-label {
+  font-size: clamp(0.72rem, 1.8vw, 0.82rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+.love-clock-note {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px dashed rgba(255, 215, 0, 0.4);
+  border-radius: 20px;
+  padding: 1.2rem 1.5rem;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.love-clock-note:hover {
+  background: rgba(255, 0, 128, 0.15);
+  border-color: #ffd700;
+}
+
+.love-clock-pulse-heart {
+  font-size: 2rem;
+  animation: heartPulse 1.4s infinite ease-in-out;
+  margin-bottom: 0.4rem;
+}
+
+.love-clock-note .note-text {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.15rem, 3.2vw, 1.45rem);
+  color: #ffd700;
+  line-height: 1.55;
+  margin-bottom: 0.3rem;
+}
+
+.love-clock-note .note-hint {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
