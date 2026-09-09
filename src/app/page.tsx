@@ -1567,11 +1567,14 @@ function GiftSection() {
 
 // ─── Special Quiz for You Section ───
 function SpecialQuizSection() {
+  // Modal visibility state
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
+
   // Stages:
   // 0: Q1 - Do you love me?
   // 1: Q2 (1st time) - Will you marry Mehboob Waqar?
   // 2: Q2 (2nd time) - Kaho Na... Will you marry Mehboob Waqar forever?
-  // 3: Q2 (3rd time) - Aakhri Baar... Do you marry Mehboob Waqar for all seven lives?
+  // 3: Q2 (3rd time) - Will you marry Mehboob Waqar? (Simple & Clean)
   // 4: Grand Congratulations Card!
   const [quizStage, setQuizStage] = useState(0);
   const [runawayOffset, setRunawayOffset] = useState({ x: 0, y: 0 });
@@ -1621,9 +1624,9 @@ function SpecialQuizSection() {
       "Not Qabool 😜",
       "Haha ab to bilkul nahi! 🏃‍♀️",
       "Ab to ho gaya Qabool! 💖",
-      "Dulhan ban jao ab! 👰‍♀️",
-      "No escape now! 👑",
-      "Pakka wada hai! 💍",
+      "Pakro pakro! 💨",
+      "No escape now! 💍",
+      "Pakka wada hai! 💕",
     ],
     []
   );
@@ -1695,6 +1698,33 @@ function SpecialQuizSection() {
     } catch (_) {}
   };
 
+  const handleOpenQuiz = () => {
+    playAudioCue("cardFlip");
+    setQuizStage(0);
+    resetRunaway("No 😜");
+    setCelebrationToast(null);
+    setIsQuizOpen(true);
+  };
+
+  const handleCloseQuiz = () => {
+    playAudioCue("cameraShutter");
+    setIsQuizOpen(false);
+    setTimeout(() => {
+      document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  };
+
+  useEffect(() => {
+    if (!isQuizOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleCloseQuiz();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isQuizOpen]);
+
   const handleAnswerYesQ1 = async () => {
     playAudioCue("success");
     playAudioCue("kiss");
@@ -1721,7 +1751,7 @@ function SpecialQuizSection() {
   const handleQaboolRound2 = async () => {
     playAudioCue("success");
     triggerConfetti("mini");
-    setCelebrationToast("Alhamdulillah! 2 dafa Qabool ho gaya! 🌹 Ab aakhri aur sab se pakka wada... 👑💍");
+    setCelebrationToast("Alhamdulillah! 2 dafa Qabool ho gaya! 🌹 Ab aakhri aur sab se pakka wada... 💍💖");
     setTimeout(() => {
       setCelebrationToast(null);
       setQuizStage(3);
@@ -1739,11 +1769,6 @@ function SpecialQuizSection() {
     }, 2000);
   };
 
-  const handleBackToTop = () => {
-    playAudioCue("cameraShutter");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   const handleRestartQuiz = () => {
     playAudioCue("cardFlip");
     setQuizStage(0);
@@ -1753,179 +1778,214 @@ function SpecialQuizSection() {
 
   return (
     <section className="quiz-section" id="quiz">
-      <h2 className="section-title">💖 Special Quiz for You 💖</h2>
-      <p className="timeline-hint" style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-        Dil ki baat jaan-ne ka waqt... No cheating allowed! 😜💍
-      </p>
-      <div className="section-divider" />
+      {/* On Main Screen: Only Show Start Special Quiz Teaser Card */}
+      <div className="quiz-container">
+        <div className="quiz-teaser-card">
+          <div className="quiz-teaser-icon">💝</div>
+          <h2 className="quiz-teaser-title">Special Romantic Quiz</h2>
+          <p className="quiz-teaser-desc">
+            Dil ki baat jaan-ne ka waqt... A little romantic surprise quiz just for you, Wifeyyy! 🙈💍
+          </p>
+          <button
+            type="button"
+            className="quiz-start-btn"
+            onClick={handleOpenQuiz}
+          >
+            ✨ Start Special Quiz 💖
+          </button>
+        </div>
+      </div>
 
-      {celebrationToast && (
-        <div className="quiz-toast-popup">
-          <span>{celebrationToast}</span>
+      {/* Dedicated Fullscreen Quiz Modal / Screen */}
+      {isQuizOpen && (
+        <div
+          className="quiz-fullscreen-modal"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              handleCloseQuiz();
+            }
+          }}
+        >
+          {celebrationToast && (
+            <div className="quiz-toast-popup">
+              <span>{celebrationToast}</span>
+            </div>
+          )}
+
+          <div className="quiz-modal-content">
+            <button
+              type="button"
+              className="quiz-modal-close"
+              onClick={handleCloseQuiz}
+              aria-label="Close Quiz"
+              title="Close Quiz"
+            >
+              ✕
+            </button>
+
+            {/* Stage 0: Q1 - Do you love me? */}
+            {quizStage === 0 && (
+              <div className="quiz-card stage-standard">
+                <span className="quiz-badge">💘 Question 1 of 2</span>
+                <h3 className="quiz-question-title">Do you love me? 🥺💖</h3>
+                <p className="quiz-subtitle">Sach sach batana... sooch samajh kar jawab dena! 🙈✨</p>
+
+                <div className="quiz-btn-row">
+                  <button type="button" className="quiz-yes-btn" onClick={handleAnswerYesQ1}>
+                    Yes, I Love You! 🥰❤️
+                  </button>
+
+                  <button
+                    type="button"
+                    className="quiz-runaway-btn"
+                    style={{
+                      transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
+                    }}
+                    onMouseEnter={moveRunaway}
+                    onTouchStart={moveRunaway}
+                    onClick={moveRunaway}
+                  >
+                    {fleeText}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Stage 1: Q2 (1st time) - Will you marry Mehboob Waqar? */}
+            {quizStage === 1 && (
+              <div className="quiz-card stage-standard">
+                <span className="quiz-badge">💍 Question 2 • 1st Time (Pehli Dafa)</span>
+                <h3 className="quiz-question-title">Will you marry Mehboob Waqar? 💍👰‍♀️</h3>
+                <p className="quiz-subtitle">Pehli dafa pucha ja raha hai... Dil par hath rakh kar bolo! 🌹</p>
+
+                <div className="quiz-btn-row">
+                  <button type="button" className="quiz-yes-btn" onClick={handleQaboolRound1}>
+                    Qabool Hai! 💖
+                  </button>
+
+                  <button
+                    type="button"
+                    className="quiz-runaway-btn"
+                    style={{
+                      transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
+                    }}
+                    onMouseEnter={moveRunaway}
+                    onTouchStart={moveRunaway}
+                    onClick={moveRunaway}
+                  >
+                    {fleeText}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Stage 2: Q2 (2nd time) - Rose Garland Theme */}
+            {quizStage === 2 && (
+              <div className="quiz-card stage-rose">
+                <div className="quiz-rose-garland">🌹 🌸 💐 🌹 🌸 💐 🌹</div>
+                <span className="quiz-badge rose-badge">🌹 Question 2 • 2nd Time (Doosri Dafa)</span>
+                <h3 className="quiz-question-title rose-title">Kaho Na... Will you marry Mehboob Waqar forever? 🌹💍</h3>
+                <p className="quiz-subtitle">Doosri dafa qabool karwaya ja raha hai... Sharmao mat, zor se bolo! 🙈❤️</p>
+
+                <div className="quiz-btn-row">
+                  <button type="button" className="quiz-yes-btn rose-btn" onClick={handleQaboolRound2}>
+                    Qabool Hai, Dil Se! 💕🌹
+                  </button>
+
+                  <button
+                    type="button"
+                    className="quiz-runaway-btn"
+                    style={{
+                      transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
+                    }}
+                    onMouseEnter={moveRunaway}
+                    onTouchStart={moveRunaway}
+                    onClick={moveRunaway}
+                  >
+                    {fleeText}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Stage 3: Q2 (3rd time) - Simple, Clean & Romantic UI */}
+            {quizStage === 3 && (
+              <div className="quiz-card stage-simple-final">
+                <span className="quiz-badge">💍 3rd Time • Final Qabool Hai</span>
+                <h3 className="quiz-question-title">Will you marry Mehboob Waqar? 💍❤️</h3>
+                <p className="quiz-subtitle">Teesri aur aakhri dafa... Hamesha hamesha ke liye, dil se bolo! 🥺✨</p>
+
+                <div className="quiz-btn-row">
+                  <button type="button" className="quiz-yes-btn" onClick={handleQaboolRound3}>
+                    Hamesha Qabool Hai! 💍💖
+                  </button>
+
+                  <button
+                    type="button"
+                    className="quiz-runaway-btn"
+                    style={{
+                      transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
+                    }}
+                    onMouseEnter={moveRunaway}
+                    onTouchStart={moveRunaway}
+                    onClick={moveRunaway}
+                  >
+                    {fleeText}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Stage 4: Grand Congratulations Card */}
+            {quizStage === 4 && (
+              <div className="quiz-card stage-congrats">
+                <div className="congrats-sparkles">✨ 💍 👰‍♀️ 🤵‍♂️ 👑 ✨</div>
+                <div style={{ textAlign: "center" }}>
+                  <span className="quiz-badge royal-badge">💍 OFFICIALLY &amp; FOREVER ACCEPTED 💍</span>
+                </div>
+                <h3 className="congrats-header">🎉 CONGRATULATIONS MRS. MEHBOOB WAQAR! 🎉</h3>
+                <div className="section-divider" style={{ margin: "1rem auto 1.5rem" }} />
+
+                <div className="congrats-letter">
+                  <p className="congrats-salutation">To My Dearest Wifey &amp; Forever Soulmate,</p>
+
+                  <p>
+                    <strong>You said YES!</strong> You said <em>Qabool Hai</em> three times with all your heart, and in this universe and every universe after, you are mine and I am yours forever and ever! 💍👰‍♀️💖
+                  </p>
+
+                  <p>
+                    Thank you for choosing me, for trusting me, and for making my world so unimaginably beautiful. Marrying you and spending every sunrise, every quiet evening, and every heartbeat by your side is the greatest blessing, the sweetest dream, and the truest honor of my entire life.
+                  </p>
+
+                  <p>
+                    I promise to hold your hand through every high and low, to protect that radiant smile that captured my soul from the very first day, and to cherish you endlessly until my very last breath. You are my home, my peace, my queen, and my forever lifeline.
+                  </p>
+
+                  <p className="congrats-birthday-wish">
+                    Happy 23rd Birthday to the love of my life, my breathtaking Wifey! Here’s to us, our eternal bond, and a lifetime of boundless love, happiness, and laughter together! 🥂💖✨
+                  </p>
+
+                  <p className="congrats-signature">
+                    Forever &amp; Always Yours,<br />
+                    <span className="congrats-name">Mehboob Waqar ❤️👑</span>
+                  </p>
+                </div>
+
+                <div className="congrats-actions">
+                  <button type="button" className="quiz-back-btn" onClick={handleCloseQuiz}>
+                    🏠 Wapis Main Screen Par Jayein
+                  </button>
+                  <button type="button" className="quiz-replay-btn" onClick={handleRestartQuiz}>
+                    🔄 Play Quiz Again
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
-
-      <div className="quiz-container">
-        {/* Stage 0: Q1 - Do you love me? */}
-        {quizStage === 0 && (
-          <div className="quiz-card stage-standard">
-            <span className="quiz-badge">💘 Question 1 of 2</span>
-            <h3 className="quiz-question-title">Do you love me? 🥺💖</h3>
-            <p className="quiz-subtitle">Sach sach batana... sooch samajh kar jawab dena! 🙈✨</p>
-
-            <div className="quiz-btn-row">
-              <button type="button" className="quiz-yes-btn" onClick={handleAnswerYesQ1}>
-                Yes, I Love You! 🥰❤️
-              </button>
-
-              <button
-                type="button"
-                className="quiz-runaway-btn"
-                style={{
-                  transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
-                }}
-                onMouseEnter={moveRunaway}
-                onTouchStart={moveRunaway}
-                onClick={moveRunaway}
-              >
-                {fleeText}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Stage 1: Q2 (1st time) - Will you marry Mehboob Waqar? */}
-        {quizStage === 1 && (
-          <div className="quiz-card stage-standard">
-            <span className="quiz-badge">💍 Question 2 • 1st Time (Pehli Dafa)</span>
-            <h3 className="quiz-question-title">Will you marry Mehboob Waqar? 💍👰‍♀️</h3>
-            <p className="quiz-subtitle">Pehli dafa pucha ja raha hai... Dil par hath rakh kar bolo! 🌹</p>
-
-            <div className="quiz-btn-row">
-              <button type="button" className="quiz-yes-btn" onClick={handleQaboolRound1}>
-                Qabool Hai! 💖
-              </button>
-
-              <button
-                type="button"
-                className="quiz-runaway-btn"
-                style={{
-                  transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
-                }}
-                onMouseEnter={moveRunaway}
-                onTouchStart={moveRunaway}
-                onClick={moveRunaway}
-              >
-                {fleeText}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Stage 2: Q2 (2nd time) - Different Rose Garland Theme */}
-        {quizStage === 2 && (
-          <div className="quiz-card stage-rose">
-            <div className="quiz-rose-garland">🌹 🌸 💐 🌹 🌸 💐 🌹</div>
-            <span className="quiz-badge rose-badge">🌹 Question 2 • 2nd Time (Doosri Dafa)</span>
-            <h3 className="quiz-question-title rose-title">Kaho Na... Will you marry Mehboob Waqar forever? 🌹💍</h3>
-            <p className="quiz-subtitle">Doosri dafa qabool karwaya ja raha hai... Sharmao mat, zor se bolo! 🙈❤️</p>
-
-            <div className="quiz-btn-row">
-              <button type="button" className="quiz-yes-btn rose-btn" onClick={handleQaboolRound2}>
-                Qabool Hai, Dil Se! 💕🌹
-              </button>
-
-              <button
-                type="button"
-                className="quiz-runaway-btn"
-                style={{
-                  transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
-                }}
-                onMouseEnter={moveRunaway}
-                onTouchStart={moveRunaway}
-                onClick={moveRunaway}
-              >
-                {fleeText}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Stage 3: Q2 (3rd time) - Royal Gold Wedding Theme */}
-        {quizStage === 3 && (
-          <div className="quiz-card stage-royal">
-            <div className="quiz-crown-garland">👑 💍 ✨ 👑 💍 ✨ 👑</div>
-            <span className="quiz-badge royal-badge">👑 Aakhri &amp; Pakka Wada • 3rd Time (Teesri Dafa)</span>
-            <h3 className="quiz-question-title royal-title">Aakhri Baar... Do you marry Mehboob Waqar for all seven lives? 👑💍👰‍♀️</h3>
-            <p className="quiz-subtitle">Teesri dafa aur hamesha hamesha ke liye... Mehboob Waqar sirf aur sirf aapka hai! ❤️✨</p>
-
-            <div className="quiz-btn-row">
-              <button type="button" className="quiz-yes-btn royal" onClick={handleQaboolRound3}>
-                Hamesha Hamesha Qabool Hai! 💍❤️👑
-              </button>
-
-              <button
-                type="button"
-                className="quiz-runaway-btn royal-runaway"
-                style={{
-                  transform: `translate(${runawayOffset.x}px, ${runawayOffset.y}px)`,
-                }}
-                onMouseEnter={moveRunaway}
-                onTouchStart={moveRunaway}
-                onClick={moveRunaway}
-              >
-                {fleeText}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Stage 4: Grand Congratulations Card */}
-        {quizStage === 4 && (
-          <div className="quiz-card stage-congrats">
-            <div className="congrats-sparkles">✨ 💍 👰‍♀️ 🤵‍♂️ 👑 ✨</div>
-            <div style={{ textAlign: "center" }}>
-              <span className="quiz-badge royal-badge">💍 OFFICIALLY &amp; FOREVER ACCEPTED 💍</span>
-            </div>
-            <h3 className="congrats-header">🎉 CONGRATULATIONS MRS. MEHBOOB WAQAR! 🎉</h3>
-            <div className="section-divider" style={{ margin: "1rem auto 1.5rem" }} />
-
-            <div className="congrats-letter">
-              <p className="congrats-salutation">To My Dearest Wifey &amp; Forever Soulmate,</p>
-
-              <p>
-                <strong>You said YES!</strong> You said <em>Qabool Hai</em> three times with all your heart, and in this universe and every universe after, you are mine and I am yours forever and ever! 💍👰‍♀️💖
-              </p>
-
-              <p>
-                Thank you for choosing me, for trusting me, and for making my world so unimaginably beautiful. Marrying you and spending every sunrise, every quiet evening, and every heartbeat by your side is the greatest blessing, the sweetest dream, and the truest honor of my entire life.
-              </p>
-
-              <p>
-                I promise to hold your hand through every high and low, to protect that radiant smile that captured my soul from the very first day, and to cherish you endlessly until my very last breath. You are my home, my peace, my queen, and my forever lifeline.
-              </p>
-
-              <p className="congrats-birthday-wish">
-                Happy 23rd Birthday to the love of my life, my breathtaking Wifey! Here’s to us, our eternal bond, and a lifetime of boundless love, happiness, and laughter together! 🥂💖✨
-              </p>
-
-              <p className="congrats-signature">
-                Forever &amp; Always Yours,<br />
-                <span className="congrats-name">Mehboob Waqar ❤️👑</span>
-              </p>
-            </div>
-
-            <div className="congrats-actions">
-              <button type="button" className="quiz-back-btn" onClick={handleBackToTop}>
-                🏠 Back to Main Screen
-              </button>
-              <button type="button" className="quiz-replay-btn" onClick={handleRestartQuiz}>
-                🔄 Play Quiz Again
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
     </section>
   );
 }
