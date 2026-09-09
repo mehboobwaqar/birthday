@@ -1377,9 +1377,9 @@ function Timeline() {
       id: 28,
       emoji: "🎉",
       badge: "Happy 23rd Birthday Wifeyy! 🎂",
-      title: `Turning ${age} — Today's Grand Celebration! 🎂👑`,
+      title: `Turning ${age} — Happy Birthday Meri Wifey! 💖👑`,
       date: `September 10, ${BIRTHDAY_YEAR}`,
-      text: `23rd Birthday Mubarak ho meri jaan, meri rani, meri cutie puttiteeee! Aaj ka din sab se bada celebration hai... Abhi to cake katna, full party aur photoshoot baqi hai! 💖👑`,
+      text: `23rd Birthday Mubarak ho meri jaan, meri rani, meri cutie puttiteeee! Tumhari wo muskurahat jis par main mar mita tha, hamesha aisi hi chamakti rahe! Happy Birthday Wifeyy G! 💖👑`,
       isComingSoon: true,
       photos: [] as string[],
     },
@@ -1458,12 +1458,16 @@ function Timeline() {
           <div className="timeline-item" key={item.id}>
             <div className="timeline-dot" />
             <div
-              className="timeline-content"
-              onClick={() => openModal(i)}
-              role="button"
-              tabIndex={0}
+              className={`timeline-content ${item.isComingSoon ? "timeline-content-static" : ""}`}
+              onClick={() => {
+                if (!item.isComingSoon) {
+                  openModal(i);
+                }
+              }}
+              role={item.isComingSoon ? undefined : "button"}
+              tabIndex={item.isComingSoon ? undefined : 0}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
+                if (!item.isComingSoon && (e.key === "Enter" || e.key === " ")) {
                   e.preventDefault();
                   openModal(i);
                 }
@@ -1476,35 +1480,31 @@ function Timeline() {
               <h3 className="timeline-title">{item.title}</h3>
               <p className="timeline-text">{item.text}</p>
 
-              {item.isComingSoon || item.photos.length === 0 ? (
-                <div className="timeline-photo-box timeline-coming-soon-card">
-                  <div className="coming-soon-preview-content">
-                    <div className="coming-soon-camera-bounce">📸🎂✨</div>
-                    <span className="coming-soon-badge">🎂 23rd Birthday Photoshoot</span>
-                    <p className="coming-soon-teaser">
-                      &ldquo;Pics Coming Soon... Abhi to cake katna aur cute photos lena baqi hai! 🙈💖&rdquo;
-                    </p>
-                    <span className="coming-soon-tap-hint">🔍 Tap to open surprise ✨</span>
+              <div className="timeline-photo-box">
+                {item.isComingSoon || item.photos.length === 0 ? (
+                  <div className="timeline-loading-box">
+                    <span className="loading-camera-icon">📸</span>
+                    <span className="loading-text">Pics loading.......</span>
                   </div>
-                </div>
-              ) : (
-                <div className="timeline-photo-box">
-                  {item.photos.length > 1 && (
-                    <span className="timeline-multi-badge">
-                      📸 {item.photos.length} Photos
-                    </span>
-                  )}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.photos[0]}
-                    alt={item.title}
-                    loading="lazy"
-                  />
-                  <div className="timeline-photo-overlay">
-                    <span>🔍 Tap to view gallery ({item.photos.length} photos)</span>
-                  </div>
-                </div>
-              )}
+                ) : (
+                  <>
+                    {item.photos.length > 1 && (
+                      <span className="timeline-multi-badge">
+                        📸 {item.photos.length} Photos
+                      </span>
+                    )}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.photos[0]}
+                      alt={item.title}
+                      loading="lazy"
+                    />
+                    <div className="timeline-photo-overlay">
+                      <span>🔍 Tap to view gallery ({item.photos.length} photos)</span>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -1527,16 +1527,9 @@ function Timeline() {
 
             <div className="timeline-modal-body">
               {currentMilestone.isComingSoon || currentPhotos.length === 0 ? (
-                <div className="timeline-coming-soon-box">
-                  <div className="coming-soon-icon">📸✨🎂</div>
-                  <h4 className="coming-soon-title">23rd Birthday Photoshoot — Coming Soon!</h4>
-                  <p className="coming-soon-text">
-                    Aree sabar meri jaan! 🙈 Abhi to 23 saal ki hui ho! Pehle cake kato, cute si birthday dress pehno aur pyari pyari poses do... Uske baad hamari 23rd Birthday ki grand pictures yahan upload hongi! 😉💖📸
-                  </p>
-                  <div className="coming-soon-status">
-                    <span className="status-dot pulse" />
-                    <span>Status: Birthday Photoshoot in progress... 99% ⏳</span>
-                  </div>
+                <div className="timeline-loading-box modal-loading-box">
+                  <span className="loading-camera-icon">📸</span>
+                  <span className="loading-text">Pics loading.......</span>
                 </div>
               ) : (
                 <>
