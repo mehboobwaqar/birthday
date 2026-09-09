@@ -815,10 +815,10 @@ function QualitiesSection() {
   );
 }
 
-// ─── Realistic 3D Birthday Cake Section with 4 Proper Slices ───
+// ─── Realistic 3D Birthday Cake Section with 4 Proper Slices (4 Clicks) ───
 function CakeSection() {
   const [candlesBlown, setCandlesBlown] = useState(false);
-  const [cakeSliced, setCakeSliced] = useState(false);
+  const [slicesCut, setSlicesCut] = useState(0); // 0, 1, 2, 3, 4
   const [isSlicing, setIsSlicing] = useState(false);
   const age = getAge();
 
@@ -848,7 +848,7 @@ function CakeSection() {
   }, [candlesBlown]);
 
   const handleSliceCake = useCallback(() => {
-    if (isSlicing) return;
+    if (slicesCut >= 4 || isSlicing) return;
     setIsSlicing(true);
     playAudioCue("cakeSlice");
 
@@ -856,24 +856,25 @@ function CakeSection() {
       .then((mod) => {
         const confetti = mod.default;
         confetti({
-          particleCount: 80,
-          spread: 85,
+          particleCount: 65,
+          spread: 75,
           origin: { y: 0.58, x: 0.5 },
           colors: ["#ffd700", "#ff0080", "#ff4081", "#ffffff", "#ce93d8"],
         });
       })
       .catch(() => {});
 
+    setSlicesCut((prev) => Math.min(4, prev + 1));
+
     setTimeout(() => {
-      setCakeSliced(true);
       setIsSlicing(false);
-    }, 550);
-  }, [isSlicing]);
+    }, 450);
+  }, [slicesCut, isSlicing]);
 
   const handleRelight = useCallback(() => {
     playAudioCue("twinkle");
     setCandlesBlown(false);
-    setCakeSliced(false);
+    setSlicesCut(0);
   }, []);
 
   // Realistic candles (rendered only when !candlesBlown)
@@ -892,12 +893,8 @@ function CakeSection() {
       <h2 className="section-title">🎂 Make a Wish & Slice the Cake! 🎂</h2>
       <div className="section-divider" />
 
-      {/* Realistic 3D Birthday Cake Stage */}
-      <div
-        className="realistic-cake-stage"
-        onClick={!candlesBlown ? handleBlowCandles : !cakeSliced ? handleSliceCake : undefined}
-        title={!candlesBlown ? "Click to Blow Candles!" : !cakeSliced ? "Click to Slice Cake!" : "Cake Sliced!"}
-      >
+      {/* Realistic 3D Birthday Cake Stage (Click on cake is disabled; only button cuts) */}
+      <div className="realistic-cake-stage">
         <svg className="realistic-cake-svg" viewBox="0 0 380 300">
           <defs>
             {/* Golden Stand Shading */}
@@ -969,24 +966,24 @@ function CakeSection() {
           <ellipse cx="190" cy="252" rx="150" ry="32" fill="url(#goldStandGrad)" stroke="#ffe082" strokeWidth="2.5" />
           <ellipse cx="190" cy="248" rx="142" ry="28" fill="#2a0535" stroke="rgba(255,215,0,0.4)" strokeWidth="1.5" />
 
-          {/* 3. 4 PROPER CAKE SLICES (Quadrants that slide apart when sliced) */}
+          {/* 3. 4 PROPER CAKE SLICES (Cut 1-by-1 across 4 clicks: Front slices first, then back slices) */}
           <g className="cake-slices-4-wrapper">
-            {/* ─── SLICE 1: TOP-LEFT QUADRANT ─── */}
+            {/* ─── SLICE 4: BACK-LEFT QUADRANT (Cuts on Click 4) ─── */}
             <g
               className="cake-slice-quadrant"
               style={{
-                transform: cakeSliced ? "translate(-18px, -12px)" : "translate(0, 0)",
+                transform: slicesCut >= 4 ? "translate(-20px, -14px)" : "translate(0, 0)",
                 transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
               }}
             >
-              {/* Back wall of Top-Left Slice */}
+              {/* Back wall of Back-Left Slice */}
               <path
                 d="M 80 155 A 110 40 0 0 1 190 115 L 190 190 A 110 40 0 0 0 80 230 Z"
                 fill="url(#cakeSideRealGrad)"
                 opacity="0.88"
               />
-              {/* Exposed cut wall along horizontal cut (facing viewer) */}
-              {cakeSliced && (
+              {/* Exposed cut wall along horizontal cut (visible when front-left slice moves on click 2) */}
+              {slicesCut >= 2 && (
                 <g>
                   <path d="M 80 155 L 190 155 L 190 230 L 80 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
                   <line x1="80" y1="180" x2="190" y2="180" stroke="#fffde7" strokeWidth="3" />
@@ -998,8 +995,8 @@ function CakeSection() {
               <path
                 d="M 190 155 L 80 155 A 110 40 0 0 1 190 115 Z"
                 fill="url(#cakeTopRealGrad)"
-                stroke={cakeSliced ? "#ffd700" : "none"}
-                strokeWidth={cakeSliced ? "1.5" : "0"}
+                stroke={slicesCut >= 4 ? "#ffd700" : "none"}
+                strokeWidth={slicesCut >= 4 ? "1.5" : "0"}
               />
               {/* Cream swirls on this quadrant */}
               <circle cx="118" cy="142" r="7.5" fill="url(#creamRosetteGrad)" />
@@ -1011,22 +1008,22 @@ function CakeSection() {
               </g>
             </g>
 
-            {/* ─── SLICE 2: TOP-RIGHT QUADRANT ─── */}
+            {/* ─── SLICE 3: BACK-RIGHT QUADRANT (Cuts on Click 3) ─── */}
             <g
               className="cake-slice-quadrant"
               style={{
-                transform: cakeSliced ? "translate(18px, -12px)" : "translate(0, 0)",
+                transform: slicesCut >= 3 ? "translate(20px, -14px)" : "translate(0, 0)",
                 transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
               }}
             >
-              {/* Back wall of Top-Right Slice */}
+              {/* Back wall of Back-Right Slice */}
               <path
                 d="M 190 115 A 110 40 0 0 1 300 155 L 300 230 A 110 40 0 0 0 190 190 Z"
                 fill="url(#cakeSideRealGrad)"
                 opacity="0.88"
               />
-              {/* Exposed cut wall along horizontal cut (facing viewer) */}
-              {cakeSliced && (
+              {/* Exposed cut wall along horizontal cut (visible when front-right slice moves on click 1) */}
+              {slicesCut >= 1 && (
                 <g>
                   <path d="M 190 155 L 300 155 L 300 230 L 190 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
                   <line x1="190" y1="180" x2="300" y2="180" stroke="#fffde7" strokeWidth="3" />
@@ -1038,8 +1035,8 @@ function CakeSection() {
               <path
                 d="M 190 155 L 190 115 A 110 40 0 0 1 300 155 Z"
                 fill="url(#cakeTopRealGrad)"
-                stroke={cakeSliced ? "#ffd700" : "none"}
-                strokeWidth={cakeSliced ? "1.5" : "0"}
+                stroke={slicesCut >= 3 ? "#ffd700" : "none"}
+                strokeWidth={slicesCut >= 3 ? "1.5" : "0"}
               />
               {/* Cream swirls on this quadrant */}
               <circle cx="230" cy="132" r="7.5" fill="url(#creamRosetteGrad)" />
@@ -1051,11 +1048,11 @@ function CakeSection() {
               </g>
             </g>
 
-            {/* ─── SLICE 4: BOTTOM-LEFT QUADRANT ─── */}
+            {/* ─── SLICE 2: FRONT-LEFT QUADRANT (Cuts on Click 2) ─── */}
             <g
               className="cake-slice-quadrant"
               style={{
-                transform: cakeSliced ? "translate(-18px, 14px)" : "translate(0, 0)",
+                transform: slicesCut >= 2 ? "translate(-22px, 16px)" : "translate(0, 0)",
                 transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
               }}
             >
@@ -1076,8 +1073,8 @@ function CakeSection() {
                 d="M 80 155 C 95 178, 105 186, 115 172 C 128 198, 138 205, 148 174 C 160 210, 172 216, 185 170 L 190 195 L 80 155 Z"
                 fill="url(#dripGlazeGrad)"
               />
-              {/* Exposed cut wall along vertical cut (facing right) */}
-              {cakeSliced && (
+              {/* Exposed cut wall along vertical cut (visible when front-right moves on click 1 or this moves on click 2) */}
+              {slicesCut >= 1 && (
                 <g>
                   <path d="M 190 155 L 190 195 L 190 270 L 190 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
                   <line x1="190" y1="180" x2="190" y2="255" stroke="#fffde7" strokeWidth="3" />
@@ -1088,8 +1085,8 @@ function CakeSection() {
               <path
                 d="M 190 155 L 190 195 A 110 40 0 0 1 80 155 Z"
                 fill="url(#cakeTopRealGrad)"
-                stroke={cakeSliced ? "#ffd700" : "none"}
-                strokeWidth={cakeSliced ? "1.5" : "0"}
+                stroke={slicesCut >= 2 ? "#ffd700" : "none"}
+                strokeWidth={slicesCut >= 2 ? "1.5" : "0"}
               />
               {/* Cream swirls on this quadrant */}
               <circle cx="95" cy="154" r="7.5" fill="url(#creamRosetteGrad)" />
@@ -1102,11 +1099,11 @@ function CakeSection() {
               </g>
             </g>
 
-            {/* ─── SLICE 3: BOTTOM-RIGHT QUADRANT ─── */}
+            {/* ─── SLICE 1: FRONT-RIGHT QUADRANT (Cuts FIRST on Click 1) ─── */}
             <g
               className="cake-slice-quadrant"
               style={{
-                transform: cakeSliced ? "translate(18px, 14px)" : "translate(0, 0)",
+                transform: slicesCut >= 1 ? "translate(22px, 16px)" : "translate(0, 0)",
                 transition: "transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
               }}
             >
@@ -1127,20 +1124,29 @@ function CakeSection() {
                 d="M 190 195 L 198 170 C 210 204, 222 210, 235 172 C 248 194, 258 200, 268 170 C 280 190, 290 184, 300 155 L 190 195 Z"
                 fill="url(#dripGlazeGrad)"
               />
-              {/* Exposed cut wall along vertical cut (facing left) */}
-              {cakeSliced && (
+              {/* Exposed cut wall along vertical cut (facing left towards center) */}
+              {slicesCut >= 1 && (
                 <g>
                   <path d="M 190 155 L 190 195 L 190 270 L 190 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
                   <line x1="190" y1="180" x2="190" y2="255" stroke="#fffde7" strokeWidth="3" />
                   <line x1="190" y1="195" x2="190" y2="260" stroke="#d81b60" strokeWidth="3.5" />
                 </g>
               )}
+              {/* Exposed cut wall along horizontal cut (facing back towards center) */}
+              {slicesCut >= 1 && (
+                <g>
+                  <path d="M 190 155 L 300 155 L 300 230 L 190 230 Z" fill="url(#insideSpongeGrad)" stroke="#ffd700" strokeWidth="1" />
+                  <line x1="190" y1="180" x2="300" y2="180" stroke="#fffde7" strokeWidth="3" />
+                  <line x1="190" y1="195" x2="300" y2="195" stroke="#d81b60" strokeWidth="3.5" />
+                  <line x1="190" y1="210" x2="300" y2="210" stroke="#fffde7" strokeWidth="3" />
+                </g>
+              )}
               {/* Top frosted surface quadrant */}
               <path
                 d="M 190 155 L 300 155 A 110 40 0 0 1 190 195 Z"
                 fill="url(#cakeTopRealGrad)"
-                stroke={cakeSliced ? "#ffd700" : "none"}
-                strokeWidth={cakeSliced ? "1.5" : "0"}
+                stroke={slicesCut >= 1 ? "#ffd700" : "none"}
+                strokeWidth={slicesCut >= 1 ? "1.5" : "0"}
               />
               {/* Cream swirls on this quadrant */}
               <circle cx="285" cy="154" r="7.5" fill="url(#creamRosetteGrad)" />
@@ -1154,8 +1160,8 @@ function CakeSection() {
             </g>
           </g>
 
-          {/* Center Rosette Cream & Strawberry (before sliced) */}
-          {!cakeSliced && (
+          {/* Center Rosette Cream & Strawberry (visible before cutting) */}
+          {slicesCut === 0 && (
             <g transform="translate(190, 155)">
               <circle cx="0" cy="0" r="10" fill="url(#creamRosetteGrad)" />
               <g transform="translate(0, -4) scale(1.05)">
@@ -1237,21 +1243,29 @@ function CakeSection() {
           </button>
         )}
 
-        {/* AFTER BLOW & BEFORE SLICE: ONLY Slice the Cake button */}
-        {candlesBlown && !cakeSliced && (
+        {/* AFTER BLOW & BEFORE ALL 4 SLICES ARE CUT: ONLY Slice the Cake button */}
+        {candlesBlown && slicesCut < 4 && (
           <div className="cake-actions-wrap">
             <button
               className={`slice-cake-btn ${isSlicing ? "slicing" : ""}`}
               onClick={handleSliceCake}
               disabled={isSlicing}
             >
-              <span>{isSlicing ? "🔪 Slicing Cake..." : "Slice the Cake! 🔪🎂"}</span>
+              <span>
+                {slicesCut === 0
+                  ? "Slice the Cake! 🔪 (1/4)"
+                  : slicesCut === 1
+                  ? "Cut Next Slice! 🔪 (2/4)"
+                  : slicesCut === 2
+                  ? "Cut Next Slice! 🔪 (3/4)"
+                  : "Cut Final Slice! 🔪 (4/4)"}
+              </span>
             </button>
           </div>
         )}
 
-        {/* AFTER SLICE: Simple Relight & Cut Again button (NO feed bite button, NO dialog) */}
-        {cakeSliced && (
+        {/* AFTER ALL 4 SLICES CUT: Simple Relight & Cut Again button (NO feed bite button, NO dialog) */}
+        {candlesBlown && slicesCut === 4 && (
           <div className="cake-actions-wrap">
             <button className="cake-relight-btn" onClick={handleRelight}>
               🔄 Relight Candles & Cut Again
@@ -1261,10 +1275,12 @@ function CakeSection() {
       </div>
 
       <p className="cake-message" style={{ marginTop: "1.2rem" }}>
-        {cakeSliced
-          ? `Happy Birthday, my sweet potato Wifey! 🎂💖 May your life be as sweet as this cake!`
+        {slicesCut === 4
+          ? `Happy Birthday, my sweet potato Wifey! 🎂💖 All 4 slices are cut for you!`
+          : slicesCut > 0
+          ? `Slice ${slicesCut} of 4 cut! Click the button to cut the next slice! 🍰✨`
           : candlesBlown
-          ? `Candles are blown! Now click "Slice the Cake! 🔪🎂" to slice the cake! 🌟`
+          ? `Candles are blown! Now click "Slice the Cake! 🔪 (1/4)" below to cut the cake! 🌟`
           : `Close your eyes, make a wish, and blow out the candles! ✨ You deserve every dream come true! 💫`}
       </p>
     </section>
