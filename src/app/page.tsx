@@ -815,59 +815,10 @@ function QualitiesSection() {
   );
 }
 
-// ─── Interactive 6-Slice Cake Constants ───
-const SLICE_TOPPINGS = ["🍓", "💖", "✨", "⭐", "🌸", "👑"];
-
-const SLICE_DEDICATIONS = [
-  {
-    num: 1,
-    title: "Slice 1: Pehla Piece Meri Sweet Wifey Ke Liye! 🥰",
-    text: "Pehla aur sab se meetha piece meri pyari Laiba ke liye! Aapki muskurahat meri sab se badi khushi hai.",
-    topping: "🍓",
-    tag: "For Wifey G 👑",
-  },
-  {
-    num: 2,
-    title: "Slice 2: Dusra Piece Mehboob (Mere) Ke Liye! 😋",
-    text: "Taake hum dono milkar cake share karein aur ek dusre ko apne haathon se khilayein!",
-    topping: "💖",
-    tag: "For Hubby 💍",
-  },
-  {
-    num: 3,
-    title: "Slice 3: Hamari Be-Inteha Mohabbat Ke Naam! 🌹",
-    text: "Start 'This way 😘' se le kar aaj tak hamare be-misaal pyaar, trust aur dosti ke naam!",
-    topping: "✨",
-    tag: "Endless Love 💖",
-  },
-  {
-    num: 4,
-    title: "Slice 4: Aapki Sehat, Lambi Umar & Barkat! 🤲",
-    text: "Allah meri Wifey ko hamesha sehat, lambi umar aur har khwahish me kamyabi ata farmaye. Aameen!",
-    topping: "⭐",
-    tag: "Dua & Blessings 🤲",
-  },
-  {
-    num: 5,
-    title: "Slice 5: Hamari Pyari Late-Night Memories! 🧸",
-    text: "Hamari hasi mazaaq, cute calls aur har pyari memory ke naam jo dil me basi hai!",
-    topping: "🌸",
-    tag: "Sweet Memories 🧸",
-  },
-  {
-    num: 6,
-    title: "Slice 6: Hamesha Ka Saath & Nikkah Ke Naam! 💍",
-    text: "Poora cake cut ho gaya! Ta-umr ka sath, be-shumar khushiyan aur hamara pak rishta mubarak ho!",
-    topping: "👑",
-    tag: "Forever & Always 💍",
-  },
-];
-
-// ─── Cake Section with Interactive Candles & 6-Slice Cake Slicing ───
+// ─── Realistic 3D Birthday Cake Section ───
 function CakeSection() {
   const [candlesBlown, setCandlesBlown] = useState(false);
-  const [slicesCut, setSlicesCut] = useState(0); // 0 to 6
-  const [activeSliceMsg, setActiveSliceMsg] = useState(0);
+  const [cakeSliced, setCakeSliced] = useState(false);
   const [isSlicing, setIsSlicing] = useState(false);
   const [bitesFed, setBitesFed] = useState(1);
   const age = getAge();
@@ -886,7 +837,7 @@ function CakeSection() {
         for (let i = 0; i < 4; i++) {
           setTimeout(() => {
             confetti({
-              particleCount: 75,
+              particleCount: 70,
               spread: 90 + i * 20,
               origin: { y: 0.55, x: 0.3 + Math.random() * 0.4 },
               colors: ["#ff0080", "#ffd700", "#ff6b9d", "#ce93d8", "#00f5ff"],
@@ -898,31 +849,26 @@ function CakeSection() {
   }, [candlesBlown]);
 
   const handleSliceCake = useCallback(() => {
-    if (slicesCut >= 6 || isSlicing) return;
+    if (isSlicing) return;
     setIsSlicing(true);
     playAudioCue("cakeSlice");
 
     import("canvas-confetti")
       .then((mod) => {
         mod.default({
-          particleCount: 50,
-          spread: 70,
+          particleCount: 65,
+          spread: 75,
           origin: { y: 0.58, x: 0.5 },
           colors: ["#ffd700", "#ff0080", "#ff4081", "#ffffff", "#ce93d8"],
         });
       })
       .catch(() => {});
 
-    setSlicesCut((prev) => {
-      const next = Math.min(6, prev + 1);
-      setActiveSliceMsg(next - 1);
-      return next;
-    });
-
     setTimeout(() => {
+      setCakeSliced(true);
       setIsSlicing(false);
-    }, 500);
-  }, [slicesCut, isSlicing]);
+    }, 550);
+  }, [isSlicing]);
 
   const handleFeedBite = useCallback(() => {
     playAudioCue("heartPop");
@@ -931,8 +877,8 @@ function CakeSection() {
     import("canvas-confetti")
       .then((mod) => {
         mod.default({
-          particleCount: 30,
-          spread: 55,
+          particleCount: 35,
+          spread: 60,
           origin: { y: 0.62, x: 0.5 },
           colors: ["#ff0080", "#ff4081", "#ffd700"],
         });
@@ -943,215 +889,325 @@ function CakeSection() {
   const handleRelight = useCallback(() => {
     playAudioCue("twinkle");
     setCandlesBlown(false);
-    setSlicesCut(0);
-    setActiveSliceMsg(0);
+    setCakeSliced(false);
     setBitesFed(1);
   }, []);
 
-  const CX = 145;
-  const CY = 145;
-  const R = 115;
+  // Strawberry positions on top of the cake
+  const strawberries = [
+    { x: 140, y: 152, s: 0.9 },
+    { x: 170, y: 142, s: 1.0 },
+    { x: 205, y: 140, s: 1.05 },
+    { x: 240, y: 148, s: 0.95 },
+    { x: 190, y: 165, s: 1.1 },
+  ];
+
+  // Cream swirls along top ellipse perimeter
+  const creamSwirls = [
+    { x: 95, y: 154 },
+    { x: 118, y: 142 },
+    { x: 150, y: 132 },
+    { x: 190, y: 126 },
+    { x: 230, y: 132 },
+    { x: 262, y: 142 },
+    { x: 285, y: 154 },
+    { x: 260, y: 168 },
+    { x: 225, y: 176 },
+    { x: 190, y: 180 },
+    { x: 155, y: 176 },
+    { x: 120, y: 168 },
+  ];
+
+  // Realistic candles (rendered only when !candlesBlown)
+  const candleCoords = [
+    { x: 130, y: 150 },
+    { x: 152, y: 140 },
+    { x: 178, y: 134 },
+    { x: 202, y: 134 },
+    { x: 228, y: 140 },
+    { x: 250, y: 150 },
+    { x: 190, y: 158 },
+  ];
 
   return (
     <section className="cake-section" id="cake">
       <h2 className="section-title">🎂 Make a Wish & Slice the Cake! 🎂</h2>
       <div className="section-divider" />
 
-      {/* Interactive 6-Slice Round Cake (SVG) */}
+      {/* Realistic 3D Birthday Cake Stage */}
       <div
-        className="interactive-cake-stage"
-        onClick={!candlesBlown ? handleBlowCandles : slicesCut < 6 ? handleSliceCake : handleFeedBite}
-        title={!candlesBlown ? "Click to Blow Candles!" : slicesCut < 6 ? "Click to Slice Cake!" : "Click to Feed Wifey!"}
+        className="realistic-cake-stage"
+        onClick={!candlesBlown ? handleBlowCandles : !cakeSliced ? handleSliceCake : handleFeedBite}
+        title={!candlesBlown ? "Click to Blow Candles!" : !cakeSliced ? "Click to Slice Cake!" : "Click to Feed Wifey!"}
       >
-        <svg className="interactive-cake-svg" viewBox="0 0 290 290">
+        <svg className="realistic-cake-svg" viewBox="0 0 380 300">
           <defs>
-            {/* Plate gradients */}
-            <radialGradient id="plateRimGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="70%" stopColor="#1e0428" />
-              <stop offset="95%" stopColor="#ffd700" />
-              <stop offset="100%" stopColor="#ffb300" />
-            </radialGradient>
-            {/* Cake slice gradients */}
-            <linearGradient id="cakeSliceGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ff2a85" />
-              <stop offset="60%" stopColor="#ff6097" />
-              <stop offset="100%" stopColor="#f48fb1" />
+            {/* Golden Stand Shading */}
+            <linearGradient id="goldStandGrad" x1="0%" y1="0%" x2="100%" y2="50%">
+              <stop offset="0%" stopColor="#b8860b" />
+              <stop offset="25%" stopColor="#ffd700" />
+              <stop offset="45%" stopColor="#fff8e1" />
+              <stop offset="70%" stopColor="#d4af37" />
+              <stop offset="100%" stopColor="#8c6b12" />
             </linearGradient>
-            <linearGradient id="cakeSliceGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ff1493" />
-              <stop offset="60%" stopColor="#ff4081" />
-              <stop offset="100%" stopColor="#ff80ab" />
+
+            {/* Cake Cylinder 3D Shading */}
+            <linearGradient id="cakeSideRealGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#660d2e" />
+              <stop offset="20%" stopColor="#ad1457" />
+              <stop offset="50%" stopColor="#ec407a" />
+              <stop offset="80%" stopColor="#c2185b" />
+              <stop offset="100%" stopColor="#4a0520" />
             </linearGradient>
-            <linearGradient id="cutSliceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ff007f" />
-              <stop offset="50%" stopColor="#ff4081" />
-              <stop offset="100%" stopColor="#ffd700" />
+
+            {/* Biscuit Crust Bottom */}
+            <linearGradient id="biscuitBaseGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#5d4037" />
+              <stop offset="50%" stopColor="#8d6e63" />
+              <stop offset="100%" stopColor="#3e2723" />
             </linearGradient>
-            <radialGradient id="centerRosetteGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ffd700" />
-              <stop offset="70%" stopColor="#ff4081" />
+
+            {/* Cake Top Frosting Ellipse */}
+            <radialGradient id="cakeTopRealGrad" cx="45%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#ff80ab" />
+              <stop offset="60%" stopColor="#f06292" />
               <stop offset="100%" stopColor="#c2185b" />
             </radialGradient>
+
+            {/* Dripping Strawberry Glaze */}
+            <linearGradient id="dripGlazeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#ff4081" />
+              <stop offset="100%" stopColor="#880e4f" />
+            </linearGradient>
+
+            {/* Strawberry Fruit Gradient */}
+            <radialGradient id="strawberryGrad" cx="35%" cy="35%" r="65%">
+              <stop offset="0%" stopColor="#ff5252" />
+              <stop offset="65%" stopColor="#d50000" />
+              <stop offset="100%" stopColor="#880e4f" />
+            </radialGradient>
+
+            {/* Whipped Cream Rosette */}
+            <radialGradient id="creamRosetteGrad" cx="35%" cy="35%" r="65%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="70%" stopColor="#fff8e1" />
+              <stop offset="100%" stopColor="#ffe082" />
+            </radialGradient>
+
+            {/* Inside Sponge Cross Section when cut */}
+            <linearGradient id="insideSpongeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fff9c4" />
+              <stop offset="25%" stopColor="#f8bbd0" />
+              <stop offset="50%" stopColor="#ad1457" />
+              <stop offset="75%" stopColor="#f8bbd0" />
+              <stop offset="100%" stopColor="#5d4037" />
+            </linearGradient>
           </defs>
 
-          {/* Golden Plate Base */}
-          <circle cx={CX} cy={CY} r="140" fill="url(#plateRimGrad)" stroke="#ffd700" strokeWidth="3.5" />
-          <circle cx={CX} cy={CY} r="126" fill="#2d0537" stroke="rgba(255,215,0,0.35)" strokeWidth="1.5" strokeDasharray="4 4" />
+          {/* 1. Floor Shadow */}
+          <ellipse cx="190" cy="272" rx="145" ry="22" fill="rgba(0,0,0,0.5)" filter="blur(8px)" />
 
-          {/* 6 Cake Slices */}
-          {Array.from({ length: 6 }, (_, i) => {
-            const isCut = i < slicesCut;
-            const isCurrent = i === activeSliceMsg && slicesCut > 0;
-            const a1 = ((-90 + i * 60) * Math.PI) / 180;
-            const a2 = ((-90 + (i + 1) * 60) * Math.PI) / 180;
-            const midA = ((-60 + i * 60) * Math.PI) / 180;
-            const x1 = (CX + R * Math.cos(a1)).toFixed(1);
-            const y1 = (CY + R * Math.sin(a1)).toFixed(1);
-            const x2 = (CX + R * Math.cos(a2)).toFixed(1);
-            const y2 = (CY + R * Math.sin(a2)).toFixed(1);
-            const d = `M ${CX} ${CY} L ${x1} ${y1} A ${R} ${R} 0 0 1 ${x2} ${y2} Z`;
+          {/* 2. Golden Cake Stand Base */}
+          <ellipse cx="190" cy="252" rx="150" ry="32" fill="url(#goldStandGrad)" stroke="#ffe082" strokeWidth="2.5" />
+          <ellipse cx="190" cy="248" rx="142" ry="28" fill="#2a0535" stroke="rgba(255,215,0,0.4)" strokeWidth="1.5" />
 
-            const transX = isCut ? (16 * Math.cos(midA)).toFixed(1) : "0";
-            const transY = isCut ? (16 * Math.sin(midA)).toFixed(1) : "0";
+          {/* 3. Main Cake Cylinder Body */}
+          {!cakeSliced ? (
+            // Complete round cake
+            <g className="cake-full-body">
+              {/* Cylinder wall */}
+              <path
+                d="M 80 155 C 80 198, 300 198, 300 155 L 300 230 C 300 273, 80 273, 80 230 Z"
+                fill="url(#cakeSideRealGrad)"
+              />
 
-            const topX = CX + 65 * Math.cos(midA);
-            const topY = CY + 65 * Math.sin(midA);
+              {/* Bottom biscuit crust */}
+              <path
+                d="M 80 216 C 80 258, 300 258, 300 216 L 300 230 C 300 273, 80 273, 80 230 Z"
+                fill="url(#biscuitBaseGrad)"
+                opacity="0.95"
+              />
 
-            return (
-              <g
-                key={i}
-                transform={`translate(${transX}, ${transY})`}
-                className={`cake-slice-svg-group ${isCut ? "is-cut" : ""} ${isCurrent ? "is-current" : ""}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (isCut) {
-                    setActiveSliceMsg(i);
-                    playAudioCue("heartPop");
-                  } else if (candlesBlown) {
-                    handleSliceCake();
-                  } else {
-                    handleBlowCandles();
-                  }
-                }}
-              >
-                {/* Slice Body */}
-                <path
-                  d={d}
-                  fill={isCut ? "url(#cutSliceGrad)" : i % 2 === 0 ? "url(#cakeSliceGrad1)" : "url(#cakeSliceGrad2)"}
-                  stroke={isCut ? "#ffd700" : "#ffb3d9"}
-                  strokeWidth={isCut ? "2.5" : "1.5"}
-                />
+              {/* Whipped cream divider line */}
+              <path
+                d="M 82 195 C 82 236, 298 236, 298 195"
+                fill="none"
+                stroke="#fffde7"
+                strokeWidth="4"
+                strokeDasharray="8 4"
+                opacity="0.85"
+              />
 
-                {/* Topping on Slice */}
-                <text
-                  x={topX}
-                  y={topY + 6}
-                  fontSize="17"
-                  textAnchor="middle"
-                  style={{ pointerEvents: "none", userSelect: "none" }}
-                >
-                  {SLICE_TOPPINGS[i]}
-                </text>
+              {/* Luscious dripping strawberry ganache glaze */}
+              <path
+                d="M 80 155 C 95 178, 105 186, 115 172 C 128 198, 138 205, 148 174 C 160 210, 172 216, 185 170 C 198 204, 210 210, 222 172 C 235 194, 245 200, 255 170 C 268 190, 280 184, 300 155 C 300 145, 80 145, 80 155 Z"
+                fill="url(#dripGlazeGrad)"
+                filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))"
+              />
 
-                {/* Sliced Badge / Sparkle */}
-                {isCut && (
-                  <circle
-                    cx={topX}
-                    cy={topY}
-                    r="13"
-                    fill="rgba(255,215,0,0.25)"
-                    stroke="#ffd700"
-                    strokeWidth="1.2"
+              {/* Top frosted surface */}
+              <ellipse cx="190" cy="155" rx="110" ry="40" fill="url(#cakeTopRealGrad)" />
+
+              {/* Glossy top specular highlight */}
+              <ellipse cx="160" cy="148" rx="60" ry="18" fill="rgba(255,255,255,0.25)" transform="rotate(-6, 160, 148)" />
+
+              {/* Cream swirls on top perimeter */}
+              {creamSwirls.map((swirl, idx) => (
+                <g key={`swirl-${idx}`}>
+                  <circle cx={swirl.x} cy={swirl.y} r="8" fill="url(#creamRosetteGrad)" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.2))" />
+                  <circle cx={swirl.x - 2} cy={swirl.y - 2} r="4" fill="#ffffff" opacity="0.85" />
+                </g>
+              ))}
+
+              {/* Fresh strawberries on top */}
+              {strawberries.map((sb, idx) => (
+                <g key={`sb-${idx}`} transform={`translate(${sb.x}, ${sb.y}) scale(${sb.s})`}>
+                  {/* Strawberry body */}
+                  <path
+                    d="M 0 -8 C 9 -8, 11 4, 0 14 C -11 4, -9 -8, 0 -8 Z"
+                    fill="url(#strawberryGrad)"
+                    filter="drop-shadow(0 3px 4px rgba(0,0,0,0.35))"
                   />
-                )}
-              </g>
-            );
-          })}
+                  {/* Yellow seed dots */}
+                  <circle cx="-3" cy="-1" r="0.7" fill="#ffe082" />
+                  <circle cx="3" cy="-1" r="0.7" fill="#ffe082" />
+                  <circle cx="0" cy="4" r="0.7" fill="#ffe082" />
+                  <circle cx="-2" cy="7" r="0.6" fill="#ffe082" />
+                  <circle cx="2" cy="7" r="0.6" fill="#ffe082" />
+                  {/* Green star calyx leaves */}
+                  <path d="M 0 -8 L -3 -12 L -1 -8 L 3 -12 L 1 -8 L 5 -9 L 2 -6 Z" fill="#4caf50" />
+                </g>
+              ))}
 
-          {/* Center Rosette Cream */}
-          <circle cx={CX} cy={CY} r="20" fill="url(#centerRosetteGrad)" stroke="#ffd700" strokeWidth="2" />
-          <text
-            x={CX}
-            y={CY + 6}
-            fontSize="14"
-            textAnchor="middle"
-            style={{ pointerEvents: "none", userSelect: "none" }}
-          >
-            {candlesBlown ? (slicesCut === 6 ? "🎉" : "💖") : "✨"}
-          </text>
+              {/* Golden edible sparkles */}
+              <text x="175" y="158" fontSize="11" fill="#ffd700" opacity="0.9">✨</text>
+              <text x="215" y="152" fontSize="10" fill="#ffd700" opacity="0.9">⭐</text>
+            </g>
+          ) : (
+            // Cake with slice cut out + sliced piece served on plate
+            <g className="cake-sliced-body">
+              {/* Remaining cake cylinder */}
+              <path
+                d="M 80 155 C 80 198, 240 198, 240 175 L 190 155 L 240 135 C 240 135, 300 142, 300 155 L 300 230 C 300 273, 80 273, 80 230 Z"
+                fill="url(#cakeSideRealGrad)"
+              />
 
-          {/* 7 CANDLES: ONLY RENDERED WHEN NOT BLOWN */}
-          {!candlesBlown && (
-            <g className="candles-layer">
-              {/* 6 candles on the slices */}
-              {Array.from({ length: 6 }, (_, i) => {
-                const midA = ((-60 + i * 60) * Math.PI) / 180;
-                const candleX = CX + 62 * Math.cos(midA);
-                const candleY = CY + 62 * Math.sin(midA);
-                return (
-                  <g key={`candle-${i}`}>
-                    {/* Candle stick */}
-                    <rect
-                      x={candleX - 2.5}
-                      y={candleY - 14}
-                      width="5"
-                      height="15"
-                      rx="2"
-                      fill="#ffd700"
-                      stroke="#fff"
-                      strokeWidth="0.8"
-                    />
-                    {/* Flame glow */}
-                    <circle
-                      cx={candleX}
-                      cy={candleY - 18}
-                      r="7"
-                      fill="rgba(255, 215, 0, 0.45)"
-                      className="candle-svg-flame"
-                    />
-                    {/* Flame core */}
-                    <ellipse
-                      cx={candleX}
-                      cy={candleY - 18}
-                      rx="3"
-                      ry="5.5"
-                      fill="#ff5722"
-                      className="candle-svg-flame"
-                    />
-                    <ellipse cx={candleX} cy={candleY - 17} rx="1.8" ry="3" fill="#fffde7" />
-                  </g>
-                );
-              })}
+              {/* Cut cavity inside layers */}
+              <path
+                d="M 190 155 L 245 178 L 245 240 L 190 220 Z"
+                fill="url(#insideSpongeGrad)"
+                stroke="#ffd700"
+                strokeWidth="1"
+              />
+              {/* Jam line inside cut */}
+              <line x1="190" y1="187" x2="245" y2="209" stroke="#d81b60" strokeWidth="4" />
+              <line x1="190" y1="172" x2="245" y2="194" stroke="#ffffff" strokeWidth="3" />
 
-              {/* 1 center candle */}
-              <g key="candle-center">
-                <rect
-                  x={CX - 2.5}
-                  y={CY - 16}
-                  width="5"
-                  height="16"
-                  rx="2"
-                  fill="#ffffff"
+              {/* Top frosted surface with cut wedge */}
+              <path
+                d="M 80 155 C 80 135, 150 115, 190 115 C 230 115, 290 135, 300 155 C 290 170, 245 178, 245 178 L 190 155 L 245 135 C 245 135, 200 195, 80 155 Z"
+                fill="url(#cakeTopRealGrad)"
+              />
+
+              {/* Remaining cream swirls */}
+              {creamSwirls.slice(0, 8).map((swirl, idx) => (
+                <g key={`swirl-cut-${idx}`}>
+                  <circle cx={swirl.x} cy={swirl.y} r="8" fill="url(#creamRosetteGrad)" />
+                  <circle cx={swirl.x - 2} cy={swirl.y - 2} r="4" fill="#ffffff" opacity="0.85" />
+                </g>
+              ))}
+
+              {/* Sliced Piece Proudly Served on Dessert Plate in Front */}
+              <g className="served-slice-group">
+                {/* Golden dessert plate */}
+                <ellipse cx="275" cy="245" rx="55" ry="20" fill="url(#goldStandGrad)" stroke="#ffe082" strokeWidth="2" />
+                <ellipse cx="275" cy="243" rx="48" ry="17" fill="#fff" opacity="0.92" />
+
+                {/* Sliced 3D wedge cake piece */}
+                <path
+                  d="M 245 225 L 290 208 L 305 235 L 260 252 Z"
+                  fill="url(#cakeSideRealGrad)"
+                />
+                <path
+                  d="M 245 225 L 275 195 L 305 210 L 290 208 Z"
+                  fill="url(#cakeTopRealGrad)"
+                />
+                {/* Side cross section on slice */}
+                <path
+                  d="M 245 225 L 275 195 L 275 225 L 245 255 Z"
+                  fill="url(#insideSpongeGrad)"
                   stroke="#ffd700"
-                  strokeWidth="1"
+                  strokeWidth="0.8"
                 />
-                <circle
-                  cx={CX}
-                  cy={CY - 21}
-                  r="9"
-                  fill="rgba(255, 215, 0, 0.55)"
-                  className="candle-svg-flame"
+
+                {/* Cream rosette on slice */}
+                <circle cx="275" cy="198" r="7" fill="url(#creamRosetteGrad)" />
+                {/* Fresh strawberry on slice */}
+                <path
+                  d="M 275 188 C 282 188, 284 198, 275 206 C 266 198, 268 188, 275 188 Z"
+                  fill="url(#strawberryGrad)"
                 />
-                <ellipse
-                  cx={CX}
-                  cy={CY - 21}
-                  rx="3.5"
-                  ry="6.5"
-                  fill="#ff5722"
-                  className="candle-svg-flame"
-                />
-                <ellipse cx={CX} cy={CY - 20} rx="2" ry="3.5" fill="#fffde7" />
+                <path d="M 275 188 L 273 184 L 275 187 L 278 184 Z" fill="#4caf50" strokeWidth="1" />
+
+                {/* Dessert Fork */}
+                <text x="312" y="252" fontSize="20" transform="rotate(-15, 312, 252)">🍴</text>
               </g>
+            </g>
+          )}
+
+          {/* 4. REALISTIC CANDLES: ONLY RENDERED WHEN NOT BLOWN */}
+          {!candlesBlown && (
+            <g className="realistic-candles-layer">
+              {candleCoords.map((c, i) => (
+                <g key={`candle-${i}`}>
+                  {/* Candle shadow */}
+                  <ellipse cx={c.x} cy={c.y + 2} rx="4" ry="1.5" fill="rgba(0,0,0,0.3)" />
+
+                  {/* Candle stick (striped cylinder) */}
+                  <rect
+                    x={c.x - 3}
+                    y={c.y - 20}
+                    width="6"
+                    height="22"
+                    rx="2"
+                    fill="#ffffff"
+                    stroke="#ffd700"
+                    strokeWidth="0.8"
+                  />
+                  {/* Candy stripes */}
+                  <line x1={c.x - 3} y1={c.y - 15} x2={c.x + 3} y2={c.y - 12} stroke="#ff4081" strokeWidth="2" />
+                  <line x1={c.x - 3} y1={c.y - 8} x2={c.x + 3} y2={c.y - 5} stroke="#ff4081" strokeWidth="2" />
+
+                  {/* Candle Wick */}
+                  <line x1={c.x} y1={c.y - 20} x2={c.x} y2={c.y - 24} stroke="#212121" strokeWidth="1" />
+
+                  {/* Flame Glow Halo */}
+                  <circle
+                    cx={c.x}
+                    cy={c.y - 28}
+                    r="10"
+                    fill="rgba(255, 215, 0, 0.5)"
+                    className="candle-flame-glow"
+                  />
+
+                  {/* Realistic Teardrop Flame */}
+                  <ellipse
+                    cx={c.x}
+                    cy={c.y - 28}
+                    rx="3.5"
+                    ry="6.5"
+                    fill="#ff9800"
+                    className="candle-flame-glow"
+                  />
+                  <ellipse
+                    cx={c.x}
+                    cy={c.y - 27}
+                    rx="2"
+                    ry="4"
+                    fill="#fffde7"
+                  />
+                </g>
+              ))}
             </g>
           )}
         </svg>
@@ -1162,7 +1218,7 @@ function CakeSection() {
 
       <div className="age-badge">{age}</div>
 
-      {/* ─── ACTION BUTTONS ─── */}
+      {/* ─── SINGLE ACTION BUTTON (Clean & Simple) ─── */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.8rem", marginTop: "0.5rem" }}>
         {/* BEFORE BLOW: ONLY Blow the Candles button */}
         {!candlesBlown && (
@@ -1171,25 +1227,21 @@ function CakeSection() {
           </button>
         )}
 
-        {/* AFTER BLOW & SLICING IN PROGRESS (1 to 6 slices): ONLY Slice the Cake button */}
-        {candlesBlown && slicesCut < 6 && (
+        {/* AFTER BLOW: ONLY Slice the Cake button */}
+        {candlesBlown && !cakeSliced && (
           <div className="cake-actions-wrap">
             <button
               className={`slice-cake-btn ${isSlicing ? "slicing" : ""}`}
               onClick={handleSliceCake}
               disabled={isSlicing}
             >
-              <span>
-                {slicesCut === 0
-                  ? "Slice the Cake! 🔪🎂 (Cut Slice 1/6)"
-                  : `Cut Next Slice! 🔪 (Slice ${slicesCut + 1} of 6)`}
-              </span>
+              <span>{isSlicing ? "🔪 Slicing Cake..." : "Slice the Cake! 🔪🎂"}</span>
             </button>
           </div>
         )}
 
-        {/* ALL 6 SLICES CUT: Feed bite & Relight buttons */}
-        {candlesBlown && slicesCut === 6 && (
+        {/* AFTER SLICE: Feed Another Bite & Relight buttons */}
+        {cakeSliced && (
           <div className="cake-actions-wrap">
             <button className="feed-more-btn" onClick={handleFeedBite}>
               Feed Another Bite! 🍓😋
@@ -1201,35 +1253,8 @@ function CakeSection() {
         )}
       </div>
 
-      {/* ─── 6-SLICES TRACKER ─── */}
-      {candlesBlown && (
-        <div className="slices-tracker">
-          <span className="slices-tracker-label">
-            Cake Slices Cut: <strong>{slicesCut} / 6</strong>
-          </span>
-          <div className="slices-tracker-pills">
-            {Array.from({ length: 6 }, (_, idx) => (
-              <div
-                key={idx}
-                className={`slice-pill ${idx < slicesCut ? "cut" : ""} ${idx === activeSliceMsg && slicesCut > 0 ? "active" : ""}`}
-                onClick={() => {
-                  if (idx < slicesCut) {
-                    setActiveSliceMsg(idx);
-                    playAudioCue("heartPop");
-                  }
-                }}
-                title={`Slice ${idx + 1}`}
-              >
-                <span>{idx < slicesCut ? "🍰" : "🎂"}</span>
-                <span className="pill-num">Slice #{idx + 1}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ─── SLICED CAKE SERVING CARD & DEDICATIONS ─── */}
-      {slicesCut > 0 && (
+      {/* ─── SLICED CAKE SERVING CARD ─── */}
+      {cakeSliced && (
         <div className="cake-slice-card">
           <div className="slice-plate">
             <span className="slice-fork-emoji">🍴</span>
@@ -1237,46 +1262,25 @@ function CakeSection() {
             <span className="slice-fork-emoji">✨</span>
           </div>
 
-          <div className="slice-tag-badge">
-            {SLICE_DEDICATIONS[activeSliceMsg]?.tag || "Sweet Love"}
-          </div>
-
           <h3 className="slice-title">
-            {SLICE_DEDICATIONS[activeSliceMsg]?.title}
+            Pehla Piece Meri Sweet Wifey Ke Liye! 🥰
           </h3>
 
           <p className="slice-text">
-            {SLICE_DEDICATIONS[activeSliceMsg]?.text}
+            Pehla aur sab se meetha piece meri pyari Laiba ke liye! Aapki zindagi me hamesha meetha ras, dher sari barkat aur be-inteha pyaar bana rahe! 🎂💖
           </p>
 
           <div className="slice-bites-count">
             <span className="bites-badge">Bites Fed with Love: {bitesFed} 🥄💕</span>
           </div>
-
-          <div className="slice-action-buttons">
-            {slicesCut < 6 ? (
-              <button className="feed-more-btn" onClick={handleSliceCake}>
-                Cut Slice #{slicesCut + 1} 🔪
-              </button>
-            ) : (
-              <button className="feed-more-btn" onClick={handleFeedBite}>
-                Feed Another Bite! 🍓😋
-              </button>
-            )}
-            <button className="cake-relight-btn" onClick={handleRelight}>
-              🔄 Relight Candles
-            </button>
-          </div>
         </div>
       )}
 
       <p className="cake-message" style={{ marginTop: "1.5rem" }}>
-        {slicesCut === 6
-          ? `All 6 slices have been cut with endless love! Happy ${age}th Birthday to my Queen Laiba! 👑💖`
-          : slicesCut > 0
-          ? `Slice ${slicesCut} of 6 cut! Click the slice button to cut all 6 pieces for Laiba! 🍰✨`
+        {cakeSliced
+          ? `Mmm... The sweetest cake for the most special girl! Happy ${age}th Birthday, Laiba! 🍰✨`
           : candlesBlown
-          ? `The candles are blown! Now click "Slice the Cake! 🔪🎂" to cut the first slice! 🌟`
+          ? `Candles are blown! Now click "Slice the Cake! 🔪🎂" to cut the cake! 🌟`
           : `Close your eyes, make a wish, and blow out the candles! ✨ You deserve every dream come true! 💫`}
       </p>
     </section>

@@ -4449,132 +4449,64 @@ body {
   margin-top: 1.2rem;
 }
 
-/* Interactive SVG Cake Stage */
-.interactive-cake-stage {
+/* Realistic 3D Birthday Cake Stage */
+.realistic-cake-stage {
   position: relative;
-  width: min(320px, 85vw);
-  height: min(320px, 85vw);
+  width: min(390px, 92vw);
+  max-width: 400px;
   margin: 1.5rem auto 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  filter: drop-shadow(0 15px 40px rgba(255, 0, 128, 0.45));
+  filter: drop-shadow(0 20px 45px rgba(255, 0, 128, 0.45));
 }
 
-.interactive-cake-svg {
+.realistic-cake-svg {
   width: 100%;
-  height: 100%;
+  height: auto;
   overflow: visible;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.interactive-cake-stage:hover .interactive-cake-svg {
-  transform: scale(1.03);
+.realistic-cake-stage:hover .realistic-cake-svg {
+  transform: scale(1.02) translateY(-2px);
 }
 
-.cake-slice-svg-group {
-  transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
-  cursor: pointer;
-}
-
-.cake-slice-svg-group.is-cut {
-  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.9));
-}
-
-.cake-slice-svg-group.is-current {
-  animation: pulseSlice 1.2s infinite ease-in-out;
-}
-
-@keyframes pulseSlice {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.9));
-  }
-  50% {
-    filter: drop-shadow(0 0 18px rgba(255, 0, 128, 0.95));
-  }
-}
-
-.candle-svg-flame {
-  animation: candleSvgFlicker 0.9s infinite alternate ease-in-out;
+.candle-flame-glow {
+  animation: candleGlowPulse 1s infinite alternate ease-in-out;
   transform-origin: center;
 }
 
-@keyframes candleSvgFlicker {
+@keyframes candleGlowPulse {
   0% {
-    transform: scale(0.9) translateY(1px);
+    transform: scale(0.92);
     opacity: 0.85;
+    filter: drop-shadow(0 0 6px #ffd700);
   }
   100% {
-    transform: scale(1.2) translateY(-1px);
+    transform: scale(1.18);
     opacity: 1;
-    filter: drop-shadow(0 0 10px #ffd700);
+    filter: drop-shadow(0 0 14px #ff9100) drop-shadow(0 0 22px #ff3d00);
   }
 }
 
-/* Slices Tracker */
-.slices-tracker {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 1.2rem auto 0.6rem;
+.served-slice-group {
+  animation: slideOutSlice 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.slices-tracker-label {
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.95rem;
-  color: #ffd700;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.slices-tracker-pills {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.slice-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 6px 13px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.slice-pill.cut {
-  background: rgba(255, 0, 128, 0.35);
-  border-color: #ffd700;
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
-}
-
-.slice-pill.active {
-  transform: scale(1.08);
-  border-color: #ff4081;
-  background: linear-gradient(135deg, rgba(255, 0, 128, 0.6), rgba(255, 215, 0, 0.5));
-  box-shadow: 0 0 18px rgba(255, 0, 128, 0.65);
-}
-
-.slice-tag-badge {
-  display: inline-block;
-  font-size: 0.82rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #ffd700, #ff80b3);
-  color: #2b0038;
-  padding: 4px 14px;
-  border-radius: 20px;
-  margin-bottom: 0.6rem;
-  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+@keyframes slideOutSlice {
+  0% {
+    transform: translate(0, 0) scale(0.95);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(15px, 8px) scale(1.04);
+  }
+  100% {
+    transform: translate(25px, 16px) scale(1);
+    opacity: 1;
+  }
 }
 
 .slice-cake-btn {
